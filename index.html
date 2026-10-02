@@ -193,6 +193,65 @@
       font-weight: 800;
     }
 
+    .account-bar {
+      max-width: 1100px;
+      margin: 20px auto 0;
+      padding: 0 20px;
+      display: none;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .account-box {
+      background: #101010;
+      border: 1px solid #2a2a2a;
+      border-radius: 14px;
+      padding: 12px 15px;
+      color: #ddd;
+      font-size: 14px;
+    }
+    .account-box strong { color: #d09aff; }
+    .service-tag {
+      display: inline-block;
+      margin-bottom: 12px;
+      padding: 5px 9px;
+      border-radius: 999px;
+      background: #1b1024;
+      color: #d09aff;
+      font-size: 12px;
+    }
+    .buy { cursor: pointer; }
+    .modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,.78);
+      z-index: 50;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .modal.show { display: flex; }
+    .modal-card {
+      width: min(440px,100%);
+      background: #111;
+      border: 1px solid #333;
+      border-radius: 20px;
+      padding: 24px;
+    }
+    .modal-card h2 { margin-bottom: 14px; }
+    .modal-card input, .modal-card select {
+      width: 100%;
+      margin: 8px 0;
+      padding: 12px;
+      border-radius: 10px;
+      border: 1px solid #333;
+      background: #080808;
+      color: #fff;
+    }
+    .modal-actions { display:flex; gap:10px; margin-top:12px; }
+    .modal-actions button { flex:1; padding:12px; border-radius:10px; border:0; font-weight:800; }
+    .close-btn { background:#222; color:#fff; }
+
     .footer {
       border-top: 1px solid #222;
       padding: 30px 20px;
@@ -221,6 +280,13 @@
       <button class="nav-btn" type="button" onclick="login()">เข้าสู่ระบบ</button>
     </div>
   </header>
+
+  <div class="account-bar" id="accountBar">
+    <div class="account-box">สมาชิก: <strong id="accountPhone">-</strong></div>
+    <div class="account-box">เครดิต: <strong id="accountCredit">฿0.00</strong></div>
+    <button class="primary" type="button" onclick="openTopup()">เติมเงิน</button>
+    <button class="secondary" type="button" onclick="openCart()">ตะกร้า (<span id="cartCount">0</span>)</button>
+  </div>
 
   <main>
 
@@ -257,57 +323,38 @@
       <div class="products">
 
         <div class="card">
-          <div class="icon">✦</div>
-
-          <h3>สินค้า PRIME</h3>
-
-          <p>
-            สินค้าตัวอย่างสำหรับระบบ PRIME Premium
-          </p>
-
-          <div class="price">
-            ฿100
-          </div>
-
-          <button class="buy" onclick="buyProduct()">
-            ซื้อสินค้า
-          </button>
+          <span class="service-tag">เติมเครดิต</span>
+          <div class="icon">฿</div>
+          <h3>เติมเงินเข้า PRIME</h3>
+          <p>เติมเครดิตเพื่อใช้สั่งซื้อบริการในร้าน</p>
+          <button class="buy" onclick="openTopup()">เติมเงิน</button>
         </div>
 
         <div class="card">
-          <div class="icon">⚡</div>
-
-          <h3>Premium Service</h3>
-
-          <p>
-            บริการระดับ Premium สำหรับสมาชิก
-          </p>
-
-          <div class="price">
-            ฿199
-          </div>
-
-          <button class="buy" onclick="buyProduct()">
-            ซื้อสินค้า
-          </button>
+          <span class="service-tag">LIKE</span>
+          <div class="icon">♥</div>
+          <h3>บริการยอดไลค์</h3>
+          <p>เลือกแพ็กเกจบริการโปรโมตยอดไลค์สำหรับโพสต์ของคุณ</p>
+          <div class="price">เริ่มต้น ฿100</div>
+          <button class="buy" onclick="addToCart('บริการยอดไลค์',100)">เพิ่มลงตะกร้า</button>
         </div>
 
         <div class="card">
+          <span class="service-tag">SHARE</span>
+          <div class="icon">↗</div>
+          <h3>บริการยอดแชร์</h3>
+          <p>เลือกแพ็กเกจบริการโปรโมตการแชร์สำหรับคอนเทนต์ของคุณ</p>
+          <div class="price">เริ่มต้น ฿199</div>
+          <button class="buy" onclick="addToCart('บริการยอดแชร์',199)">เพิ่มลงตะกร้า</button>
+        </div>
+
+        <div class="card">
+          <span class="service-tag">FOLLOW</span>
           <div class="icon">◆</div>
-
-          <h3>VIP Service</h3>
-
-          <p>
-            บริการสำหรับผู้ใช้งานระดับ VIP
-          </p>
-
-          <div class="price">
-            ฿299
-          </div>
-
-          <button class="buy" onclick="buyProduct()">
-            ซื้อสินค้า
-          </button>
+          <h3>บริการยอดติดตาม</h3>
+          <p>เลือกแพ็กเกจบริการโปรโมตผู้ติดตามสำหรับบัญชีของคุณ</p>
+          <div class="price">เริ่มต้น ฿299</div>
+          <button class="buy" onclick="addToCart('บริการยอดติดตาม',299)">เพิ่มลงตะกร้า</button>
         </div>
 
       </div>
@@ -325,92 +372,81 @@ const SUPABASE_URL = "https://uxatabaoxbmgswcqrptq.supabase.co";
 const SUPABASE_KEY = "sb_publishable_WIFz-7unS6IQFspqOSoj_Q_BST2Hr4o";
 const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-function goProducts() {
-  document.getElementById("products")?.scrollIntoView({behavior:"smooth",block:"start"});
+function goProducts(){document.getElementById("products")?.scrollIntoView({behavior:"smooth",block:"start"});}
+function normalizePhone(v){let p=String(v||"").trim().replace(/[\s-]/g,"");if(p.startsWith("0"))p="+66"+p.slice(1);else if(p.startsWith("66"))p="+"+p;return p;}
+function validThaiPhone(p){return /^\+66\d{9}$/.test(p);}
+function cart(){try{return JSON.parse(localStorage.getItem("prime_cart")||"[]")}catch{return[]}}
+function saveCart(c){localStorage.setItem("prime_cart",JSON.stringify(c));updateCartCount();}
+function updateCartCount(){const n=document.getElementById("cartCount");if(n)n.textContent=cart().length;}
+function openCart(){renderCart();document.getElementById("cartModal").classList.add("show");}
+function openTopup(){document.getElementById("topupModal").classList.add("show");}
+function closeModal(id){document.getElementById(id).classList.remove("show");}
+function addToCart(name,price){
+  if(localStorage.getItem("prime_logged_in")!=="1"){alert("กรุณาเข้าสู่ระบบก่อนสั่งซื้อ");return;}
+  const c=cart();c.push({name,price});saveCart(c);alert("เพิ่ม "+name+" ลงตะกร้าแล้ว");}
+function renderCart(){
+  const el=document.getElementById("cartItems"),c=cart();
+  if(!c.length){el.innerHTML='<p style="color:#999">ยังไม่มีสินค้าในตะกร้า</p>';return;}
+  const total=c.reduce((s,x)=>s+Number(x.price),0);
+  el.innerHTML=c.map((x,i)=>'<div style="display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid #222"><span>'+x.name+'</span><strong>฿'+x.price+'</strong></div>').join("")+
+    '<div style="margin-top:15px;font-weight:800">รวม ฿'+total.toFixed(2)+'</div>';
 }
-
-function normalizePhone(value) {
-  let phone = String(value || "").trim().replace(/[\s-]/g,"");
-  if (phone.startsWith("0")) phone = "+66" + phone.slice(1);
-  else if (phone.startsWith("66")) phone = "+" + phone;
-  return phone;
+async function getSession(){const {data}=await supabaseClient.auth.getSession();return data?.session||null;}
+async function loadMember(){
+  const s=await getSession();if(!s)return null;
+  const {data,error}=await supabaseClient.from("members").select("phone,credit").eq("id",s.user.id).maybeSingle();
+  if(error)return null;return data;
 }
-
-function validThaiPhone(phone) {
-  return /^\+66\d{9}$/.test(phone);
+async function updateLoginButton(){
+  const s=await getSession(),logged=!!s,phone=localStorage.getItem("prime_phone")||"";
+  document.querySelectorAll(".nav-btn,.secondary").forEach(b=>{if(b.classList.contains("secondary")&&b.textContent.includes("ตะกร้า"))return;b.textContent=logged?"ออกจากระบบ":"เข้าสู่ระบบ";b.onclick=logged?logout:login;});
+  const bar=document.getElementById("accountBar");if(bar)bar.style.display=logged?"flex":"none";
+  if(logged){const m=await loadMember();document.getElementById("accountPhone").textContent=m?.phone||phone;document.getElementById("accountCredit").textContent="฿"+Number(m?.credit||0).toFixed(2);}
+  updateCartCount();
 }
-
-async function login() {
-  let phone = prompt("กรอกเบอร์โทรศัพท์เพื่อเข้า PRIME\nตัวอย่าง: 0812345678");
-  if (!phone) return;
-  phone = normalizePhone(phone);
-
-  if (!validThaiPhone(phone)) {
-    alert("กรุณากรอกเบอร์โทรไทยให้ถูกต้อง เช่น 0812345678");
-    return;
-  }
-
-  try {
-    const {error} = await supabaseClient.auth.signInAnonymously({
-      options:{data:{phone}}
-    });
-
-    if (error) throw error;
-
-    localStorage.setItem("prime_phone",phone);
-    localStorage.setItem("prime_logged_in","1");
-    updateLoginButton();
-    alert("เข้าสู่ PRIME สำเร็จ");
-  } catch (error) {
-    alert("เข้าสู่ระบบไม่สำเร็จ: " + error.message);
-  }
+async function login(){
+  let p=prompt("กรอกเบอร์โทรศัพท์เพื่อเข้า PRIME\nตัวอย่าง: 0812345678");if(!p)return;p=normalizePhone(p);
+  if(!validThaiPhone(p)){alert("กรุณากรอกเบอร์โทรไทยให้ถูกต้อง เช่น 0812345678");return;}
+  const {error}=await supabaseClient.auth.signInAnonymously({options:{data:{phone:p}}});
+  if(error){alert("เข้าสู่ระบบไม่สำเร็จ: "+error.message);return;}
+  localStorage.setItem("prime_phone",p);localStorage.setItem("prime_logged_in","1");await updateLoginButton();alert("เข้าสู่ PRIME สำเร็จ");
 }
-
-async function logout() {
-  await supabaseClient.auth.signOut().catch(()=>{});
-  localStorage.removeItem("prime_phone");
-  localStorage.removeItem("prime_logged_in");
-  location.reload();
+async function logout(){await supabaseClient.auth.signOut().catch(()=>{});localStorage.removeItem("prime_phone");localStorage.removeItem("prime_logged_in");location.reload();}
+async function createTopup(){
+  const amount=Number(document.getElementById("topupAmount").value);if(!amount||amount<=0){alert("กรุณาระบุจำนวนเงิน");return;}
+  const s=await getSession();if(!s){alert("กรุณาเข้าสู่ระบบก่อน");return;}
+  alert("สร้างคำขอเติมเงิน ฿"+amount.toFixed(2)+" แล้ว\nขั้นตอนชำระเงินจริงจะต้องผูกช่องทางรับเงินของร้านก่อนจึงจะเพิ่มเครดิตอัตโนมัติได้");
+  closeModal("topupModal");
 }
-
-async function updateLoginButton() {
-  const {data} = await supabaseClient.auth.getSession();
-  const loggedIn = !!data.session;
-  const phone = localStorage.getItem("prime_phone") || "";
-
-  document.querySelectorAll(".nav-btn,.secondary").forEach(button=>{
-    button.textContent = loggedIn ? "ออกจากระบบ" : "เข้าสู่ระบบ";
-    button.onclick = loggedIn ? logout : login;
-  });
-
-  if (loggedIn) {
-    const badge=document.querySelector(".badge");
-    if (badge) badge.textContent="✦ เข้าสู่ระบบแล้ว • " + phone;
-  }
+async function checkout(){
+  const c=cart();if(!c.length){alert("ตะกร้าว่าง");return;}
+  const m=await loadMember();const total=c.reduce((s,x)=>s+Number(x.price),0);const credit=Number(m?.credit||0);
+  if(credit<total){alert("เครดิตไม่พอ\nเครดิต ฿"+credit.toFixed(2)+"\nยอดสั่งซื้อ ฿"+total.toFixed(2));return;}
+  alert("ยอดเครดิตเพียงพอแล้ว แต่การหักเงินจริงต้องใช้ฟังก์ชันฐานข้อมูลฝั่งเซิร์ฟเวอร์เพื่อป้องกันการแก้ยอดจากหน้าเว็บ");
 }
-
-async function buyProduct() {
-  const {data} = await supabaseClient.auth.getSession();
-  if (!data.session) {
-    alert("กรุณาเข้าสู่ระบบก่อนทำรายการ");
-    return;
-  }
-
-  const {data:member,error} = await supabaseClient
-    .from("members")
-    .select("credit")
-    .eq("id",data.session.user.id)
-    .maybeSingle();
-
-  if (error) {
-    alert("เชื่อมต่อข้อมูลสมาชิกไม่สำเร็จ: " + error.message);
-    return;
-  }
-
-  alert("เข้าสู่ระบบแล้ว\nเครดิตปัจจุบัน: ฿" + Number(member?.credit || 0).toFixed(2));
-}
-
 document.addEventListener("DOMContentLoaded",updateLoginButton);
 </script>
+  <div class="modal" id="topupModal">
+    <div class="modal-card">
+      <h2>เติมเงิน</h2>
+      <p style="color:#999">เลือกจำนวนเครดิต แล้วทำตามวิธีชำระเงินที่ร้านกำหนด</p>
+      <input id="topupAmount" type="number" min="1" step="1" placeholder="จำนวนเงิน (บาท)">
+      <div class="modal-actions">
+        <button class="close-btn" onclick="closeModal('topupModal')">ปิด</button>
+        <button class="primary" onclick="createTopup()">สร้างรายการเติมเงิน</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal" id="cartModal">
+    <div class="modal-card">
+      <h2>ตะกร้าสั่งซื้อ</h2>
+      <div id="cartItems"></div>
+      <div class="modal-actions">
+        <button class="close-btn" onclick="closeModal('cartModal')">ปิด</button>
+        <button class="primary" onclick="checkout()">ยืนยันสั่งซื้อ</button>
+      </div>
+    </div>
+  </div>
 </body>
 </html>
