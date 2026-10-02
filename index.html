@@ -391,7 +391,8 @@
 <script>
 const SUPABASE_URL = "https://uxatabaoxbmgswcqrptq.supabase.co";
 const SUPABASE_KEY = "sb_publishable_WIFz-7unS6IQFspqOSoj_Q_BST2Hr4o";
-const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+const supabaseClient = window.supabase ? window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY) : null;
+function requireSupabase(){ if(!supabaseClient){ alert("ระบบเชื่อมต่อฐานข้อมูลยังไม่พร้อม กรุณารีเฟรชหน้าเว็บแล้วลองใหม่"); return false; } return true; }
 
 function goProducts(){document.getElementById("products")?.scrollIntoView({behavior:"smooth",block:"start"});}
 function showSocial(name){alert(name==="LINE"?"ช่องทาง LINE สำหรับติดต่อ PRIME":"บริการ "+name+" พร้อมใช้งานใน PRIME — เลือกแพ็กเกจที่ต้องการจากหน้าร้าน");}
@@ -413,7 +414,7 @@ function renderCart(){
   el.innerHTML=c.map((x,i)=>'<div style="display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid #222"><span>'+x.name+'</span><strong>฿'+x.price+'</strong></div>').join("")+
     '<div style="margin-top:15px;font-weight:800">รวม ฿'+total.toFixed(2)+'</div>';
 }
-async function getSession(){const {data}=await supabaseClient.auth.getSession();return data?.session||null;}
+async function getSession(){if(!requireSupabase())return null;const {data}=await supabaseClient.auth.getSession();return data?.session||null;}
 async function loadMember(){
   const s=await getSession();if(!s)return null;
   const {data,error}=await supabaseClient.from("members").select("phone,credit").eq("id",s.user.id).maybeSingle();
@@ -457,6 +458,7 @@ async function updateLoginButton(){
   updateCartCount();
 }
 async function login(){
+  if(!requireSupabase())return;
   let p=prompt("กรอกเบอร์โทรศัพท์เพื่อเข้า PRIME
 ตัวอย่าง: 0812345678");if(!p)return;p=normalizePhone(p);
   if(!validThaiPhone(p)){alert("กรุณากรอกเบอร์โทรไทยให้ถูกต้อง เช่น 0812345678");return;}
@@ -527,7 +529,7 @@ async function checkout(){
   alert("สั่งซื้อสำเร็จ
 หักเครดิต ฿"+total.toFixed(2)+" แล้ว");
 }
-supabaseClient.auth.onAuthStateChange(()=>{setTimeout(updateLoginButton,0);});
+if(supabaseClient){supabaseClient.auth.onAuthStateChange(()=>{setTimeout(updateLoginButton,0);});}
 document.addEventListener("DOMContentLoaded",updateLoginButton);
 </script>
   <div class="modal" id="topupModal">
