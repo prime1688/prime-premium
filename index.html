@@ -346,7 +346,7 @@
 
   <main>
 
-    <section class="hero">
+    <section class="hero" id="heroSection">
       <div class="badge">✦ PRIME PREMIUM</div>
 
       <h1>
@@ -524,6 +524,7 @@ async function updateLoginButton(){
   const s=await getSession(),logged=!!s,phone=localStorage.getItem("prime_phone")||"";
   document.querySelectorAll(".nav-btn").forEach(b=>{b.textContent=logged?"ออกจากระบบ":"เข้าสู่ระบบ";b.dataset.action=logged?"logout":"login";});
   const bar=document.getElementById("accountBar");if(bar)bar.style.display=logged?"flex":"none";
+  const hero=document.getElementById("heroSection");if(hero)hero.style.display=logged?"none":"";
   if(logged){const m=await loadMember();document.getElementById("accountPhone").textContent=phone||m?.phone||"-";document.getElementById("accountCredit").textContent="฿"+Number(m?.credit||0).toFixed(2);}
   updateCartCount();
 }
