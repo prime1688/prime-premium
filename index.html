@@ -51,6 +51,7 @@
     .header-mini{display:none;color:#aaa;text-decoration:none;font-size:12px;white-space:nowrap}
     .header-credit{display:none;color:#d09aff;font-size:12px;font-weight:800;white-space:nowrap}
     .header-contact{display:none;color:#cfa0ff;text-decoration:none;font-size:12px;font-weight:700;white-space:nowrap}
+    .line-logo{width:18px;height:18px;vertical-align:-4px;margin-right:4px;display:inline-block;object-fit:contain}
     .nav-btn {
       border: 1px solid #333;
       background: #111;
@@ -363,7 +364,7 @@
       <div class="logo">PRIME<span>.</span></div>
       <div class="nav-actions">
         <span class="header-credit" id="headerCredit">฿0.00</span>
-        <a class="header-contact" id="headerContact" href="https://lin.ee/sZghOhY" target="_blank" rel="noopener noreferrer">LINE ติดต่อแอดมิน</a>
+        <a class="header-contact" id="headerContact" href="https://lin.ee/sZghOhY" target="_blank" rel="noopener noreferrer"><img class="line-logo" src="https://upload.wikimedia.org/wikipedia/commons/4/41/LINE_logo.svg" alt="LINE">ติดต่อแอดมิน</a>
         <button class="nav-btn" type="button" data-action="login">เข้าสู่ระบบ</button>
       </div>
     </div>
@@ -372,9 +373,9 @@
   <div class="account-bar" id="accountBar">
     <div class="account-box">สมาชิก: <strong id="accountPhone">-</strong></div>
     <button class="primary" type="button" data-action="openTopup">เติมเงิน</button>
+    <button class="secondary" type="button" data-action="openCart">ตะกร้า (<span id="cartCount">0</span>)</button>
     <button class="secondary" type="button" data-action="openTransactions">รายการเงิน</button>
     <button class="secondary" type="button" data-action="openOrders">ออเดอร์ของฉัน</button>
-    <button class="secondary" type="button" data-action="openCart">ตะกร้า (<span id="cartCount">0</span>)</button>
   </div>
 
 
