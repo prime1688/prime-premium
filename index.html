@@ -322,13 +322,6 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 
 <script>
-const SUPABASE_URL = "https://uxatabaoxbmgswcqrptq.supabase.co";
-const SUPABASE_KEY = "sb_publishable_WIFz-7unS6IQFspqOSoj_Q_BST2Hr4o";
-
-const supabaseClient = window.supabase?.createClient
-  ? window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY)
-  : null;
-
 function goProducts() {
   const products = document.getElementById("products");
   if (products) products.scrollIntoView({ behavior: "smooth" });
@@ -354,38 +347,28 @@ function setLoggedIn(phone) {
   localStorage.setItem("prime_logged_in", "1");
 }
 
-async function logout() {
-  if (supabaseClient) await supabaseClient.auth.signOut();
+function logout() {
   localStorage.removeItem("prime_phone");
   localStorage.removeItem("prime_logged_in");
   location.reload();
 }
 
-async function updateLoginButton() {
-  const buttons = document.querySelectorAll(".nav-btn, .secondary");
-  let session = null;
-
-  if (supabaseClient) {
-    const result = await supabaseClient.auth.getSession();
-    session = result.data?.session || null;
-  }
-
-  const loggedIn = !!session && localStorage.getItem("prime_logged_in") === "1";
+function updateLoginButton() {
+  const loggedIn = localStorage.getItem("prime_logged_in") === "1";
   const phone = getLoginPhone();
 
-  buttons.forEach((button) => {
-    const isLoggedIn = loggedIn;
-    button.textContent = isLoggedIn ? "ออกจากระบบ" : "เข้าสู่ระบบ";
-    button.onclick = isLoggedIn ? logout : login;
+  document.querySelectorAll(".nav-btn, .secondary").forEach((button) => {
+    button.textContent = loggedIn ? "ออกจากระบบ" : "เข้าสู่ระบบ";
+    button.onclick = loggedIn ? logout : login;
   });
 
   if (loggedIn && phone) {
     const badge = document.querySelector(".badge");
-    if (badge) badge.textContent = "✦ PRIME • " + phone;
+    if (badge) badge.textContent = "✦ เข้าสู่ระบบแล้ว • " + phone;
   }
 }
 
-async function login() {
+function login() {
   let phone = prompt("กรอกเบอร์โทรศัพท์เพื่อเข้า PRIME\nตัวอย่าง: 0812345678");
   if (!phone) return;
 
@@ -396,40 +379,16 @@ async function login() {
     return;
   }
 
-  try {
-    if (supabaseClient) {
-      const { data, error } = await supabaseClient.auth.signInAnonymously({
-        options: { data: { phone } }
-      });
-
-      if (error) {
-        console.warn("Supabase session:", error.message);
-      }
-    }
-
-    setLoggedIn(phone);
-    alert("เข้าสู่ PRIME สำเร็จ");
-    await updateLoginButton();
-  } catch (err) {
-    setLoggedIn(phone);
-    alert("เข้าสู่ PRIME สำเร็จ");
-    await updateLoginButton();
-  }
+  setLoggedIn(phone);
+  updateLoginButton();
+  alert("เข้าสู่ PRIME สำเร็จ");
 }
 
-async function buyProduct() {
-  if (!supabaseClient) {
-    alert("ระบบยังเชื่อมต่อไม่สำเร็จ");
-    return;
-  }
-
-  const { data } = await supabaseClient.auth.getSession();
-
-  if (!data?.session) {
+function buyProduct() {
+  if (localStorage.getItem("prime_logged_in") !== "1") {
     alert("กรุณาเข้าสู่ระบบก่อนทำรายการ");
     return;
   }
-
   alert("เข้าสู่ระบบแล้ว สามารถทำรายการต่อได้");
 }
 
