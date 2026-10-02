@@ -5,7 +5,33 @@ const SUPABASE_URL="https://uxatabaoxbmgswcqrptq.supabase.co",SUPABASE_KEY="sb_p
 const sb=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 const app=document.getElementById("app");
 function esc(v){return String(v??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]))}
-async function init(){const {data:{session}}=await sb.auth.getSession();if(!session){return loginBox("กรุณาเข้าสู่ระบบ PRIME ก่อน");}const {data:ok,error}=await sb.rpc("is_prime_admin");if(error||!ok){return loginBox("บัญชีนี้ไม่มีสิทธิ์แอดมิน");}render();load();}
+async function getSessionWithTimeout(ms=8000){
+  try{
+    const result=await Promise.race([
+      sb.auth.getSession(),
+      new Promise((_,reject)=>setTimeout(()=>reject(new Error("การตรวจสอบเซสชันใช้เวลานานเกินไป (8 วินาที) กรุณารีเฟรชหน้าเว็บ"))),ms))
+    ]);
+    return result?.data?.session||null;
+  }catch(e){
+    throw new Error(e?.message||"ไม่สามารถตรวจสอบเซสชันได้ กรุณารีเฟรชหน้าเว็บ");
+  }
+}
+async function init(){
+  app.innerHTML='<div class="card login"><h2>กำลังตรวจสอบสิทธิ์...</h2><div class="muted">กำลังเชื่อมต่อ PRIME Admin</div></div>';
+  try{
+    const session=await getSessionWithTimeout(8000);
+    if(!session){return loginBox("ไม่พบการเข้าสู่ระบบ กรุณากลับหน้า PRIME แล้วล็อกอินด้วย 0954321666 ก่อน");}
+    const result=await Promise.race([
+      sb.rpc("is_prime_admin"),
+      new Promise((_,reject)=>setTimeout(()=>reject(new Error("ตรวจสอบสิทธิ์แอดมินไม่สำเร็จภายใน 8 วินาที กรุณารีเฟรชหน้าเว็บ"))),8000))
+    ]);
+    if(result.error){return loginBox("ตรวจสอบสิทธิ์แอดมินไม่สำเร็จ: "+result.error.message);}
+    if(!result.data){return loginBox("บัญชีนี้ไม่มีสิทธิ์แอดมิน");}
+    render();load();
+  }catch(e){
+    loginBox(e?.message||"เกิดข้อผิดพลาดในการตรวจสอบสิทธิ์");
+  }
+}
 function loginBox(msg){app.innerHTML='<div class="card login"><h2>เข้าสู่ระบบแอดมิน</h2><p class="err">'+esc(msg)+'</p><p class="muted">เปิดหน้า PRIME หลักและเข้าสู่ระบบด้วยบัญชีแอดมิน จากนั้นกลับมาหน้านี้</p><button class="ok" onclick="location.href='./'">กลับ PRIME</button></div>'}
 function render(){app.innerHTML='<div class="card"><div class="row"><div><h2>รายการเติมเงินรออนุมัติ</h2><div class="muted">ตรวจสอบยอดโอนก่อนกดอนุมัติ</div></div><button class="no" onclick="load()">รีเฟรช</button></div></div><div id="list"></div>'}
 async function load(){const {data,error}=await sb.rpc("admin_pending_deposits");const list=document.getElementById("list");if(error){list.innerHTML='<div class="card err">'+esc(error.message)+'</div>';return}if(!data?.length){list.innerHTML='<div class="card muted">ไม่มีรายการรออนุมัติ</div>';return}list.innerHTML=data.map(x=>'<div class="card"><div class="row"><div><div class="pill">'+esc(x.phone||x.user_id)+'</div><p class="amount">฿'+Number(x.amount).toFixed(2)+'</p><div class="muted">'+new Date(x.created_at).toLocaleString("th-TH")+'</div><div class="muted">'+esc(x.description||"")+'</div></div><div class="row"><button class="ok" onclick="approve(\''+x.id+'\')">✓ อนุมัติ</button><button class="no" onclick="reject(\''+x.id+'\')">ปฏิเสธ</button></div></div></div>').join("")}
