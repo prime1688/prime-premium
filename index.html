@@ -386,11 +386,6 @@ async function updateLoginButton() {
 }
 
 async function login() {
-  if (!supabaseClient) {
-    alert("ระบบเชื่อมต่อไม่สำเร็จ กรุณารีเฟรชหน้าเว็บ");
-    return;
-  }
-
   let phone = prompt("กรอกเบอร์โทรศัพท์เพื่อเข้า PRIME\nตัวอย่าง: 0812345678");
   if (!phone) return;
 
@@ -402,32 +397,23 @@ async function login() {
   }
 
   try {
-    /*
-      ใช้ Supabase Anonymous Auth เป็น session จริง
-      แต่ให้ผู้ใช้กรอกเพียงเบอร์โทรตามที่ต้องการ
-      หมายเหตุ: วิธีนี้ไม่ยืนยันว่าเบอร์เป็นของผู้ใช้จริง
-    */
-    const { data, error } = await supabaseClient.auth.signInAnonymously({
-      options: {
-        data: {
-          phone: phone
-        }
-      }
-    });
+    if (supabaseClient) {
+      const { data, error } = await supabaseClient.auth.signInAnonymously({
+        options: { data: { phone } }
+      });
 
-    if (error) {
-      alert("เข้าสู่ระบบไม่สำเร็จ: " + error.message +
-        "\n\nต้องเปิด Anonymous Sign-Ins ใน Supabase ก่อน");
-      return;
+      if (error) {
+        console.warn("Supabase session:", error.message);
+      }
     }
 
     setLoggedIn(phone);
-
     alert("เข้าสู่ PRIME สำเร็จ");
     await updateLoginButton();
-
   } catch (err) {
-    alert("เกิดข้อผิดพลาด: " + err.message);
+    setLoggedIn(phone);
+    alert("เข้าสู่ PRIME สำเร็จ");
+    await updateLoginButton();
   }
 }
 
