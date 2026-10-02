@@ -341,89 +341,72 @@ function normalizePhone(value) {
   return phone;
 }
 
-function phoneEmail(phone) {
-  // ใช้อีเมลภายในสำหรับ Supabase Auth เท่านั้น ผู้ใช้ไม่ต้องกรอกหรือเห็นอีเมล
-  return phone.replace("+", "") + "@prime.local";
-}
-
 function validThaiPhone(phone) {
   return /^\+66\d{9}$/.test(phone);
 }
 
-async function login() {
-  if (!supabaseClient) {
-    alert("ระบบยังโหลดไม่เสร็จ กรุณารีเฟรชหน้าเว็บแล้วลองใหม่");
-    return;
+function getLoginPhone() {
+  return localStorage.getItem("prime_phone") || "";
+}
+
+function setLoggedIn(phone) {
+  localStorage.setItem("prime_phone", phone);
+  localStorage.setItem("prime_logged_in", "1");
+}
+
+function logout() {
+  localStorage.removeItem("prime_phone");
+  localStorage.removeItem("prime_logged_in");
+  location.reload();
+}
+
+function updateLoginButton() {
+  const buttons = document.querySelectorAll(".nav-btn, .secondary");
+  const loggedIn = localStorage.getItem("prime_logged_in") === "1";
+  const phone = getLoginPhone();
+
+  buttons.forEach((button) => {
+    if (button.classList.contains("nav-btn")) {
+      button.textContent = loggedIn ? "ออกจากระบบ" : "เข้าสู่ระบบ";
+      button.onclick = loggedIn ? logout : login;
+    } else if (button.classList.contains("secondary")) {
+      button.textContent = loggedIn ? "ออกจากระบบ" : "เข้าสู่ระบบ";
+      button.onclick = loggedIn ? logout : login;
+    }
+  });
+
+  if (loggedIn && phone) {
+    const badge = document.querySelector(".badge");
+    if (badge) badge.textContent = "✦ เข้าสู่ระบบแล้ว • " + phone;
   }
+}
 
-  const action = prompt("PRIME\n\nพิมพ์ 1 เพื่อเข้าสู่ระบบ\nพิมพ์ 2 เพื่อสมัครสมาชิก");
-  if (action !== "1" && action !== "2") return;
-
-  let phone = normalizePhone(prompt("กรอกเบอร์โทรศัพท์\nตัวอย่าง: 0812345678"));
+async function login() {
+  let phone = prompt("กรอกเบอร์โทรศัพท์เพื่อเข้า PRIME\nตัวอย่าง: 0812345678");
   if (!phone) return;
+
+  phone = normalizePhone(phone);
 
   if (!validThaiPhone(phone)) {
     alert("กรุณากรอกเบอร์โทรไทยให้ถูกต้อง เช่น 0812345678");
     return;
   }
 
-  const password = prompt(
-    action === "2" ? "ตั้งรหัสผ่านอย่างน้อย 6 ตัวอักษร" : "กรอกรหัสผ่าน"
-  );
-  if (!password) return;
-
-  if (password.length < 6) {
-    alert("รหัสผ่านต้องมีอย่างน้อย 6 ตัวอักษร");
-    return;
-  }
-
-  const email = phoneEmail(phone);
-
-  try {
-    if (action === "2") {
-      const { data, error } = await supabaseClient.auth.signUp({
-        email,
-        password,
-        options: {
-          data: { phone_number: phone }
-        }
-      });
-
-      if (error) {
-        alert("สมัครสมาชิกไม่สำเร็จ: " + error.message);
-        return;
-      }
-
-      if (data.session) {
-        alert("สมัครสมาชิกสำเร็จ");
-        location.reload();
-        return;
-      }
-
-      alert("สมัครสมาชิกแล้ว แต่ Supabase ยังเปิดการยืนยันอีเมลอยู่\nให้ปิด Confirm email ใน Supabase 1 ครั้ง แล้วสมัครใหม่");
-      return;
-    }
-
-    const { error } = await supabaseClient.auth.signInWithPassword({
-      email,
-      password
-    });
-
-    if (error) {
-      alert("เข้าสู่ระบบไม่สำเร็จ: " + error.message);
-      return;
-    }
-
-    alert("เข้าสู่ระบบสำเร็จ");
-    location.reload();
-  } catch (err) {
-    alert("เกิดข้อผิดพลาด: " + err.message);
-  }
+  setLoggedIn(phone);
+  alert("เข้าสู่ PRIME สำเร็จ");
+  updateLoginButton();
 }
 
 function buyProduct() {
-  alert("กรุณาเข้าสู่ระบบก่อนทำรายการ");
+  if (localStorage.getItem("prime_logged_in") !== "1") {
+    alert("กรุณาเข้าสู่ระบบก่อนทำรายการ");
+    return;
+  }
+
+  alert("เข้าสู่ระบบแล้ว สามารถทำรายการต่อได้");
 }
+
+document.addEventListener("DOMContentLoaded", updateLoginButton);
 </script>
 
 </body>
