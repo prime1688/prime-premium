@@ -585,7 +585,7 @@ async function loadSocialServices(platform){
   if(!requireSupabase())return [];
   const {data,error}=await supabaseClient.from("services").select("id,name,platform,price,min_quantity").eq("platform",platform).eq("active",true).order("id");
   if(error){alert("โหลดบริการไม่สำเร็จ: "+error.message);return [];}
-  return (data||[]).filter(x=>SOCIAL_RULES[platform]?.[x.name]).map(x=>({...x,rule:{...SOCIAL_RULES[platform][x.name],min:x.min_quantity||SOCIAL_RULES[platform][x.name].min,price:Number(x.price)}));
+  return (data||[]).filter(x=>SOCIAL_RULES[platform]?.[x.name]).map(x=>({...x,rule:{...SOCIAL_RULES[platform][x.name],min:x.min_quantity||SOCIAL_RULES[platform][x.name].min,price:Number(x.price)}}));
 }
 function formatNumber(n){return Number(n).toLocaleString("th-TH");}
 function socialTotal(qty,rule){return Math.ceil(Number(qty)/rule.min)*rule.price;}
