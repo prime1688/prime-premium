@@ -335,9 +335,26 @@ function goProducts() {
         behavior: "smooth"
     });
 }
-    function login() {
-      alert("ระบบเข้าสู่ระบบกำลังอยู่ระหว่างการตั้งค่า");
+async function login() {
+    const email = prompt("กรอกอีเมล");
+    if (!email) return;
+
+    const password = prompt("กรอกรหัสผ่าน");
+    if (!password) return;
+
+    const { error } = await supabase.auth.signInWithPassword({
+        email: email,
+        password: password
+    });
+
+    if (error) {
+        alert("เข้าสู่ระบบไม่สำเร็จ: " + error.message);
+        return;
     }
+
+    alert("เข้าสู่ระบบสำเร็จ");
+    location.reload();
+}
 
     function buyProduct() {
       alert("กรุณาเข้าสู่ระบบก่อนทำรายการ");
