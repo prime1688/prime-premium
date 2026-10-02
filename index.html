@@ -331,21 +331,19 @@ const supabaseClient = window.supabase?.createClient
 
 function goProducts() {
   const products = document.getElementById("products");
-  if (products) {
-    products.scrollIntoView({ behavior: "smooth" });
-  }
+  if (products) products.scrollIntoView({ behavior: "smooth" });
 }
 
-function normalizeThaiPhone(value) {
+function normalizePhone(value) {
   let phone = String(value || "").trim().replace(/[\s-]/g, "");
-
-  if (phone.startsWith("0")) {
-    phone = "+66" + phone.slice(1);
-  } else if (phone.startsWith("66")) {
-    phone = "+" + phone;
-  }
-
+  if (phone.startsWith("0")) phone = "+66" + phone.slice(1);
+  else if (phone.startsWith("66")) phone = "+" + phone;
   return phone;
+}
+
+function phoneEmail(phone) {
+  // ใช้อีเมลภายในสำหรับ Supabase Auth เท่านั้น ผู้ใช้ไม่ต้องกรอกหรือเห็นอีเมล
+  return phone.replace("+", "") + "@prime.local";
 }
 
 function validThaiPhone(phone) {
@@ -358,16 +356,11 @@ async function login() {
     return;
   }
 
-  const action = prompt(
-    "PRIME\n\nพิมพ์ 1 เพื่อเข้าสู่ระบบ\nพิมพ์ 2 เพื่อสมัครสมาชิก"
-  );
-
+  const action = prompt("PRIME\n\nพิมพ์ 1 เพื่อเข้าสู่ระบบ\nพิมพ์ 2 เพื่อสมัครสมาชิก");
   if (action !== "1" && action !== "2") return;
 
-  let phone = prompt("กรอกเบอร์โทรศัพท์\nตัวอย่าง: 0812345678");
+  let phone = normalizePhone(prompt("กรอกเบอร์โทรศัพท์\nตัวอย่าง: 0812345678"));
   if (!phone) return;
-
-  phone = normalizeThaiPhone(phone);
 
   if (!validThaiPhone(phone)) {
     alert("กรุณากรอกเบอร์โทรไทยให้ถูกต้อง เช่น 0812345678");
@@ -375,11 +368,8 @@ async function login() {
   }
 
   const password = prompt(
-    action === "2"
-      ? "ตั้งรหัสผ่านอย่างน้อย 6 ตัวอักษร"
-      : "กรอกรหัสผ่าน"
+    action === "2" ? "ตั้งรหัสผ่านอย่างน้อย 6 ตัวอักษร" : "กรอกรหัสผ่าน"
   );
-
   if (!password) return;
 
   if (password.length < 6) {
@@ -387,11 +377,16 @@ async function login() {
     return;
   }
 
+  const email = phoneEmail(phone);
+
   try {
     if (action === "2") {
       const { data, error } = await supabaseClient.auth.signUp({
-        phone,
-        password
+        email,
+        password,
+        options: {
+          data: { phone_number: phone }
+        }
       });
 
       if (error) {
@@ -400,20 +395,17 @@ async function login() {
       }
 
       if (data.session) {
-        alert("สมัครสมาชิกและเข้าสู่ระบบสำเร็จ");
+        alert("สมัครสมาชิกสำเร็จ");
         location.reload();
         return;
       }
 
-      alert(
-        "สมัครสมาชิกสำเร็จ แต่บัญชีต้องยืนยันเบอร์โทรก่อนใช้งาน\n" +
-        "ถ้ายังไม่ได้ตั้งค่า Phone Confirmation ให้ปิดการยืนยันเบอร์ใน Supabase"
-      );
+      alert("สมัครสมาชิกแล้ว แต่ Supabase ยังเปิดการยืนยันอีเมลอยู่\nให้ปิด Confirm email ใน Supabase 1 ครั้ง แล้วสมัครใหม่");
       return;
     }
 
     const { error } = await supabaseClient.auth.signInWithPassword({
-      phone,
+      email,
       password
     });
 
@@ -424,7 +416,6 @@ async function login() {
 
     alert("เข้าสู่ระบบสำเร็จ");
     location.reload();
-
   } catch (err) {
     alert("เกิดข้อผิดพลาด: " + err.message);
   }
