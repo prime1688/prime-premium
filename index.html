@@ -354,34 +354,43 @@ function setLoggedIn(phone) {
   localStorage.setItem("prime_logged_in", "1");
 }
 
-function logout() {
+async function logout() {
+  if (supabaseClient) await supabaseClient.auth.signOut();
   localStorage.removeItem("prime_phone");
   localStorage.removeItem("prime_logged_in");
   location.reload();
 }
 
-function updateLoginButton() {
+async function updateLoginButton() {
   const buttons = document.querySelectorAll(".nav-btn, .secondary");
-  const loggedIn = localStorage.getItem("prime_logged_in") === "1";
+  let session = null;
+
+  if (supabaseClient) {
+    const result = await supabaseClient.auth.getSession();
+    session = result.data?.session || null;
+  }
+
+  const loggedIn = !!session && localStorage.getItem("prime_logged_in") === "1";
   const phone = getLoginPhone();
 
   buttons.forEach((button) => {
-    if (button.classList.contains("nav-btn")) {
-      button.textContent = loggedIn ? "ออกจากระบบ" : "เข้าสู่ระบบ";
-      button.onclick = loggedIn ? logout : login;
-    } else if (button.classList.contains("secondary")) {
-      button.textContent = loggedIn ? "ออกจากระบบ" : "เข้าสู่ระบบ";
-      button.onclick = loggedIn ? logout : login;
-    }
+    const isLoggedIn = loggedIn;
+    button.textContent = isLoggedIn ? "ออกจากระบบ" : "เข้าสู่ระบบ";
+    button.onclick = isLoggedIn ? logout : login;
   });
 
   if (loggedIn && phone) {
     const badge = document.querySelector(".badge");
-    if (badge) badge.textContent = "✦ เข้าสู่ระบบแล้ว • " + phone;
+    if (badge) badge.textContent = "✦ PRIME • " + phone;
   }
 }
 
 async function login() {
+  if (!supabaseClient) {
+    alert("ระบบเชื่อมต่อไม่สำเร็จ กรุณารีเฟรชหน้าเว็บ");
+    return;
+  }
+
   let phone = prompt("กรอกเบอร์โทรศัพท์เพื่อเข้า PRIME\nตัวอย่าง: 0812345678");
   if (!phone) return;
 
@@ -392,13 +401,58 @@ async function login() {
     return;
   }
 
-  setLoggedIn(phone);
-  alert("เข้าสู่ PRIME สำเร็จ");
-  updateLoginButton();
+  try {
+    /*
+      ใช้ Supabase Anonymous Auth เป็น session จริง
+      แต่ให้ผู้ใช้กรอกเพียงเบอร์โทรตามที่ต้องการ
+      หมายเหตุ: วิธีนี้ไม่ยืนยันว่าเบอร์เป็นของผู้ใช้จริง
+    */
+    const { data, error } = await supabaseClient.auth.signInAnonymously({
+      options: {
+        data: {
+          phone: phone
+        }
+      }
+    });
+
+    if (error) {
+      alert("เข้าสู่ระบบไม่สำเร็จ: " + error.message +
+        "\n\nต้องเปิด Anonymous Sign-Ins ใน Supabase ก่อน");
+      return;
+    }
+
+    setLoggedIn(phone);
+
+    if (data?.user?.id) {
+      const { error: memberError } = await supabaseClient
+        .from("members")
+        .upsert(
+          { id: data.user.id, phone: phone },
+          { onConflict: "id" }
+        );
+
+      if (memberError) {
+        console.warn("บันทึกสมาชิกไม่สำเร็จ:", memberError.message);
+      }
+    }
+
+    alert("เข้าสู่ PRIME สำเร็จ");
+    await updateLoginButton();
+
+  } catch (err) {
+    alert("เกิดข้อผิดพลาด: " + err.message);
+  }
 }
 
-function buyProduct() {
-  if (localStorage.getItem("prime_logged_in") !== "1") {
+async function buyProduct() {
+  if (!supabaseClient) {
+    alert("ระบบยังเชื่อมต่อไม่สำเร็จ");
+    return;
+  }
+
+  const { data } = await supabaseClient.auth.getSession();
+
+  if (!data?.session) {
     alert("กรุณาเข้าสู่ระบบก่อนทำรายการ");
     return;
   }
