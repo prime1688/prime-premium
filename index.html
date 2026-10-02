@@ -734,6 +734,7 @@ document.addEventListener("DOMContentLoaded",()=>{
     if(!b)return;
     const a=b.dataset.action;
     if(a==="login") login();
+    else if(a==="logout") logout();
     else if(a==="goProducts") goProducts();
     else if(a==="openTopup") openTopup();
     else if(a==="openTransactions") openTransactions();
