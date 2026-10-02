@@ -457,9 +457,11 @@ async function updateLoginButton(){
   updateCartCount();
 }
 async function login(){
-  let p=prompt("กรอกเบอร์โทรศัพท์เพื่อเข้า PRIME\nตัวอย่าง: 0812345678");if(!p)return;p=normalizePhone(p);
+  let p=prompt("กรอกเบอร์โทรศัพท์เพื่อเข้า PRIME
+ตัวอย่าง: 0812345678");if(!p)return;p=normalizePhone(p);
   if(!validThaiPhone(p)){alert("กรุณากรอกเบอร์โทรไทยให้ถูกต้อง เช่น 0812345678");return;}
-  await supabaseClient.auth.signOut().catch(()=>{});\n  const {error}=await supabaseClient.auth.signInAnonymously({options:{data:{phone:p}}});
+  await supabaseClient.auth.signOut().catch(()=>{});
+  const {error}=await supabaseClient.auth.signInAnonymously({options:{data:{phone:p}}});
   if(error){alert("เข้าสู่ระบบไม่สำเร็จ: "+error.message);return;}
   localStorage.setItem("prime_phone",p);localStorage.setItem("prime_logged_in","1");await updateLoginButton();alert("เข้าสู่ PRIME สำเร็จ");
 }
@@ -483,7 +485,8 @@ async function createTopup(){
     return;
   }
 
-  alert("สร้างรายการเติมเงิน ฿"+amount.toFixed(2)+" แล้ว\nสถานะ: รอตรวจสอบการชำระเงิน");
+  alert("สร้างรายการเติมเงิน ฿"+amount.toFixed(2)+" แล้ว
+สถานะ: รอตรวจสอบการชำระเงิน");
   document.getElementById("topupAmount").value="";
   closeModal("topupModal");
   await updateLoginButton();
@@ -521,7 +524,8 @@ async function checkout(){
   saveCart([]);
   closeModal("cartModal");
   await updateLoginButton();
-  alert("สั่งซื้อสำเร็จ\nหักเครดิต ฿"+total.toFixed(2)+" แล้ว");
+  alert("สั่งซื้อสำเร็จ
+หักเครดิต ฿"+total.toFixed(2)+" แล้ว");
 }
 supabaseClient.auth.onAuthStateChange(()=>{setTimeout(updateLoginButton,0);});
 document.addEventListener("DOMContentLoaded",updateLoginButton);
