@@ -369,6 +369,18 @@
       </div>
     </section>
 
+    <section class="section" id="social">
+      <div class="section-title">ช่องทางโซเชียล</div>
+      <div class="products">
+        <div class="card"><span class="service-tag">INSTAGRAM</span><div class="icon">◎</div><h3>Instagram</h3><p>บริการสำหรับ Instagram ทั้งยอดไลค์ ยอดติดตาม และการโปรโมตคอนเทนต์</p><button class="buy" onclick="showSocial('Instagram')">ดูบริการ</button></div>
+        <div class="card"><span class="service-tag">TIKTOK</span><div class="icon">♪</div><h3>TikTok</h3><p>บริการสำหรับ TikTok ทั้งยอดไลค์ ยอดวิว และยอดติดตาม</p><button class="buy" onclick="showSocial('TikTok')">ดูบริการ</button></div>
+        <div class="card"><span class="service-tag">FACEBOOK</span><div class="icon">f</div><h3>Facebook</h3><p>บริการสำหรับ Facebook ทั้งยอดไลค์ ยอดแชร์ และการโปรโมตโพสต์</p><button class="buy" onclick="showSocial('Facebook')">ดูบริการ</button></div>
+        <div class="card"><span class="service-tag">YOUTUBE</span><div class="icon">▶</div><h3>YouTube</h3><p>บริการสำหรับ YouTube ทั้งยอดวิว ยอดไลค์ และยอดติดตามช่อง</p><button class="buy" onclick="showSocial('YouTube')">ดูบริการ</button></div>
+        <div class="card"><span class="service-tag">X</span><div class="icon">𝕏</div><h3>X</h3><p>บริการสำหรับ X ทั้งยอดไลค์ ยอดรีโพสต์ และการโปรโมตโพสต์</p><button class="buy" onclick="showSocial('X')">ดูบริการ</button></div>
+        <div class="card"><span class="service-tag">LINE</span><div class="icon">L</div><h3>LINE</h3><p>ช่องทางติดต่อ PRIME สำหรับสอบถามบริการและแจ้งปัญหา</p><button class="buy" onclick="showSocial('LINE')">ติดต่อเรา</button></div>
+      </div>
+    </section>
+
   </main>
 
   <footer class="footer">
@@ -382,6 +394,7 @@ const SUPABASE_KEY = "sb_publishable_WIFz-7unS6IQFspqOSoj_Q_BST2Hr4o";
 const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
 function goProducts(){document.getElementById("products")?.scrollIntoView({behavior:"smooth",block:"start"});}
+function showSocial(name){alert(name==="LINE"?"ช่องทาง LINE สำหรับติดต่อ PRIME":"บริการ "+name+" พร้อมใช้งานใน PRIME — เลือกแพ็กเกจที่ต้องการจากหน้าร้าน");}
 function normalizePhone(v){let p=String(v||"").trim().replace(/[\s-]/g,"");if(p.startsWith("0"))p="+66"+p.slice(1);else if(p.startsWith("66"))p="+"+p;return p;}
 function validThaiPhone(p){return /^\+66\d{9}$/.test(p);}
 function cart(){try{return JSON.parse(localStorage.getItem("prime_cart")||"[]")}catch{return[]}}
