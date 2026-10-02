@@ -412,7 +412,7 @@ async function loadTransactions(){
   if(!s)return [];
   const {data,error}=await supabaseClient
     .from("transactions")
-    .select("id,type,amount,status,note,created_at")
+    .select("id,type,amount,status,description,created_at")
     .eq("user_id",s.user.id)
     .order("created_at",{ascending:false})
     .limit(30);
@@ -433,7 +433,7 @@ async function openTransactions(){
     const amount=Number(x.amount||0).toFixed(2);
     const cls=x.status==="approved"||x.status==="completed"?"status-approved":x.status==="rejected"?"status-rejected":"status-pending";
     const date=x.created_at?new Date(x.created_at).toLocaleString("th-TH"):"-";
-    return '<div class="tx-row"><div class="tx-top"><strong>'+String(x.type||"รายการ")+'</strong><strong>฿'+amount+'</strong></div><div class="muted">'+date+' · <span class="'+cls+'">'+transactionStatus(x.status)+'</span></div><div class="muted">'+String(x.note||"")+'</div></div>';
+    return '<div class="tx-row"><div class="tx-top"><strong>'+String(x.type||"รายการ")+'</strong><strong>฿'+amount+'</strong></div><div class="muted">'+date+' · <span class="'+cls+'">'+transactionStatus(x.status)+'</span></div><div class="muted">'+String(x.description||"")+'</div></div>';
   }).join("");
 }
 async function updateLoginButton(){
@@ -446,7 +446,7 @@ async function updateLoginButton(){
 async function login(){
   let p=prompt("กรอกเบอร์โทรศัพท์เพื่อเข้า PRIME\nตัวอย่าง: 0812345678");if(!p)return;p=normalizePhone(p);
   if(!validThaiPhone(p)){alert("กรุณากรอกเบอร์โทรไทยให้ถูกต้อง เช่น 0812345678");return;}
-  const {error}=await supabaseClient.auth.signInAnonymously({options:{data:{phone:p}}});
+  await supabaseClient.auth.signOut().catch(()=>{});\n  const {error}=await supabaseClient.auth.signInAnonymously({options:{data:{phone:p}}});
   if(error){alert("เข้าสู่ระบบไม่สำเร็จ: "+error.message);return;}
   localStorage.setItem("prime_phone",p);localStorage.setItem("prime_logged_in","1");await updateLoginButton();alert("เข้าสู่ PRIME สำเร็จ");
 }
