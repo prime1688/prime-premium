@@ -268,6 +268,33 @@
       font-size: 13px;
     }
 
+
+    /* PRIME one-page layout */
+    .quick-nav{max-width:1100px;margin:14px auto 0;padding:0 20px;display:flex;gap:8px;position:sticky;top:74px;z-index:9}
+    .quick-nav a{flex:1;text-align:center;text-decoration:none;background:#111;color:#ddd;border:1px solid #292929;border-radius:11px;padding:9px 10px;font-size:13px;font-weight:800}
+    .quick-nav a:first-child{background:#1b1024;color:#d09aff;border-color:#6d3d91}
+    #social.section{padding-top:18px;padding-bottom:30px}
+    #products.section{padding-top:30px;padding-bottom:45px}
+    #social .card{padding:16px}
+    #social .card p{margin-bottom:12px}
+    #social .icon{width:42px;height:42px;margin-bottom:12px}
+    @media (max-width:600px){
+      .hero{padding:32px 16px 24px}
+      .hero h1{font-size:42px}
+      .subtitle{font-size:14px;margin:12px auto}
+      .buttons{margin-top:16px}
+      .quick-nav{top:69px;padding:0 12px;margin-top:10px}
+      .quick-nav a{padding:8px 6px;font-size:12px}
+      .section{padding-left:12px;padding-right:12px}
+      .products{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+      .card{padding:14px;border-radius:14px}
+      .card h3{font-size:16px}
+      .card p{font-size:12px;line-height:1.45}
+      #social .card{padding:13px}
+      #social .service-tag{font-size:10px}
+      #social .buy{padding:10px 6px;font-size:12px}
+    }
+
     @media (max-width: 600px) {
       .hero {
         padding-top: 60px;
@@ -297,6 +324,12 @@
     <button class="secondary" type="button" data-action="openCart">ตะกร้า (<span id="cartCount">0</span>)</button>
   </div>
 
+
+  <nav class="quick-nav" aria-label="เมนูหลัก">
+    <a href="#social">โซเชียล</a>
+    <a href="#products">สินค้าแนะนำ</a>
+  </nav>
+
   <main>
 
     <section class="hero">
@@ -320,6 +353,18 @@
         <button class="secondary" type="button" data-action="login">
           เข้าสู่ระบบ
         </button>
+      </div>
+    </section>
+
+    <section class="section" id="social">
+      <div class="section-title">ช่องทางโซเชียล</div>
+      <div class="products">
+        <div class="card"><span class="service-tag">INSTAGRAM</span><div class="icon">◎</div><h3>Instagram</h3><p>บริการสำหรับ Instagram ทั้งยอดไลค์ ยอดติดตาม และการโปรโมตคอนเทนต์</p><button class="buy" data-action="showSocial" data-name="Instagram">ดูบริการ</button></div>
+        <div class="card"><span class="service-tag">TIKTOK</span><div class="icon">♪</div><h3>TikTok</h3><p>บริการสำหรับ TikTok ทั้งยอดไลค์ ยอดวิว และยอดติดตาม</p><button class="buy" data-action="showSocial" data-name="TikTok">ดูบริการ</button></div>
+        <div class="card"><span class="service-tag">FACEBOOK</span><div class="icon">f</div><h3>Facebook</h3><p>บริการสำหรับ Facebook ทั้งยอดไลค์ ยอดแชร์ และการโปรโมตโพสต์</p><button class="buy" data-action="showSocial" data-name="Facebook">ดูบริการ</button></div>
+        <div class="card"><span class="service-tag">YOUTUBE</span><div class="icon">▶</div><h3>YouTube</h3><p>บริการสำหรับ YouTube ทั้งยอดวิว ยอดไลค์ และยอดติดตามช่อง</p><button class="buy" data-action="showSocial" data-name="YouTube">ดูบริการ</button></div>
+        <div class="card"><span class="service-tag">X</span><div class="icon">𝕏</div><h3>X</h3><p>บริการสำหรับ X ทั้งยอดไลค์ ยอดรีโพสต์ และการโปรโมตโพสต์</p><button class="buy" data-action="showSocial" data-name="X">ดูบริการ</button></div>
+        <div class="card"><span class="service-tag">LINE</span><div class="icon">L</div><h3>LINE</h3><p>ช่องทางติดต่อ PRIME สำหรับสอบถามบริการและแจ้งปัญหา</p><button class="buy" data-action="showSocial" data-name="LINE">ติดต่อเรา</button></div>
       </div>
     </section>
 
@@ -369,17 +414,7 @@
       </div>
     </section>
 
-    <section class="section" id="social">
-      <div class="section-title">ช่องทางโซเชียล</div>
-      <div class="products">
-        <div class="card"><span class="service-tag">INSTAGRAM</span><div class="icon">◎</div><h3>Instagram</h3><p>บริการสำหรับ Instagram ทั้งยอดไลค์ ยอดติดตาม และการโปรโมตคอนเทนต์</p><button class="buy" data-action="showSocial" data-name="Instagram">ดูบริการ</button></div>
-        <div class="card"><span class="service-tag">TIKTOK</span><div class="icon">♪</div><h3>TikTok</h3><p>บริการสำหรับ TikTok ทั้งยอดไลค์ ยอดวิว และยอดติดตาม</p><button class="buy" data-action="showSocial" data-name="TikTok">ดูบริการ</button></div>
-        <div class="card"><span class="service-tag">FACEBOOK</span><div class="icon">f</div><h3>Facebook</h3><p>บริการสำหรับ Facebook ทั้งยอดไลค์ ยอดแชร์ และการโปรโมตโพสต์</p><button class="buy" data-action="showSocial" data-name="Facebook">ดูบริการ</button></div>
-        <div class="card"><span class="service-tag">YOUTUBE</span><div class="icon">▶</div><h3>YouTube</h3><p>บริการสำหรับ YouTube ทั้งยอดวิว ยอดไลค์ และยอดติดตามช่อง</p><button class="buy" data-action="showSocial" data-name="YouTube">ดูบริการ</button></div>
-        <div class="card"><span class="service-tag">X</span><div class="icon">𝕏</div><h3>X</h3><p>บริการสำหรับ X ทั้งยอดไลค์ ยอดรีโพสต์ และการโปรโมตโพสต์</p><button class="buy" data-action="showSocial" data-name="X">ดูบริการ</button></div>
-        <div class="card"><span class="service-tag">LINE</span><div class="icon">L</div><h3>LINE</h3><p>ช่องทางติดต่อ PRIME สำหรับสอบถามบริการและแจ้งปัญหา</p><button class="buy" data-action="showSocial" data-name="LINE">ติดต่อเรา</button></div>
-      </div>
-    </section>
+
 
   </main>
 
