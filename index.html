@@ -318,19 +318,19 @@
   <footer class="footer">
     © 2026 PRIME Premium. All rights reserved.
   </footer>
-<!-- Load the UMD build before the application script so `window.supabase` is available. -->
+<!-- PRIME ↔ Supabase -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
-
 <script>
+const SUPABASE_URL = "https://uxatabaoxbmgswcqrptq.supabase.co";
+const SUPABASE_KEY = "sb_publishable_WIFz-7unS6IQFspqOSoj_Q_BST2Hr4o";
+const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
 function goProducts() {
-  const products = document.getElementById("products");
-  if (products) {
-    products.scrollIntoView({ behavior: "smooth", block: "start" });
-  }
+  document.getElementById("products")?.scrollIntoView({behavior:"smooth",block:"start"});
 }
 
 function normalizePhone(value) {
-  let phone = String(value || "").trim().replace(/[\s-]/g, "");
+  let phone = String(value || "").trim().replace(/[\s-]/g,"");
   if (phone.startsWith("0")) phone = "+66" + phone.slice(1);
   else if (phone.startsWith("66")) phone = "+" + phone;
   return phone;
@@ -340,40 +340,9 @@ function validThaiPhone(phone) {
   return /^\+66\d{9}$/.test(phone);
 }
 
-function getLoginPhone() {
-  return localStorage.getItem("prime_phone") || "";
-}
-
-function setLoggedIn(phone) {
-  localStorage.setItem("prime_phone", phone);
-  localStorage.setItem("prime_logged_in", "1");
-}
-
-function logout() {
-  localStorage.removeItem("prime_phone");
-  localStorage.removeItem("prime_logged_in");
-  location.reload();
-}
-
-function updateLoginButton() {
-  const loggedIn = localStorage.getItem("prime_logged_in") === "1";
-  const phone = getLoginPhone();
-
-  document.querySelectorAll(".nav-btn, .secondary").forEach((button) => {
-    button.textContent = loggedIn ? "ออกจากระบบ" : "เข้าสู่ระบบ";
-    button.onclick = loggedIn ? logout : login;
-  });
-
-  if (loggedIn && phone) {
-    const badge = document.querySelector(".badge");
-    if (badge) badge.textContent = "✦ เข้าสู่ระบบแล้ว • " + phone;
-  }
-}
-
-function login() {
+async function login() {
   let phone = prompt("กรอกเบอร์โทรศัพท์เพื่อเข้า PRIME\nตัวอย่าง: 0812345678");
   if (!phone) return;
-
   phone = normalizePhone(phone);
 
   if (!validThaiPhone(phone)) {
@@ -381,21 +350,67 @@ function login() {
     return;
   }
 
-  setLoggedIn(phone);
-  updateLoginButton();
-  alert("เข้าสู่ PRIME สำเร็จ");
+  try {
+    const {error} = await supabaseClient.auth.signInAnonymously({
+      options:{data:{phone}}
+    });
+
+    if (error) throw error;
+
+    localStorage.setItem("prime_phone",phone);
+    localStorage.setItem("prime_logged_in","1");
+    updateLoginButton();
+    alert("เข้าสู่ PRIME สำเร็จ");
+  } catch (error) {
+    alert("เข้าสู่ระบบไม่สำเร็จ: " + error.message);
+  }
 }
 
-function buyProduct() {
-  if (localStorage.getItem("prime_logged_in") !== "1") {
+async function logout() {
+  await supabaseClient.auth.signOut().catch(()=>{});
+  localStorage.removeItem("prime_phone");
+  localStorage.removeItem("prime_logged_in");
+  location.reload();
+}
+
+async function updateLoginButton() {
+  const {data} = await supabaseClient.auth.getSession();
+  const loggedIn = !!data.session;
+  const phone = localStorage.getItem("prime_phone") || "";
+
+  document.querySelectorAll(".nav-btn,.secondary").forEach(button=>{
+    button.textContent = loggedIn ? "ออกจากระบบ" : "เข้าสู่ระบบ";
+    button.onclick = loggedIn ? logout : login;
+  });
+
+  if (loggedIn) {
+    const badge=document.querySelector(".badge");
+    if (badge) badge.textContent="✦ เข้าสู่ระบบแล้ว • " + phone;
+  }
+}
+
+async function buyProduct() {
+  const {data} = await supabaseClient.auth.getSession();
+  if (!data.session) {
     alert("กรุณาเข้าสู่ระบบก่อนทำรายการ");
     return;
   }
-  alert("เข้าสู่ระบบแล้ว สามารถทำรายการต่อได้");
+
+  const {data:member,error} = await supabaseClient
+    .from("members")
+    .select("credit")
+    .eq("id",data.session.user.id)
+    .maybeSingle();
+
+  if (error) {
+    alert("เชื่อมต่อข้อมูลสมาชิกไม่สำเร็จ: " + error.message);
+    return;
+  }
+
+  alert("เข้าสู่ระบบแล้ว\nเครดิตปัจจุบัน: ฿" + Number(member?.credit || 0).toFixed(2));
 }
 
-document.addEventListener("DOMContentLoaded", updateLoginButton);
+document.addEventListener("DOMContentLoaded",updateLoginButton);
 </script>
-
 </body>
 </html>
