@@ -466,7 +466,7 @@ async function openTransactions(){
 }
 async function updateLoginButton(){
   const s=await getSession(),logged=!!s,phone=localStorage.getItem("prime_phone")||"";
-  document.querySelectorAll(".nav-btn,.secondary").forEach(b=>{if(b.classList.contains("secondary")&&b.textContent.includes("ตะกร้า"))return;b.textContent=logged?"ออกจากระบบ":"เข้าสู่ระบบ";b.onclick=logged?logout:login;});
+  document.querySelectorAll(".nav-btn").forEach(b=>{b.textContent=logged?"ออกจากระบบ":"เข้าสู่ระบบ";b.dataset.action=logged?"logout":"login";});
   const bar=document.getElementById("accountBar");if(bar)bar.style.display=logged?"flex":"none";
   if(logged){const m=await loadMember();document.getElementById("accountPhone").textContent=phone||m?.phone||"-";document.getElementById("accountCredit").textContent="฿"+Number(m?.credit||0).toFixed(2);}
   updateCartCount();
