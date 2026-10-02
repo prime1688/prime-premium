@@ -342,20 +342,46 @@ async function login() {
     return;
   }
 
-  const email = prompt("กรอกอีเมล");
-  if (!email) return;
+  let phone = prompt("กรอกเบอร์โทรศัพท์\nตัวอย่าง: 0812345678");
+  if (!phone) return;
 
-  const password = prompt("กรอกรหัสผ่าน");
-  if (!password) return;
+  phone = phone.trim().replace(/[\\s-]/g, "");
+
+  if (phone.startsWith("0")) {
+    phone = "+66" + phone.slice(1);
+  } else if (phone.startsWith("66")) {
+    phone = "+" + phone;
+  }
+
+  if (!/^\\+66\\d{9}$/.test(phone)) {
+    alert("กรุณากรอกเบอร์โทรไทยให้ถูกต้อง เช่น 0812345678");
+    return;
+  }
 
   try {
-    const { error } = await supabaseClient.auth.signInWithPassword({
-      email: email.trim(),
-      password: password
+    const { error } = await supabaseClient.auth.signInWithOtp({
+      phone: phone,
+      options: {
+        shouldCreateUser: true
+      }
     });
 
     if (error) {
-      alert("เข้าสู่ระบบไม่สำเร็จ: " + error.message);
+      alert("ส่ง OTP ไม่สำเร็จ: " + error.message);
+      return;
+    }
+
+    const otp = prompt("ส่งรหัส OTP ไปที่ " + phone + "\\nกรอกรหัส 6 หลัก");
+    if (!otp) return;
+
+    const { error: verifyError } = await supabaseClient.auth.verifyOtp({
+      phone: phone,
+      token: otp.trim(),
+      type: "sms"
+    });
+
+    if (verifyError) {
+      alert("ยืนยัน OTP ไม่สำเร็จ: " + verifyError.message);
       return;
     }
 
