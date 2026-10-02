@@ -336,16 +336,8 @@ function goProducts() {
   }
 }
 
-async function login() {
-  if (!supabaseClient) {
-    alert("ระบบยังโหลดไม่เสร็จ กรุณารีเฟรชหน้าเว็บแล้วลองใหม่");
-    return;
-  }
-
-  let phone = prompt("กรอกเบอร์โทรศัพท์\nตัวอย่าง: 0812345678");
-  if (!phone) return;
-
-  phone = phone.trim().replace(/[\\s-]/g, "");
+function normalizeThaiPhone(value) {
+  let phone = String(value || "").trim().replace(/[\s-]/g, "");
 
   if (phone.startsWith("0")) {
     phone = "+66" + phone.slice(1);
@@ -353,35 +345,80 @@ async function login() {
     phone = "+" + phone;
   }
 
-  if (!/^\\+66\\d{9}$/.test(phone)) {
+  return phone;
+}
+
+function validThaiPhone(phone) {
+  return /^\+66\d{9}$/.test(phone);
+}
+
+async function login() {
+  if (!supabaseClient) {
+    alert("ระบบยังโหลดไม่เสร็จ กรุณารีเฟรชหน้าเว็บแล้วลองใหม่");
+    return;
+  }
+
+  const action = prompt(
+    "PRIME\n\nพิมพ์ 1 เพื่อเข้าสู่ระบบ\nพิมพ์ 2 เพื่อสมัครสมาชิก"
+  );
+
+  if (action !== "1" && action !== "2") return;
+
+  let phone = prompt("กรอกเบอร์โทรศัพท์\nตัวอย่าง: 0812345678");
+  if (!phone) return;
+
+  phone = normalizeThaiPhone(phone);
+
+  if (!validThaiPhone(phone)) {
     alert("กรุณากรอกเบอร์โทรไทยให้ถูกต้อง เช่น 0812345678");
     return;
   }
 
-  try {
-    const { error } = await supabaseClient.auth.signInWithOtp({
-      phone: phone,
-      options: {
-        shouldCreateUser: true
-      }
-    });
+  const password = prompt(
+    action === "2"
+      ? "ตั้งรหัสผ่านอย่างน้อย 6 ตัวอักษร"
+      : "กรอกรหัสผ่าน"
+  );
 
-    if (error) {
-      alert("ส่ง OTP ไม่สำเร็จ: " + error.message);
+  if (!password) return;
+
+  if (password.length < 6) {
+    alert("รหัสผ่านต้องมีอย่างน้อย 6 ตัวอักษร");
+    return;
+  }
+
+  try {
+    if (action === "2") {
+      const { data, error } = await supabaseClient.auth.signUp({
+        phone,
+        password
+      });
+
+      if (error) {
+        alert("สมัครสมาชิกไม่สำเร็จ: " + error.message);
+        return;
+      }
+
+      if (data.session) {
+        alert("สมัครสมาชิกและเข้าสู่ระบบสำเร็จ");
+        location.reload();
+        return;
+      }
+
+      alert(
+        "สมัครสมาชิกสำเร็จ แต่บัญชีต้องยืนยันเบอร์โทรก่อนใช้งาน\n" +
+        "ถ้ายังไม่ได้ตั้งค่า Phone Confirmation ให้ปิดการยืนยันเบอร์ใน Supabase"
+      );
       return;
     }
 
-    const otp = prompt("ส่งรหัส OTP ไปที่ " + phone + "\\nกรอกรหัส 6 หลัก");
-    if (!otp) return;
-
-    const { error: verifyError } = await supabaseClient.auth.verifyOtp({
-      phone: phone,
-      token: otp.trim(),
-      type: "sms"
+    const { error } = await supabaseClient.auth.signInWithPassword({
+      phone,
+      password
     });
 
-    if (verifyError) {
-      alert("ยืนยัน OTP ไม่สำเร็จ: " + verifyError.message);
+    if (error) {
+      alert("เข้าสู่ระบบไม่สำเร็จ: " + error.message);
       return;
     }
 
