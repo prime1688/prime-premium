@@ -319,13 +319,22 @@
     © 2026 PRIME Premium. All rights reserved.
   </footer>
 
-  <script>
-    function goProducts() {
-      document.getElementById("products").scrollIntoView({
-        behavior: "smooth"
-      });
-    }
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
+<script>
+const SUPABASE_URL = "https://bmgswcqrptq.supabase.co";
+const SUPABASE_KEY = "sb_publishable_WIFz-7unS6IQFspqOSoj_Q_BST2Hr4o";
+
+const supabase = window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_KEY
+);
+
+function goProducts() {
+    document.getElementById("products").scrollIntoView({
+        behavior: "smooth"
+    });
+}
     function login() {
       alert("ระบบเข้าสู่ระบบกำลังอยู่ระหว่างการตั้งค่า");
     }
