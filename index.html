@@ -413,16 +413,57 @@ async function login(){
 }
 async function logout(){await supabaseClient.auth.signOut().catch(()=>{});localStorage.removeItem("prime_phone");localStorage.removeItem("prime_logged_in");location.reload();}
 async function createTopup(){
-  const amount=Number(document.getElementById("topupAmount").value);if(!amount||amount<=0){alert("กรุณาระบุจำนวนเงิน");return;}
-  const s=await getSession();if(!s){alert("กรุณาเข้าสู่ระบบก่อน");return;}
-  alert("สร้างคำขอเติมเงิน ฿"+amount.toFixed(2)+" แล้ว\nขั้นตอนชำระเงินจริงจะต้องผูกช่องทางรับเงินของร้านก่อนจึงจะเพิ่มเครดิตอัตโนมัติได้");
+  const amount=Number(document.getElementById("topupAmount").value);
+  if(!amount||amount<=0){alert("กรุณาระบุจำนวนเงิน");return;}
+  const s=await getSession();
+  if(!s){alert("กรุณาเข้าสู่ระบบก่อน");return;}
+
+  const {error}=await supabaseClient.from("transactions").insert({
+    user_id:s.user.id,
+    type:"topup",
+    amount:amount,
+    status:"pending",
+    note:"คำขอเติมเงินจากหน้า PRIME"
+  });
+
+  if(error){
+    alert("สร้างรายการเติมเงินไม่สำเร็จ: "+error.message);
+    return;
+  }
+
+  alert("สร้างรายการเติมเงิน ฿"+amount.toFixed(2)+" แล้ว\nสถานะ: รอตรวจสอบการชำระเงิน");
+  document.getElementById("topupAmount").value="";
   closeModal("topupModal");
 }
+
 async function checkout(){
-  const c=cart();if(!c.length){alert("ตะกร้าว่าง");return;}
-  const m=await loadMember();const total=c.reduce((s,x)=>s+Number(x.price),0);const credit=Number(m?.credit||0);
-  if(credit<total){alert("เครดิตไม่พอ\nเครดิต ฿"+credit.toFixed(2)+"\nยอดสั่งซื้อ ฿"+total.toFixed(2));return;}
-  alert("ยอดเครดิตเพียงพอแล้ว แต่การหักเงินจริงต้องใช้ฟังก์ชันฐานข้อมูลฝั่งเซิร์ฟเวอร์เพื่อป้องกันการแก้ยอดจากหน้าเว็บ");
+  const c=cart();
+  if(!c.length){alert("ตะกร้าว่าง");return;}
+
+  const s=await getSession();
+  if(!s){alert("กรุณาเข้าสู่ระบบก่อน");return;}
+
+  const total=c.reduce((sum,x)=>sum+Number(x.price),0);
+
+  const {data,error}=await supabaseClient.rpc("place_order",{
+    p_items:c,
+    p_total:total
+  });
+
+  if(error){
+    alert("สั่งซื้อไม่สำเร็จ: "+error.message);
+    return;
+  }
+
+  if(!data?.success){
+    alert(data?.message||"เครดิตไม่เพียงพอ");
+    return;
+  }
+
+  saveCart([]);
+  closeModal("cartModal");
+  await updateLoginButton();
+  alert("สั่งซื้อสำเร็จ\nหักเครดิต ฿"+total.toFixed(2)+" แล้ว");
 }
 document.addEventListener("DOMContentLoaded",updateLoginButton);
 </script>
