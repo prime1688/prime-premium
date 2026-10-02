@@ -395,15 +395,29 @@ const supabaseClient = window.supabase ? window.supabase.createClient(SUPABASE_U
 function requireSupabase(){ if(!supabaseClient){ alert("ระบบเชื่อมต่อฐานข้อมูลยังไม่พร้อม กรุณารีเฟรชหน้าเว็บแล้วลองใหม่"); return false; } return true; }
 
 function goProducts(){document.getElementById("products")?.scrollIntoView({behavior:"smooth",block:"start"});}
-function showSocial(name){alert(name==="LINE"?"ช่องทาง LINE สำหรับติดต่อ PRIME":"บริการ "+name+" พร้อมใช้งานใน PRIME — เลือกแพ็กเกจที่ต้องการจากหน้าร้าน");}
+const PAYMENT_QR_PAYLOAD="00020101021130840016A00000067701011201150107537000882050219AD1749906T0883804DN0318PRIMEENTERTAINMENT53037645802TH6208070400006304E5FD";
+let qrTimer=null,qrSeconds=300;
+function paymentQrUrl(){return "https://api.qrserver.com/v1/create-qr-code/?size=420x420&margin=12&data="+encodeURIComponent(PAYMENT_QR_PAYLOAD);}
+function showSocial(name){openSocialOrder(name);}
 function normalizePhone(v){let p=String(v||"").trim().replace(/[\s-]/g,"");if(p.startsWith("0"))p="+66"+p.slice(1);else if(p.startsWith("66"))p="+"+p;return p;}
 function validThaiPhone(p){return /^\+66\d{9}$/.test(p);}
 function cart(){try{return JSON.parse(localStorage.getItem("prime_cart")||"[]")}catch{return[]}}
 function saveCart(c){localStorage.setItem("prime_cart",JSON.stringify(c));updateCartCount();}
 function updateCartCount(){const n=document.getElementById("cartCount");if(n)n.textContent=cart().length;}
 function openCart(){renderCart();document.getElementById("cartModal").classList.add("show");}
-function openTopup(){document.getElementById("topupModal").classList.add("show");}
-function closeModal(id){document.getElementById(id).classList.remove("show");}
+function openTopup(){
+  const img=document.getElementById("paymentQr");
+  if(img)img.src=paymentQrUrl();
+  document.getElementById("topupModal").classList.add("show");
+  startQrTimer();
+}
+function startQrTimer(){
+  clearInterval(qrTimer); qrSeconds=300; updateQrTimer();
+  qrTimer=setInterval(()=>{qrSeconds--;updateQrTimer();if(qrSeconds<=0){clearInterval(qrTimer);closeModal("topupModal");alert("QR หมดอายุแล้ว กรุณาเปิด QR ใหม่");}},1000);
+}
+function updateQrTimer(){const el=document.getElementById("qrTimer");if(el){const m=Math.floor(qrSeconds/60),s=String(qrSeconds%60).padStart(2,"0");el.textContent=m+":"+s;}}
+
+function closeModal(id){document.getElementById(id).classList.remove("show");if(id==="topupModal")clearInterval(qrTimer);}
 function addToCart(name,price){
   if(localStorage.getItem("prime_logged_in")!=="1"){alert("กรุณาเข้าสู่ระบบก่อนสั่งซื้อ");return;}
   const c=cart();c.push({name,price});saveCart(c);alert("เพิ่ม "+name+" ลงตะกร้าแล้ว");}
@@ -474,6 +488,37 @@ async function login(){
   localStorage.setItem("prime_phone",p);localStorage.setItem("prime_logged_in","1");await updateLoginButton();alert("เข้าสู่ PRIME สำเร็จ");
 }
 async function logout(){await supabaseClient.auth.signOut().catch(()=>{});localStorage.removeItem("prime_phone");localStorage.removeItem("prime_logged_in");location.reload();}
+async function loadSocialServices(platform){
+  if(!requireSupabase())return [];
+  const {data,error}=await supabaseClient.from("services").select("id,name,platform,price").eq("platform",platform).eq("active",true).order("id");
+  if(error){alert("โหลดบริการไม่สำเร็จ: "+error.message);return [];}
+  return data||[];
+}
+async function openSocialOrder(platform){
+  const s=await getSession();
+  if(!s){alert("กรุณาเข้าสู่ระบบก่อนสั่งซื้อ");return;}
+  const list=await loadSocialServices(platform);
+  const sel=document.getElementById("socialService");
+  if(!sel)return;
+  sel.innerHTML=list.length?list.map(x=>'<option value="'+x.id+'">'+x.name+' — ฿'+Number(x.price).toFixed(2)+' / 1 หน่วย</option>').join(""):'<option value="">ยังไม่มีบริการ</option>';
+  document.getElementById("socialPlatform").textContent=platform;
+  document.getElementById("socialTargetUrl").value="";
+  document.getElementById("socialQuantity").value="1";
+  document.getElementById("socialOrderModal").classList.add("show");
+}
+async function placeSocialOrder(){
+  const serviceId=Number(document.getElementById("socialService").value);
+  const url=document.getElementById("socialTargetUrl").value.trim();
+  const qty=Number(document.getElementById("socialQuantity").value);
+  if(!serviceId||!url||!qty){alert("กรุณากรอกข้อมูลให้ครบ");return;}
+  if(!/^https?:\/\//i.test(url)){alert("กรุณาใส่ลิงก์ที่ขึ้นต้นด้วย https:// หรือ http://");return;}
+  const {data,error}=await supabaseClient.rpc("place_social_order",{p_service_id:serviceId,p_target_url:url,p_quantity:qty});
+  if(error){alert("สั่งซื้อไม่สำเร็จ: "+error.message);return;}
+  if(!data?.success){alert(data?.message||"เครดิตไม่เพียงพอ");return;}
+  closeModal("socialOrderModal");
+  await updateLoginButton();
+  alert("สั่งซื้อสำเร็จ\nยอดที่หัก ฿"+Number(data.total).toFixed(2)+"\nเครดิตคงเหลือ ฿"+Number(data.credit).toFixed(2));
+}
 async function createTopup(){
   const amount=Number(document.getElementById("topupAmount").value);
   if(!amount||amount<=0){alert("กรุณาระบุจำนวนเงิน");return;}
@@ -550,17 +595,23 @@ document.addEventListener("DOMContentLoaded",()=>{
     else if(a==="closeModal") closeModal(b.dataset.modal);
     else if(a==="createTopup") createTopup();
     else if(a==="checkout") checkout();
+    else if(a==="placeSocialOrder") placeSocialOrder();
   });
 });
 </script>
   <div class="modal" id="topupModal">
     <div class="modal-card">
-      <h2>เติมเงิน</h2>
-      <p style="color:#999">เลือกจำนวนเครดิต แล้วทำตามวิธีชำระเงินที่ร้านกำหนด</p>
-      <input id="topupAmount" type="number" min="1" step="1" placeholder="จำนวนเงิน (บาท)">
+      <h2>เติมเงินเข้า PRIME</h2>
+      <p style="color:#aaa">สแกน QR นี้เพื่อชำระเงินเข้าบัญชี PRIME</p>
+      <div style="text-align:center;background:#fff;border-radius:16px;padding:12px;margin:14px 0">
+        <img id="paymentQr" src="" alt="QR ชำระเงิน PRIME" style="width:min(100%,360px);display:block;margin:auto">
+      </div>
+      <div style="text-align:center;font-size:18px;font-weight:800;color:#d09aff">QR หมดอายุใน <span id="qrTimer">5:00</span></div>
+      <input id="topupAmount" type="number" min="1" step="1" placeholder="จำนวนเงินที่โอน (บาท)">
+      <p style="color:#888;font-size:12px;line-height:1.5">หลังโอนเงินแล้ว กรอกยอดที่โอนและกด “แจ้งชำระเงิน” รายการจะเข้าสู่สถานะรอตรวจสอบก่อนเพิ่มเครดิต</p>
       <div class="modal-actions">
         <button class="close-btn" data-action="closeModal" data-modal="topupModal">ปิด</button>
-        <button class="primary" data-action="createTopup">สร้างรายการเติมเงิน</button>
+        <button class="primary" data-action="createTopup">แจ้งชำระเงิน</button>
       </div>
     </div>
   </div>
@@ -582,6 +633,19 @@ document.addEventListener("DOMContentLoaded",()=>{
       <div class="modal-actions">
         <button class="close-btn" data-action="closeModal" data-modal="cartModal">ปิด</button>
         <button class="primary" data-action="checkout">ยืนยันสั่งซื้อ</button>
+      </div>
+    </div>
+  </div>
+<div class="modal" id="socialOrderModal">
+    <div class="modal-card">
+      <h2>สั่งซื้อบริการ <span id="socialPlatform">-</span></h2>
+      <select id="socialService"></select>
+      <input id="socialTargetUrl" type="url" placeholder="ลิงก์โพสต์ / วิดีโอ / โปรไฟล์">
+      <input id="socialQuantity" type="number" min="1" max="100" value="1" placeholder="จำนวน">
+      <p style="color:#888;font-size:12px">เลือกบริการ ใส่ลิงก์เป้าหมาย และจำนวน จากนั้นระบบจะหักเครดิตและสร้างออเดอร์ใน PRIME</p>
+      <div class="modal-actions">
+        <button class="close-btn" data-action="closeModal" data-modal="socialOrderModal">ปิด</button>
+        <button class="primary" data-action="placeSocialOrder">สั่งซื้อ</button>
       </div>
     </div>
   </div>
