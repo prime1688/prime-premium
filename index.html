@@ -549,94 +549,70 @@ async function login(){
 }
 async function logout(){await supabaseClient.auth.signOut().catch(()=>{});localStorage.removeItem("prime_phone");localStorage.removeItem("prime_logged_in");location.reload();}
 const SOCIAL_RULES={
-  Likes:{min:100,price:30,unit:"ไลค์",label:"ไลค์"},
-  Shares:{min:1000,price:50,unit:"แชร์",label:"แชร์"},
-  Views:{min:20000,price:130,unit:"วิว",label:"วิว"},
-  Followers:{min:10000,price:3699,unit:"คน",label:"ผู้ติดตาม"}
+  Instagram:{
+    Likes:{min:100,price:150,unit:"ไลค์",label:"ไลค์"},
+    Shares:{min:100,price:20,unit:"แชร์",label:"แชร์"},
+    Views:{min:10000,price:30,unit:"วิว",label:"วิว"},
+    Followers:{min:100,price:180,unit:"คน",label:"ติดตาม"}
+  },
+  Facebook:{
+    Likes:{min:100,price:40,unit:"ไลค์",label:"ไลค์"},
+    Shares:{min:100,price:30,unit:"แชร์",label:"แชร์"},
+    Views:{min:10000,price:250,unit:"วิว",label:"วิว"},
+    Followers:{min:10000,price:790,unit:"คน",label:"ติดตาม"}
+  },
+  TikTok:{
+    Likes:{min:100,price:40,unit:"ไลค์",label:"ไลค์"},
+    Shares:{min:1000,price:70,unit:"แชร์",label:"แชร์"},
+    Views:{min:1000,price:350,unit:"วิว",label:"วิว"},
+    Followers:{min:1000,price:190,unit:"คน",label:"ติดตาม"}
+  },
+  YouTube:{
+    Likes:{min:1000,price:350,unit:"ไลค์",label:"ไลค์"},
+    Shares:{min:100,price:60,unit:"แชร์",label:"แชร์"},
+    Views:{min:20000,price:3550,unit:"วิว",label:"วิว"},
+    Followers:{min:20000,price:55990,unit:"คน",label:"ติดตาม"}
+  },
+  X:{
+    Likes:{min:100,price:60,unit:"ไลค์",label:"ไลค์"},
+    Shares:{min:100,price:30,unit:"แชร์",label:"แชร์"},
+    Views:{min:5000,price:150,unit:"วิว",label:"วิว"},
+    Followers:{min:800,price:250,unit:"คน",label:"ติดตาม"}
+  }
 };
-let socialServices=[],selectedSocialService=null;
-
+let socialServices=[],selectedSocialService=null,socialPlatformCurrent="";
 async function loadSocialServices(platform){
   if(!requireSupabase())return [];
-  const {data,error}=await supabaseClient.from("services")
-    .select("id,name,platform,price").eq("platform",platform).eq("active",true).order("id");
+  const {data,error}=await supabaseClient.from("services").select("id,name,platform,price,min_quantity").eq("platform",platform).eq("active",true).order("id");
   if(error){alert("โหลดบริการไม่สำเร็จ: "+error.message);return [];}
-  return (data||[]).filter(x=>SOCIAL_RULES[x.name]);
+  return (data||[]).filter(x=>SOCIAL_RULES[platform]?.[x.name]).map(x=>({...x,rule:{...SOCIAL_RULES[platform][x.name],min:x.min_quantity||SOCIAL_RULES[platform][x.name].min,price:Number(x.price)}));
 }
-function socialRule(name){return SOCIAL_RULES[name]||{min:1,price:0,unit:"หน่วย",label:name};}
 function formatNumber(n){return Number(n).toLocaleString("th-TH");}
 function socialTotal(qty,rule){return Math.ceil(Number(qty)/rule.min)*rule.price;}
 function renderSocialServices(){
-  const el=document.getElementById("socialServiceCards");
-  if(!el)return;
-  el.innerHTML=socialServices.map(x=>{
-    const r=socialRule(x.name);
-    const active=selectedSocialService&&selectedSocialService.id===x.id;
-    return '<button type="button" class="social-service-card '+(active?"selected":"")+'" data-service-id="'+x.id+'">'+
-      '<span class="ssc-icon">'+({Likes:"♥",Shares:"↗",Views:"◉",Followers:"●"}[x.name]||"•")+'</span>'+
-      '<span class="ssc-info"><strong>'+r.label+'</strong><small>ขั้นต่ำ '+formatNumber(r.min)+' '+r.unit+'</small></span>'+
-      '<span class="ssc-price">฿'+formatNumber(r.price)+'<small>/ '+formatNumber(r.min)+'</small></span>'+
-      '<span class="ssc-check">'+(active?"✓":"")+'</span></button>';
-  }).join("");
-  el.querySelectorAll("[data-service-id]").forEach(btn=>btn.addEventListener("click",()=>{
-    selectedSocialService=socialServices.find(x=>x.id===Number(btn.dataset.serviceId))||null;
-    const q=document.getElementById("socialQuantity");
-    const r=socialRule(selectedSocialService.name);
-    q.min=r.min;q.step=r.min;q.value=r.min;
-    updateSocialSummary();renderSocialServices();
-  }));
+  const el=document.getElementById("socialServiceCards");if(!el)return;
+  el.innerHTML=socialServices.map(x=>{const r=x.rule,active=selectedSocialService?.id===x.id;return '<button type="button" class="social-service-card '+(active?"selected":"")+'" data-service-id="'+x.id+'"><span class="ssc-icon">'+({Likes:"♥",Shares:"↗",Views:"◉",Followers:"●"}[x.name]||"•")+'</span><span class="ssc-info"><strong>'+r.label+'</strong><small>ขั้นต่ำ '+formatNumber(r.min)+' '+r.unit+'</small></span><span class="ssc-price">฿'+formatNumber(r.price)+'<small>/ '+formatNumber(r.min)+'</small></span><span class="ssc-check">'+(active?"✓":"")+'</span></button>'}).join("");
+  el.querySelectorAll("[data-service-id]").forEach(btn=>btn.addEventListener("click",()=>{selectedSocialService=socialServices.find(x=>x.id===Number(btn.dataset.serviceId))||null;const q=document.getElementById("socialQuantity"),r=selectedSocialService.rule;q.min=r.min;q.step=r.min;q.value=r.min;updateSocialSummary();renderSocialServices()}));
 }
 function updateSocialSummary(){
-  if(!selectedSocialService)return;
-  const r=socialRule(selectedSocialService.name);
-  const q=Math.max(r.min,Number(document.getElementById("socialQuantity").value)||r.min);
-  const safe=Math.ceil(q/r.min)*r.min;
-  document.getElementById("socialQuantity").value=safe;
-  const total=socialTotal(safe,r);
-  const unit=document.getElementById("socialUnitLabel");
-  if(unit)unit.textContent=r.unit;
-  document.getElementById("socialQtyLabel").textContent=formatNumber(safe)+" "+r.unit;
-  document.getElementById("socialQtyLabel2").textContent=formatNumber(safe)+" "+r.unit;
-  document.getElementById("socialPriceEach").textContent="฿"+formatNumber(r.price)+" / "+formatNumber(r.min)+" "+r.unit;
-  document.getElementById("socialTotal").textContent="฿"+formatNumber(total);
-  document.getElementById("socialBuyText").textContent="สั่งซื้อ ฿"+formatNumber(total);
-  const minus=document.getElementById("socialMinus"),plus=document.getElementById("socialPlus");
-  minus.disabled=safe<=r.min;plus.disabled=false;
+  if(!selectedSocialService)return;const r=selectedSocialService.rule;
+  const q=Math.max(r.min,Number(document.getElementById("socialQuantity").value)||r.min),safe=Math.ceil(q/r.min)*r.min,total=socialTotal(safe,r);
+  document.getElementById("socialQuantity").value=safe;document.getElementById("socialUnitLabel").textContent=r.unit;document.getElementById("socialQtyLabel").textContent=formatNumber(safe)+" "+r.unit;document.getElementById("socialQtyLabel2").textContent=formatNumber(safe)+" "+r.unit;document.getElementById("socialPriceEach").textContent="฿"+formatNumber(r.price)+" / "+formatNumber(r.min)+" "+r.unit;document.getElementById("socialTotal").textContent="฿"+formatNumber(total);document.getElementById("socialBuyText").textContent="สั่งซื้อ ฿"+formatNumber(total);document.getElementById("socialMinus").disabled=safe<=r.min;
 }
-function changeSocialQuantity(direction){
-  if(!selectedSocialService)return;
-  const r=socialRule(selectedSocialService.name);
-  const q=Number(document.getElementById("socialQuantity").value)||r.min;
-  document.getElementById("socialQuantity").value=Math.max(r.min,q+(direction*r.min));
-  updateSocialSummary();
-}
+function changeSocialQuantity(direction){if(!selectedSocialService)return;const r=selectedSocialService.rule,q=Number(document.getElementById("socialQuantity").value)||r.min;document.getElementById("socialQuantity").value=Math.max(r.min,q+direction*r.min);updateSocialSummary()}
 async function openSocialOrder(platform){
-  const s=await getSession();
-  if(!s){alert("กรุณาเข้าสู่ระบบก่อนสั่งซื้อ");return;}
-  socialServices=await loadSocialServices(platform);
-  if(!socialServices.length){alert("ยังไม่มีบริการสำหรับ "+platform);return;}
-  selectedSocialService=socialServices[0];
-  document.getElementById("socialPlatform").textContent=platform;
-  document.getElementById("socialTargetUrl").value="";
-  const r=socialRule(selectedSocialService.name);
-  const q=document.getElementById("socialQuantity");
-  q.min=r.min;q.step=r.min;q.value=r.min;
-  renderSocialServices();updateSocialSummary();
-  document.getElementById("socialOrderModal").classList.add("show");
+  const s=await getSession();if(!s){alert("กรุณาเข้าสู่ระบบก่อนสั่งซื้อ");return}
+  socialPlatformCurrent=platform;socialServices=await loadSocialServices(platform);if(!socialServices.length){alert("ยังไม่มีบริการสำหรับ "+platform);return}
+  selectedSocialService=socialServices[0];document.getElementById("socialPlatform").textContent=platform;document.getElementById("socialTargetUrl").value="";
+  const q=document.getElementById("socialQuantity"),r=selectedSocialService.rule;q.min=r.min;q.step=r.min;q.value=r.min;renderSocialServices();updateSocialSummary();document.getElementById("socialOrderModal").classList.add("show");
 }
 async function placeSocialOrder(){
-  if(!selectedSocialService){alert("กรุณาเลือกบริการ");return;}
-  const url=document.getElementById("socialTargetUrl").value.trim();
-  const r=socialRule(selectedSocialService.name);
-  const qty=Math.ceil((Number(document.getElementById("socialQuantity").value)||r.min)/r.min)*r.min;
-  if(!url){alert("กรุณาใส่ลิงก์เป้าหมาย");return;}
-  if(!/^https?:\/\//i.test(url)){alert("กรุณาใส่ลิงก์ที่ขึ้นต้นด้วย https:// หรือ http://");return;}
-  const total=socialTotal(qty,r);
+  if(!selectedSocialService)return alert("กรุณาเลือกบริการ");
+  const url=document.getElementById("socialTargetUrl").value.trim(),r=selectedSocialService.rule,qty=Math.ceil((Number(document.getElementById("socialQuantity").value)||r.min)/r.min)*r.min;
+  if(!url)return alert("กรุณาใส่ลิงก์เป้าหมาย");if(!/^https?:\/\//i.test(url))return alert("กรุณาใส่ลิงก์ที่ขึ้นต้นด้วย https:// หรือ http://");
   const {data,error}=await supabaseClient.rpc("place_social_order",{p_service_id:selectedSocialService.id,p_target_url:url,p_quantity:qty});
-  if(error){alert("สั่งซื้อไม่สำเร็จ: "+error.message);return;}
-  if(!data?.success){alert(data?.message||"เครดิตไม่เพียงพอ");return;}
-  closeModal("socialOrderModal");await updateLoginButton();
-  alert("สั่งซื้อสำเร็จ\n"+r.label+" "+formatNumber(qty)+" "+r.unit+"\nยอดที่หัก ฿"+formatNumber(total)+"\nเครดิตคงเหลือ ฿"+formatNumber(data.credit));
+  if(error)return alert("สั่งซื้อไม่สำเร็จ: "+error.message);if(!data?.success)return alert(data?.message||"เครดิตไม่เพียงพอ");
+  closeModal("socialOrderModal");await updateLoginButton();alert("สั่งซื้อสำเร็จ\n"+r.label+" "+formatNumber(qty)+" "+r.unit+"\nยอดที่หัก ฿"+formatNumber(data.total)+"\nเครดิตคงเหลือ ฿"+formatNumber(data.credit));
 }
 async function createTopup(){
   const amount=Number(document.getElementById("topupAmount").value);
