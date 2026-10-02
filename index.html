@@ -324,7 +324,9 @@
 <script>
 function goProducts() {
   const products = document.getElementById("products");
-  if (products) products.scrollIntoView({ behavior: "smooth" });
+  if (products) {
+    products.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
 }
 
 function normalizePhone(value) {
