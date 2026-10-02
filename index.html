@@ -285,16 +285,16 @@
   <header class="header">
     <div class="nav">
       <div class="logo">PRIME<span>.</span></div>
-      <button class="nav-btn" type="button" onclick="login()">เข้าสู่ระบบ</button>
+      <button class="nav-btn" type="button" data-action="login">เข้าสู่ระบบ</button>
     </div>
   </header>
 
   <div class="account-bar" id="accountBar">
     <div class="account-box">สมาชิก: <strong id="accountPhone">-</strong></div>
     <div class="account-box">เครดิต: <strong id="accountCredit">฿0.00</strong></div>
-    <button class="primary" type="button" onclick="openTopup()">เติมเงิน</button>
-    <button class="secondary" type="button" onclick="openTransactions()">รายการเงิน</button>
-    <button class="secondary" type="button" onclick="openCart()">ตะกร้า (<span id="cartCount">0</span>)</button>
+    <button class="primary" type="button" data-action="openTopup">เติมเงิน</button>
+    <button class="secondary" type="button" data-action="openTransactions">รายการเงิน</button>
+    <button class="secondary" type="button" data-action="openCart">ตะกร้า (<span id="cartCount">0</span>)</button>
   </div>
 
   <main>
@@ -313,11 +313,11 @@
       </p>
 
       <div class="buttons">
-        <button class="primary" onclick="goProducts()">
+        <button class="primary" data-action="goProducts">
           ดูสินค้า
         </button>
 
-        <button class="secondary" type="button" onclick="login()">
+        <button class="secondary" type="button" data-action="login">
           เข้าสู่ระบบ
         </button>
       </div>
@@ -336,7 +336,7 @@
           <div class="icon">฿</div>
           <h3>เติมเงินเข้า PRIME</h3>
           <p>เติมเครดิตเพื่อใช้สั่งซื้อบริการในร้าน</p>
-          <button class="buy" onclick="openTopup()">เติมเงิน</button>
+          <button class="buy" data-action="openTopup">เติมเงิน</button>
         </div>
 
         <div class="card">
@@ -345,7 +345,7 @@
           <h3>บริการยอดไลค์</h3>
           <p>เลือกแพ็กเกจบริการโปรโมตยอดไลค์สำหรับโพสต์ของคุณ</p>
           <div class="price">เริ่มต้น ฿100</div>
-          <button class="buy" onclick="addToCart('บริการยอดไลค์',100)">เพิ่มลงตะกร้า</button>
+          <button class="buy" data-action="addToCart" data-name="บริการยอดไลค์" data-price="100">เพิ่มลงตะกร้า</button>
         </div>
 
         <div class="card">
@@ -354,7 +354,7 @@
           <h3>บริการยอดแชร์</h3>
           <p>เลือกแพ็กเกจบริการโปรโมตการแชร์สำหรับคอนเทนต์ของคุณ</p>
           <div class="price">เริ่มต้น ฿199</div>
-          <button class="buy" onclick="addToCart('บริการยอดแชร์',199)">เพิ่มลงตะกร้า</button>
+          <button class="buy" data-action="addToCart" data-name="บริการยอดแชร์" data-price="199">เพิ่มลงตะกร้า</button>
         </div>
 
         <div class="card">
@@ -363,7 +363,7 @@
           <h3>บริการยอดติดตาม</h3>
           <p>เลือกแพ็กเกจบริการโปรโมตผู้ติดตามสำหรับบัญชีของคุณ</p>
           <div class="price">เริ่มต้น ฿299</div>
-          <button class="buy" onclick="addToCart('บริการยอดติดตาม',299)">เพิ่มลงตะกร้า</button>
+          <button class="buy" data-action="addToCart" data-name="บริการยอดติดตาม" data-price="299">เพิ่มลงตะกร้า</button>
         </div>
 
       </div>
@@ -372,12 +372,12 @@
     <section class="section" id="social">
       <div class="section-title">ช่องทางโซเชียล</div>
       <div class="products">
-        <div class="card"><span class="service-tag">INSTAGRAM</span><div class="icon">◎</div><h3>Instagram</h3><p>บริการสำหรับ Instagram ทั้งยอดไลค์ ยอดติดตาม และการโปรโมตคอนเทนต์</p><button class="buy" onclick="showSocial('Instagram')">ดูบริการ</button></div>
-        <div class="card"><span class="service-tag">TIKTOK</span><div class="icon">♪</div><h3>TikTok</h3><p>บริการสำหรับ TikTok ทั้งยอดไลค์ ยอดวิว และยอดติดตาม</p><button class="buy" onclick="showSocial('TikTok')">ดูบริการ</button></div>
-        <div class="card"><span class="service-tag">FACEBOOK</span><div class="icon">f</div><h3>Facebook</h3><p>บริการสำหรับ Facebook ทั้งยอดไลค์ ยอดแชร์ และการโปรโมตโพสต์</p><button class="buy" onclick="showSocial('Facebook')">ดูบริการ</button></div>
-        <div class="card"><span class="service-tag">YOUTUBE</span><div class="icon">▶</div><h3>YouTube</h3><p>บริการสำหรับ YouTube ทั้งยอดวิว ยอดไลค์ และยอดติดตามช่อง</p><button class="buy" onclick="showSocial('YouTube')">ดูบริการ</button></div>
-        <div class="card"><span class="service-tag">X</span><div class="icon">𝕏</div><h3>X</h3><p>บริการสำหรับ X ทั้งยอดไลค์ ยอดรีโพสต์ และการโปรโมตโพสต์</p><button class="buy" onclick="showSocial('X')">ดูบริการ</button></div>
-        <div class="card"><span class="service-tag">LINE</span><div class="icon">L</div><h3>LINE</h3><p>ช่องทางติดต่อ PRIME สำหรับสอบถามบริการและแจ้งปัญหา</p><button class="buy" onclick="showSocial('LINE')">ติดต่อเรา</button></div>
+        <div class="card"><span class="service-tag">INSTAGRAM</span><div class="icon">◎</div><h3>Instagram</h3><p>บริการสำหรับ Instagram ทั้งยอดไลค์ ยอดติดตาม และการโปรโมตคอนเทนต์</p><button class="buy" data-action="showSocial" data-name="Instagram">ดูบริการ</button></div>
+        <div class="card"><span class="service-tag">TIKTOK</span><div class="icon">♪</div><h3>TikTok</h3><p>บริการสำหรับ TikTok ทั้งยอดไลค์ ยอดวิว และยอดติดตาม</p><button class="buy" data-action="showSocial" data-name="TikTok">ดูบริการ</button></div>
+        <div class="card"><span class="service-tag">FACEBOOK</span><div class="icon">f</div><h3>Facebook</h3><p>บริการสำหรับ Facebook ทั้งยอดไลค์ ยอดแชร์ และการโปรโมตโพสต์</p><button class="buy" data-action="showSocial" data-name="Facebook">ดูบริการ</button></div>
+        <div class="card"><span class="service-tag">YOUTUBE</span><div class="icon">▶</div><h3>YouTube</h3><p>บริการสำหรับ YouTube ทั้งยอดวิว ยอดไลค์ และยอดติดตามช่อง</p><button class="buy" data-action="showSocial" data-name="YouTube">ดูบริการ</button></div>
+        <div class="card"><span class="service-tag">X</span><div class="icon">𝕏</div><h3>X</h3><p>บริการสำหรับ X ทั้งยอดไลค์ ยอดรีโพสต์ และการโปรโมตโพสต์</p><button class="buy" data-action="showSocial" data-name="X">ดูบริการ</button></div>
+        <div class="card"><span class="service-tag">LINE</span><div class="icon">L</div><h3>LINE</h3><p>ช่องทางติดต่อ PRIME สำหรับสอบถามบริการและแจ้งปัญหา</p><button class="buy" data-action="showSocial" data-name="LINE">ติดต่อเรา</button></div>
       </div>
     </section>
 
@@ -531,6 +531,23 @@ async function checkout(){
 }
 if(supabaseClient){supabaseClient.auth.onAuthStateChange(()=>{setTimeout(updateLoginButton,0);});}
 document.addEventListener("DOMContentLoaded",updateLoginButton);
+document.addEventListener("DOMContentLoaded",()=>{ 
+  document.addEventListener("click",(event)=>{
+    const b=event.target.closest("button[data-action]");
+    if(!b)return;
+    const a=b.dataset.action;
+    if(a==="login") login();
+    else if(a==="goProducts") goProducts();
+    else if(a==="openTopup") openTopup();
+    else if(a==="openTransactions") openTransactions();
+    else if(a==="openCart") openCart();
+    else if(a==="addToCart") addToCart(b.dataset.name,Number(b.dataset.price));
+    else if(a==="showSocial") showSocial(b.dataset.name);
+    else if(a==="closeModal") closeModal(b.dataset.modal);
+    else if(a==="createTopup") createTopup();
+    else if(a==="checkout") checkout();
+  });
+});
 </script>
   <div class="modal" id="topupModal">
     <div class="modal-card">
@@ -538,8 +555,8 @@ document.addEventListener("DOMContentLoaded",updateLoginButton);
       <p style="color:#999">เลือกจำนวนเครดิต แล้วทำตามวิธีชำระเงินที่ร้านกำหนด</p>
       <input id="topupAmount" type="number" min="1" step="1" placeholder="จำนวนเงิน (บาท)">
       <div class="modal-actions">
-        <button class="close-btn" onclick="closeModal('topupModal')">ปิด</button>
-        <button class="primary" onclick="createTopup()">สร้างรายการเติมเงิน</button>
+        <button class="close-btn" data-action="closeModal" data-modal="topupModal">ปิด</button>
+        <button class="primary" data-action="createTopup">สร้างรายการเติมเงิน</button>
       </div>
     </div>
   </div>
@@ -549,7 +566,7 @@ document.addEventListener("DOMContentLoaded",updateLoginButton);
       <h2>รายการเงิน</h2>
       <div id="transactionItems"></div>
       <div class="modal-actions">
-        <button class="close-btn" onclick="closeModal('transactionModal')">ปิด</button>
+        <button class="close-btn" data-action="closeModal" data-modal="transactionModal">ปิด</button>
       </div>
     </div>
   </div>
@@ -559,8 +576,8 @@ document.addEventListener("DOMContentLoaded",updateLoginButton);
       <h2>ตะกร้าสั่งซื้อ</h2>
       <div id="cartItems"></div>
       <div class="modal-actions">
-        <button class="close-btn" onclick="closeModal('cartModal')">ปิด</button>
-        <button class="primary" onclick="checkout()">ยืนยันสั่งซื้อ</button>
+        <button class="close-btn" data-action="closeModal" data-modal="cartModal">ปิด</button>
+        <button class="primary" data-action="checkout">ยืนยันสั่งซื้อ</button>
       </div>
     </div>
   </div>
