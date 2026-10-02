@@ -1,1 +1,339 @@
-<!DOCTYPE 
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PRIME Premium</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #070707;
+      color: #ffffff;
+      min-height: 100vh;
+    }
+
+    .header {
+      padding: 22px 20px;
+      border-bottom: 1px solid #222;
+      position: sticky;
+      top: 0;
+      background: rgba(7,7,7,.95);
+      backdrop-filter: blur(12px);
+      z-index: 10;
+    }
+
+    .nav {
+      max-width: 1100px;
+      margin: auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .logo {
+      font-size: 25px;
+      font-weight: 900;
+      letter-spacing: 3px;
+    }
+
+    .logo span {
+      color: #b56cff;
+    }
+
+    .nav-btn {
+      border: 1px solid #333;
+      background: #111;
+      color: white;
+      padding: 10px 16px;
+      border-radius: 12px;
+      font-size: 14px;
+    }
+
+    .hero {
+      max-width: 1100px;
+      margin: auto;
+      padding: 80px 20px 50px;
+      text-align: center;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 8px 14px;
+      border: 1px solid #3a234e;
+      background: #170d20;
+      color: #d09aff;
+      border-radius: 999px;
+      font-size: 13px;
+      margin-bottom: 22px;
+    }
+
+    h1 {
+      font-size: clamp(42px, 10vw, 82px);
+      line-height: 1;
+      font-weight: 900;
+      letter-spacing: -3px;
+    }
+
+    h1 span {
+      color: #b56cff;
+    }
+
+    .subtitle {
+      max-width: 650px;
+      margin: 25px auto;
+      color: #999;
+      font-size: 17px;
+      line-height: 1.7;
+    }
+
+    .buttons {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 30px;
+    }
+
+    .primary {
+      background: #b56cff;
+      color: #080808;
+      border: none;
+      padding: 14px 25px;
+      border-radius: 13px;
+      font-weight: 800;
+      font-size: 15px;
+    }
+
+    .secondary {
+      background: #111;
+      color: white;
+      border: 1px solid #333;
+      padding: 14px 25px;
+      border-radius: 13px;
+      font-weight: 700;
+      font-size: 15px;
+    }
+
+    .section {
+      max-width: 1100px;
+      margin: auto;
+      padding: 30px 20px 80px;
+    }
+
+    .section-title {
+      font-size: 28px;
+      font-weight: 800;
+      margin-bottom: 22px;
+    }
+
+    .products {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+      gap: 18px;
+    }
+
+    .card {
+      background: #101010;
+      border: 1px solid #242424;
+      border-radius: 18px;
+      padding: 22px;
+      transition: .2s;
+    }
+
+    .card:hover {
+      transform: translateY(-3px);
+      border-color: #6d3d91;
+    }
+
+    .icon {
+      width: 48px;
+      height: 48px;
+      display: grid;
+      place-items: center;
+      border-radius: 14px;
+      background: #1b1024;
+      color: #c78cff;
+      font-size: 23px;
+      margin-bottom: 18px;
+    }
+
+    .card h3 {
+      font-size: 19px;
+      margin-bottom: 8px;
+    }
+
+    .card p {
+      color: #888;
+      line-height: 1.6;
+      font-size: 14px;
+      margin-bottom: 18px;
+    }
+
+    .price {
+      color: #d09aff;
+      font-size: 21px;
+      font-weight: 800;
+      margin-bottom: 15px;
+    }
+
+    .buy {
+      width: 100%;
+      padding: 12px;
+      border: none;
+      border-radius: 11px;
+      background: #b56cff;
+      color: #090909;
+      font-weight: 800;
+    }
+
+    .footer {
+      border-top: 1px solid #222;
+      padding: 30px 20px;
+      text-align: center;
+      color: #666;
+      font-size: 13px;
+    }
+
+    @media (max-width: 600px) {
+      .hero {
+        padding-top: 60px;
+      }
+
+      h1 {
+        letter-spacing: -2px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <header class="header">
+    <div class="nav">
+      <div class="logo">PRIME<span>.</span></div>
+      <button class="nav-btn" onclick="login()">เข้าสู่ระบบ</button>
+    </div>
+  </header>
+
+  <main>
+
+    <section class="hero">
+      <div class="badge">✦ PRIME PREMIUM</div>
+
+      <h1>
+        PREMIUM<br>
+        <span>EXPERIENCE</span>
+      </h1>
+
+      <p class="subtitle">
+        ระบบ PRIME Premium สำหรับจัดการสินค้าและบริการ
+        พร้อมหน้าร้านที่ใช้งานง่ายและออกแบบสำหรับมือถือ
+      </p>
+
+      <div class="buttons">
+        <button class="primary" onclick="goProducts()">
+          ดูสินค้า
+        </button>
+
+        <button class="secondary" onclick="login()">
+          เข้าสู่ระบบ
+        </button>
+      </div>
+    </section>
+
+    <section class="section" id="products">
+
+      <div class="section-title">
+        สินค้าแนะนำ
+      </div>
+
+      <div class="products">
+
+        <div class="card">
+          <div class="icon">✦</div>
+
+          <h3>สินค้า PRIME</h3>
+
+          <p>
+            สินค้าตัวอย่างสำหรับระบบ PRIME Premium
+          </p>
+
+          <div class="price">
+            ฿100
+          </div>
+
+          <button class="buy" onclick="buyProduct()">
+            ซื้อสินค้า
+          </button>
+        </div>
+
+        <div class="card">
+          <div class="icon">⚡</div>
+
+          <h3>Premium Service</h3>
+
+          <p>
+            บริการระดับ Premium สำหรับสมาชิก
+          </p>
+
+          <div class="price">
+            ฿199
+          </div>
+
+          <button class="buy" onclick="buyProduct()">
+            ซื้อสินค้า
+          </button>
+        </div>
+
+        <div class="card">
+          <div class="icon">◆</div>
+
+          <h3>VIP Service</h3>
+
+          <p>
+            บริการสำหรับผู้ใช้งานระดับ VIP
+          </p>
+
+          <div class="price">
+            ฿299
+          </div>
+
+          <button class="buy" onclick="buyProduct()">
+            ซื้อสินค้า
+          </button>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="footer">
+    © 2026 PRIME Premium. All rights reserved.
+  </footer>
+
+  <script>
+    function goProducts() {
+      document.getElementById("products").scrollIntoView({
+        behavior: "smooth"
+      });
+    }
+
+    function login() {
+      alert("ระบบเข้าสู่ระบบกำลังอยู่ระหว่างการตั้งค่า");
+    }
+
+    function buyProduct() {
+      alert("กรุณาเข้าสู่ระบบก่อนทำรายการ");
+    }
+  </script>
+
+</body>
+</html>
