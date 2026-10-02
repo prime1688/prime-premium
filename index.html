@@ -459,10 +459,10 @@ async function createTopup(){
 
   const {error}=await supabaseClient.from("transactions").insert({
     user_id:s.user.id,
-    type:"topup",
+    type:"deposit",
     amount:amount,
     status:"pending",
-    note:"คำขอเติมเงินจากหน้า PRIME"
+    description:"คำขอเติมเงินจากหน้า PRIME"
   });
 
   if(error){
