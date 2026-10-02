@@ -423,19 +423,6 @@ async function login() {
 
     setLoggedIn(phone);
 
-    if (data?.user?.id) {
-      const { error: memberError } = await supabaseClient
-        .from("members")
-        .upsert(
-          { id: data.user.id, phone: phone },
-          { onConflict: "id" }
-        );
-
-      if (memberError) {
-        console.warn("บันทึกสมาชิกไม่สำเร็จ:", memberError.message);
-      }
-    }
-
     alert("เข้าสู่ PRIME สำเร็จ");
     await updateLoginButton();
 
