@@ -251,6 +251,14 @@
     .modal-actions { display:flex; gap:10px; margin-top:12px; }
     .modal-actions button { flex:1; padding:12px; border-radius:10px; border:0; font-weight:800; }
     .close-btn { background:#222; color:#fff; }
+    .status-pending { color:#ffd166; }
+    .status-approved { color:#7ee787; }
+    .status-rejected { color:#ff7b72; }
+    .tx-row { padding:12px 0; border-bottom:1px solid #222; }
+    .tx-row:last-child { border-bottom:0; }
+    .tx-top { display:flex; justify-content:space-between; gap:10px; }
+    .muted { color:#888; font-size:13px; }
+    .empty-state { color:#888; text-align:center; padding:20px 0; }
 
     .footer {
       border-top: 1px solid #222;
@@ -285,6 +293,7 @@
     <div class="account-box">สมาชิก: <strong id="accountPhone">-</strong></div>
     <div class="account-box">เครดิต: <strong id="accountCredit">฿0.00</strong></div>
     <button class="primary" type="button" onclick="openTopup()">เติมเงิน</button>
+    <button class="secondary" type="button" onclick="openTransactions()">รายการเงิน</button>
     <button class="secondary" type="button" onclick="openCart()">ตะกร้า (<span id="cartCount">0</span>)</button>
   </div>
 
@@ -395,7 +404,37 @@ async function getSession(){const {data}=await supabaseClient.auth.getSession();
 async function loadMember(){
   const s=await getSession();if(!s)return null;
   const {data,error}=await supabaseClient.from("members").select("phone,credit").eq("id",s.user.id).maybeSingle();
-  if(error)return null;return data;
+  if(error){console.error("loadMember:",error);return null;}
+  return data;
+}
+async function loadTransactions(){
+  const s=await getSession();
+  if(!s)return [];
+  const {data,error}=await supabaseClient
+    .from("transactions")
+    .select("id,type,amount,status,note,created_at")
+    .eq("user_id",s.user.id)
+    .order("created_at",{ascending:false})
+    .limit(30);
+  if(error){console.error("loadTransactions:",error);return [];}
+  return data||[];
+}
+function transactionStatus(status){
+  const map={pending:"รอตรวจสอบ",approved:"สำเร็จ",rejected:"ไม่อนุมัติ",completed:"สำเร็จ"};
+  return map[status]||status||"ไม่ทราบสถานะ";
+}
+async function openTransactions(){
+  const el=document.getElementById("transactionItems");
+  el.innerHTML='<div class="empty-state">กำลังโหลด...</div>';
+  document.getElementById("transactionModal").classList.add("show");
+  const rows=await loadTransactions();
+  if(!rows.length){el.innerHTML='<div class="empty-state">ยังไม่มีรายการเงิน</div>';return;}
+  el.innerHTML=rows.map(x=>{
+    const amount=Number(x.amount||0).toFixed(2);
+    const cls=x.status==="approved"||x.status==="completed"?"status-approved":x.status==="rejected"?"status-rejected":"status-pending";
+    const date=x.created_at?new Date(x.created_at).toLocaleString("th-TH"):"-";
+    return '<div class="tx-row"><div class="tx-top"><strong>'+String(x.type||"รายการ")+'</strong><strong>฿'+amount+'</strong></div><div class="muted">'+date+' · <span class="'+cls+'">'+transactionStatus(x.status)+'</span></div><div class="muted">'+String(x.note||"")+'</div></div>';
+  }).join("");
 }
 async function updateLoginButton(){
   const s=await getSession(),logged=!!s,phone=localStorage.getItem("prime_phone")||"";
@@ -434,6 +473,7 @@ async function createTopup(){
   alert("สร้างรายการเติมเงิน ฿"+amount.toFixed(2)+" แล้ว\nสถานะ: รอตรวจสอบการชำระเงิน");
   document.getElementById("topupAmount").value="";
   closeModal("topupModal");
+  await updateLoginButton();
 }
 
 async function checkout(){
@@ -451,7 +491,12 @@ async function checkout(){
   });
 
   if(error){
-    alert("สั่งซื้อไม่สำเร็จ: "+error.message);
+    const msg=String(error.message||"");
+    if(msg.includes("place_order")||msg.includes("function")){
+      alert("ระบบสั่งซื้อยังไม่พร้อม: ต้องสร้างฟังก์ชัน place_order ใน Supabase ก่อน");
+    }else{
+      alert("สั่งซื้อไม่สำเร็จ: "+msg);
+    }
     return;
   }
 
@@ -465,6 +510,7 @@ async function checkout(){
   await updateLoginButton();
   alert("สั่งซื้อสำเร็จ\nหักเครดิต ฿"+total.toFixed(2)+" แล้ว");
 }
+supabaseClient.auth.onAuthStateChange(()=>{setTimeout(updateLoginButton,0);});
 document.addEventListener("DOMContentLoaded",updateLoginButton);
 </script>
   <div class="modal" id="topupModal">
@@ -475,6 +521,16 @@ document.addEventListener("DOMContentLoaded",updateLoginButton);
       <div class="modal-actions">
         <button class="close-btn" onclick="closeModal('topupModal')">ปิด</button>
         <button class="primary" onclick="createTopup()">สร้างรายการเติมเงิน</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal" id="transactionModal">
+    <div class="modal-card">
+      <h2>รายการเงิน</h2>
+      <div id="transactionItems"></div>
+      <div class="modal-actions">
+        <button class="close-btn" onclick="closeModal('transactionModal')">ปิด</button>
       </div>
     </div>
   </div>
