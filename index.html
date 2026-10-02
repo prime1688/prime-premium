@@ -318,48 +318,59 @@
   <footer class="footer">
     © 2026 PRIME Premium. All rights reserved.
   </footer>
-
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 
 <script>
 const SUPABASE_URL = "https://bmgswcqrptq.supabase.co";
 const SUPABASE_KEY = "sb_publishable_WIFz-7unS6IQFspqOSoj_Q_BST2Hr4o";
 
-const supabase = window.supabase.createClient(
-    SUPABASE_URL,
-    SUPABASE_KEY
-);
-
 function goProducts() {
-    document.getElementById("products").scrollIntoView({
-        behavior: "smooth"
-    });
+  const products = document.getElementById("products");
+  if (products) {
+    products.scrollIntoView({ behavior: "smooth" });
+  }
 }
+
 async function login() {
-    const email = prompt("กรอกอีเมล");
-    if (!email) return;
+  const email = prompt("กรอกอีเมล");
+  if (!email) return;
 
-    const password = prompt("กรอกรหัสผ่าน");
-    if (!password) return;
+  const password = prompt("กรอกรหัสผ่าน");
+  if (!password) return;
 
-    const { error } = await supabase.auth.signInWithPassword({
-        email: email,
-        password: password
+  if (!window.supabase || !window.supabase.createClient) {
+    alert("ระบบยังโหลดไม่เสร็จ กรุณารีเฟรชหน้าเว็บแล้วลองใหม่");
+    return;
+  }
+
+  try {
+    const client = window.supabase.createClient(
+      SUPABASE_URL,
+      SUPABASE_KEY
+    );
+
+    const { error } = await client.auth.signInWithPassword({
+      email: email.trim(),
+      password: password
     });
 
     if (error) {
-        alert("เข้าสู่ระบบไม่สำเร็จ: " + error.message);
-        return;
+      alert("เข้าสู่ระบบไม่สำเร็จ: " + error.message);
+      return;
     }
 
     alert("เข้าสู่ระบบสำเร็จ");
     location.reload();
+
+  } catch (err) {
+    alert("เกิดข้อผิดพลาด: " + err.message);
+  }
 }
 
-    function buyProduct() {
-      alert("กรุณาเข้าสู่ระบบก่อนทำรายการ");
-    }
-  </script>
+function buyProduct() {
+  alert("กรุณาเข้าสู่ระบบก่อนทำรายการ");
+}
+</script>
 
 </body>
 </html>
