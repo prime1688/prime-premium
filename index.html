@@ -218,7 +218,7 @@
   <header class="header">
     <div class="nav">
       <div class="logo">PRIME<span>.</span></div>
-      <button class="nav-btn" onclick="login()">เข้าสู่ระบบ</button>
+      <button class="nav-btn" type="button" onclick="login()">เข้าสู่ระบบ</button>
     </div>
   </header>
 
@@ -242,7 +242,7 @@
           ดูสินค้า
         </button>
 
-        <button class="secondary" onclick="login()">
+        <button class="secondary" type="button" onclick="login()">
           เข้าสู่ระบบ
         </button>
       </div>
@@ -318,11 +318,16 @@
   <footer class="footer">
     © 2026 PRIME Premium. All rights reserved.
   </footer>
+<!-- Load the UMD build before the application script so `window.supabase` is available. -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 
 <script>
 const SUPABASE_URL = "https://bmgswcqrptq.supabase.co";
 const SUPABASE_KEY = "sb_publishable_WIFz-7unS6IQFspqOSoj_Q_BST2Hr4o";
+
+const supabaseClient = window.supabase?.createClient
+  ? window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY)
+  : null;
 
 function goProducts() {
   const products = document.getElementById("products");
@@ -332,24 +337,19 @@ function goProducts() {
 }
 
 async function login() {
+  if (!supabaseClient) {
+    alert("ระบบยังโหลดไม่เสร็จ กรุณารีเฟรชหน้าเว็บแล้วลองใหม่");
+    return;
+  }
+
   const email = prompt("กรอกอีเมล");
   if (!email) return;
 
   const password = prompt("กรอกรหัสผ่าน");
   if (!password) return;
 
-  if (!window.supabase || !window.supabase.createClient) {
-    alert("ระบบยังโหลดไม่เสร็จ กรุณารีเฟรชหน้าเว็บแล้วลองใหม่");
-    return;
-  }
-
   try {
-    const client = window.supabase.createClient(
-      SUPABASE_URL,
-      SUPABASE_KEY
-    );
-
-    const { error } = await client.auth.signInWithPassword({
+    const { error } = await supabaseClient.auth.signInWithPassword({
       email: email.trim(),
       password: password
     });
