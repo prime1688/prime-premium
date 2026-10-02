@@ -487,8 +487,7 @@ async function createTopup(){
     return;
   }
 
-  alert("สร้างรายการเติมเงิน ฿"+amount.toFixed(2)+" แล้ว
-สถานะ: รอตรวจสอบการชำระเงิน");
+  alert("สร้างรายการเติมเงิน ฿"+amount.toFixed(2)+" แล้ว\nสถานะ: รอตรวจสอบการชำระเงิน");
   document.getElementById("topupAmount").value="";
   closeModal("topupModal");
   await updateLoginButton();
@@ -526,8 +525,7 @@ async function checkout(){
   saveCart([]);
   closeModal("cartModal");
   await updateLoginButton();
-  alert("สั่งซื้อสำเร็จ
-หักเครดิต ฿"+total.toFixed(2)+" แล้ว");
+  alert("สั่งซื้อสำเร็จ\nหักเครดิต ฿"+total.toFixed(2)+" แล้ว");
 }
 if(supabaseClient){supabaseClient.auth.onAuthStateChange(()=>{setTimeout(updateLoginButton,0);});}
 document.addEventListener("DOMContentLoaded",updateLoginButton);
