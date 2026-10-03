@@ -720,7 +720,44 @@
     .quick-nav{display:none!important}
     @media(max-width:900px){.prime-nav{padding:10px 12px;gap:8px}.prime-brand{min-width:125px;height:42px}.prime-brand-logo{height:42px;max-width:125px}.prime-menu{overflow-x:auto;justify-content:flex-start;scrollbar-width:none}.prime-menu::-webkit-scrollbar{display:none}.prime-menu-item{font-size:11px;padding:9px 10px}.prime-menu-item span{font-size:15px}.prime-user-box{padding:5px}.prime-credit,.prime-avatar{display:none}.prime-line{width:34px;height:34px}.prime-login{padding:8px 9px!important;font-size:11px!important}.prime-account{padding:10px 12px!important}.prime-carousel{padding:0 10px!important}.promo-thumbs{gap:6px}.promo-thumb{height:64px;border-radius:9px}}
     @media(max-width:600px){.prime-nav{display:block;padding:10px}.prime-brand{display:block;height:38px;margin-bottom:9px}.prime-brand-logo{height:38px;max-width:125px}.prime-menu{width:100%;gap:5px}.prime-menu-item{font-size:10px;padding:8px 9px}.prime-menu-item em{font-size:6px}.prime-user-box{position:absolute;right:9px;top:9px;background:transparent;border:0}.prime-login{font-size:10px!important}.prime-account{padding-top:9px!important}.prime-carousel .promo-stage{aspect-ratio:1320/484!important}.prime-carousel .promo-panel{border-radius:16px!important}.promo-thumbs{grid-template-columns:repeat(5,1fr);gap:4px}.promo-thumb{height:48px;border-radius:7px}}
-  </style>
+  
+/* PRIME STORE - premium recommended products */
+#products.prime-store{max-width:1180px;margin:0 auto;padding:42px 20px 70px;scroll-margin-top:90px}
+.prime-store-head{display:flex;align-items:flex-end;justify-content:space-between;gap:18px;margin-bottom:18px}
+.prime-store-title{font-size:34px;font-weight:950;color:#fff;text-shadow:0 0 22px rgba(181,108,255,.38);margin:0}
+.prime-store-sub{color:#a99ab4;font-size:14px;margin:6px 0 0}
+.prime-store-search{width:min(520px,100%);display:flex;align-items:center;gap:10px;background:#09070d;border:1px solid #6e35a5;border-radius:16px;padding:11px 15px;box-shadow:0 0 24px rgba(145,65,220,.14)}
+.prime-store-search span{font-size:21px;color:#d58aff}.prime-store-search input{width:100%;border:0;outline:0;background:transparent;color:#fff;font-size:14px}
+.prime-store-tabs{display:flex;gap:9px;overflow:auto;padding:3px 0 15px;scrollbar-width:none}
+.prime-store-tabs::-webkit-scrollbar{display:none}
+.prime-store-tab{flex:0 0 auto;border:1px solid #29212f;background:#0d0a11;color:#cfc4d6;border-radius:999px;padding:10px 16px;font-weight:850;font-size:13px;cursor:pointer}
+.prime-store-tab.active{background:linear-gradient(135deg,#d58aff,#7e35cf);border-color:#d58aff;color:#09050d;box-shadow:0 0 22px rgba(181,108,255,.34)}
+.prime-store-featured{display:grid;grid-template-columns:1.05fr 1fr 1fr;gap:14px;margin:6px 0 28px}
+.prime-feature{min-height:170px;border:1px solid #5e2b89;border-radius:20px;padding:20px;position:relative;overflow:hidden;background:radial-gradient(circle at 80% 20%,rgba(181,108,255,.22),transparent 42%),linear-gradient(135deg,#1b0927,#09070d 72%);box-shadow:inset 0 0 30px rgba(132,50,198,.08),0 0 25px rgba(109,47,160,.08)}
+.prime-feature.sale{background:radial-gradient(circle at 80% 25%,rgba(255,74,178,.2),transparent 40%),linear-gradient(135deg,#250b2d,#09070d 72%)}
+.prime-feature.info{background:radial-gradient(circle at 85% 20%,rgba(108,78,255,.22),transparent 40%),linear-gradient(135deg,#130c2a,#09070d 72%)}
+.prime-feature h3{margin:0 0 8px;font-size:21px;color:#fff}.prime-feature p{margin:0;color:#c8b9d2;font-size:13px;line-height:1.55;max-width:330px}
+.prime-feature .feature-icon{font-size:42px;margin-bottom:8px;filter:drop-shadow(0 0 12px rgba(213,138,255,.7))}
+.prime-feature .feature-btn{margin-top:14px;border:1px solid #a95ff0;background:#160b20;color:#e6c7ff;border-radius:10px;padding:9px 14px;font-weight:900;cursor:pointer}
+.prime-sale-percent{color:#ff72c8;font-size:24px;font-weight:950;margin-top:12px}.prime-sale-timer{display:flex;gap:7px;margin-top:12px}.prime-time-box{min-width:45px;text-align:center;padding:6px 5px;border-radius:9px;background:#09070d;border:1px solid #40204f;color:#fff;font-weight:900}.prime-time-box small{display:block;color:#8d7b98;font-size:8px;font-weight:700}
+.prime-section-label{display:flex;align-items:end;justify-content:space-between;margin:22px 0 12px}.prime-section-label h3{margin:0;color:#fff;font-size:24px}.prime-section-label p{margin:4px 0 0;color:#8f8297;font-size:12px}.prime-see-all{color:#c982ff;font-size:12px;font-weight:900}
+.prime-product-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.prime-product-card{position:relative;overflow:hidden;border:1px solid #302337;border-radius:18px;padding:15px;background:linear-gradient(180deg,#100b14,#08070b);transition:.22s;min-width:0}
+.prime-product-card:hover{transform:translateY(-4px);border-color:#9d4ee2;box-shadow:0 10px 35px rgba(134,52,190,.2)}
+.prime-product-card.is-hidden{display:none}
+.prime-badge{position:absolute;left:11px;top:10px;padding:5px 8px;border-radius:999px;font-size:9px;font-weight:950;color:#fff;background:#ff4d72;box-shadow:0 0 14px rgba(255,77,114,.3)}.prime-badge.gold{background:#e8b83e;color:#160f00}.prime-badge.pink{background:#e23cae}.prime-badge.purple{background:#8f4be8}
+.prime-product-icon{height:92px;border-radius:14px;display:grid;place-items:center;font-size:48px;background:radial-gradient(circle,rgba(181,108,255,.24),transparent 58%),#100b17;border:1px solid #281735;margin-bottom:12px}
+.prime-product-card h4{margin:0;color:#fff;font-size:16px}.prime-product-desc{color:#8e8395;font-size:11px;margin:5px 0 8px}.prime-rating{color:#ffd34e;font-size:11px;font-weight:900}.prime-rating span{color:#777}
+.prime-price{font-size:19px;color:#d78aff;font-weight:950;margin:9px 0}.prime-price small{color:#8d8294;font-size:10px;font-weight:700}
+.prime-select-btn{width:100%;border:1px solid #d19aff;border-radius:11px;padding:10px;background:linear-gradient(135deg,#a74ef1,#6931aa);color:#09050d;font-weight:950;cursor:pointer}
+.prime-platform-wrap{margin-top:28px}.prime-platform-tabs{display:flex;gap:8px;overflow:auto;padding-bottom:10px;scrollbar-width:none}.prime-platform-tabs::-webkit-scrollbar{display:none}
+.prime-mini-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px}
+.prime-mini-card{border:1px solid #29202f;border-radius:14px;background:#0b090e;padding:12px}.prime-mini-card .mini-status{font-size:8px;color:#6dff9a;font-weight:900}.prime-mini-card h5{color:#eee;margin:9px 0 5px;font-size:12px}.prime-mini-card p{color:#7f7487;font-size:10px;margin:0 0 9px}.prime-mini-card strong{color:#d68aff}.prime-mini-card button{width:100%;margin-top:8px;border:1px solid #8d45c7;background:#160d1d;color:#dcb0ff;border-radius:9px;padding:8px;font-size:10px;font-weight:900;cursor:pointer}
+.prime-benefits{margin-top:20px;border:1px solid #4c2864;border-radius:17px;background:linear-gradient(135deg,#130b1c,#09070d);padding:16px;display:grid;grid-template-columns:repeat(5,1fr);gap:12px}.prime-benefit{display:flex;align-items:center;gap:9px;color:#d9cedf;font-size:11px}.prime-benefit b{display:block;color:#fff;font-size:12px}.prime-benefit i{font-style:normal;font-size:23px;color:#c77cff;filter:drop-shadow(0 0 8px rgba(199,124,255,.5))}
+@media(max-width:850px){.prime-store-featured{grid-template-columns:1fr}.prime-product-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.prime-mini-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.prime-benefits{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:600px){#products.prime-store{padding:30px 12px 50px}.prime-store-head{display:block}.prime-store-title{font-size:28px}.prime-store-search{margin-top:14px}.prime-feature{min-height:145px;padding:16px}.prime-feature h3{font-size:18px}.prime-product-grid{gap:9px}.prime-product-card{padding:11px;border-radius:15px}.prime-product-icon{height:78px;font-size:39px}.prime-product-card h4{font-size:14px}.prime-price{font-size:17px}.prime-benefits{grid-template-columns:1fr 1fr}.prime-benefit{font-size:9px}.prime-benefit b{font-size:10px}}
+
+</style>
 </head>
 
 <body>
@@ -832,43 +869,99 @@
       </div>
     </section>
 
-    <section class="section" id="products">
+    <section class="section prime-store" id="products">
+  <div class="prime-store-head">
+    <div>
+      <h2 class="prime-store-title">✨ สินค้าแนะนำ</h2>
+      <p class="prime-store-sub">บริการคุณภาพสำหรับการเติบโตของโซเชียล พร้อมแพ็กเกจให้เลือกตามต้องการ</p>
+    </div>
+    <label class="prime-store-search"><span>⌕</span><input id="primeProductSearch" type="search" placeholder="ค้นหาสินค้า เช่น TikTok Views..." oninput="filterPrimeProducts(this.value)"></label>
+  </div>
 
-      <div class="section-title">
-        สินค้าแนะนำ
-      </div>
+  <div class="prime-store-tabs">
+    <button class="prime-store-tab active" type="button" onclick="filterPrimeProducts('', 'all', this)">ทั้งหมด</button>
+    <button class="prime-store-tab" type="button" onclick="filterPrimeProducts('', 'popular', this)">🔥 ยอดนิยม</button>
+    <button class="prime-store-tab" type="button" onclick="filterPrimeProducts('', 'sale', this)">⚡ โปรโมชั่น</button>
+    <button class="prime-store-tab" type="button" onclick="filterPrimeProducts('', 'Instagram', this)">◎ Instagram</button>
+    <button class="prime-store-tab" type="button" onclick="filterPrimeProducts('', 'TikTok', this)">♪ TikTok</button>
+    <button class="prime-store-tab" type="button" onclick="filterPrimeProducts('', 'Facebook', this)">f Facebook</button>
+    <button class="prime-store-tab" type="button" onclick="filterPrimeProducts('', 'YouTube', this)">▶ YouTube</button>
+    <button class="prime-store-tab" type="button" onclick="filterPrimeProducts('', 'X', this)">𝕏 X</button>
+    <button class="prime-store-tab" type="button" onclick="filterPrimeProducts('', 'LINE', this)">● LINE</button>
+  </div>
 
-      <div class="products">
+  <div class="prime-store-featured">
+    <article class="prime-feature">
+      <div class="feature-icon">🏆</div>
+      <h3>สินค้ายอดนิยมประจำสัปดาห์</h3>
+      <p>บริการที่ลูกค้าเลือกใช้มากที่สุด คัดแพ็กเกจยอดนิยมให้เลือกได้ทันที</p>
+      <button class="feature-btn" type="button" onclick="filterPrimeProducts('', 'popular')">ดูทั้งหมด →</button>
+    </article>
+    <article class="prime-feature sale">
+      <div class="feature-icon">⚡</div>
+      <h3>FLASH SALE</h3>
+      <p>โปรโมชั่นพิเศษสำหรับแพ็กเกจที่ร่วมรายการ</p>
+      <div class="prime-sale-percent">ลดสูงสุด 50%</div>
+      <div class="prime-sale-timer"><div class="prime-time-box"><b id="shopHours">02</b><small>ชั่วโมง</small></div><div class="prime-time-box"><b id="shopMinutes">35</b><small>นาที</small></div><div class="prime-time-box"><b id="shopSeconds">18</b><small>วินาที</small></div></div>
+    </article>
+    <article class="prime-feature info">
+      <div class="feature-icon">💜</div>
+      <h3>บริการคุณภาพ PRIME</h3>
+      <p>เลือกบริการได้ง่าย มีสถานะสินค้า ราคา และรายละเอียดก่อนสั่งซื้อ</p>
+      <button class="feature-btn" type="button" onclick="goProducts()">ดูสินค้า →</button>
+    </article>
+  </div>
 
-        <div class="card" data-viewer-key="product-like">
-          <span class="service-tag">LIKE</span>
-          <div class="icon">♥</div>
-          <h3>บริการยอดไลค์</h3>
-          <p>เลือกแพ็กเกจบริการโปรโมตยอดไลค์สำหรับโพสต์ของคุณ</p>
-          <div class="price">เริ่มต้น ฿100</div>
-          <button class="buy" data-action="addToCart" data-name="บริการยอดไลค์" data-price="100">เพิ่มลงตะกร้า</button>
-        </div>
+  <div class="prime-section-label">
+    <div><h3>🔥 สินค้ายอดนิยม</h3><p>บริการที่ลูกค้าเลือกใช้งานบ่อย</p></div><span class="prime-see-all">ดูทั้งหมด →</span>
+  </div>
 
-        <div class="card" data-viewer-key="product-share">
-          <span class="service-tag">SHARE</span>
-          <div class="icon">↗</div>
-          <h3>บริการยอดแชร์</h3>
-          <p>เลือกแพ็กเกจบริการโปรโมตการแชร์สำหรับคอนเทนต์ของคุณ</p>
-          <div class="price">เริ่มต้น ฿199</div>
-          <button class="buy" data-action="addToCart" data-name="บริการยอดแชร์" data-price="199">เพิ่มลงตะกร้า</button>
-        </div>
+  <div class="prime-product-grid" id="primeProductGrid">
+    <article class="prime-product-card" data-platform="Instagram" data-tags="popular sale">
+      <span class="prime-badge">🔥 ขายดี</span><div class="prime-product-icon">◎</div><h4>Instagram Likes</h4><p class="prime-product-desc">เพิ่มยอดไลค์โพสต์ Instagram</p><div class="prime-rating">★ 4.9 <span>(1.2K)</span></div><div class="prime-price"><small>เริ่มต้น </small>฿10</div>
+      <button class="prime-select-btn" type="button" data-action="showSocial" data-name="Instagram">เลือกแพ็กเกจ →</button>
+    </article>
+    <article class="prime-product-card" data-platform="TikTok" data-tags="popular">
+      <span class="prime-badge gold">★ แนะนำ</span><div class="prime-product-icon">♪</div><h4>TikTok Views</h4><p class="prime-product-desc">เพิ่มยอดวิว TikTok</p><div class="prime-rating">★ 4.8 <span>(2.1K)</span></div><div class="prime-price"><small>เริ่มต้น </small>฿15</div>
+      <button class="prime-select-btn" type="button" data-action="showSocial" data-name="TikTok">เลือกแพ็กเกจ →</button>
+    </article>
+    <article class="prime-product-card" data-platform="Facebook" data-tags="popular">
+      <span class="prime-badge">🔥 ขายดี</span><div class="prime-product-icon">f</div><h4>Facebook Followers</h4><p class="prime-product-desc">เพิ่มผู้ติดตาม Facebook</p><div class="prime-rating">★ 4.9 <span>(980)</span></div><div class="prime-price"><small>เริ่มต้น </small>฿20</div>
+      <button class="prime-select-btn" type="button" data-action="showSocial" data-name="Facebook">เลือกแพ็กเกจ →</button>
+    </article>
+    <article class="prime-product-card" data-platform="YouTube" data-tags="sale">
+      <span class="prime-badge pink">⚡ โปรโมชั่น</span><div class="prime-product-icon">▶</div><h4>YouTube Subscribers</h4><p class="prime-product-desc">เพิ่มผู้ติดตามช่อง YouTube</p><div class="prime-rating">★ 4.8 <span>(756)</span></div><div class="prime-price"><small>เริ่มต้น </small>฿30</div>
+      <button class="prime-select-btn" type="button" data-action="showSocial" data-name="YouTube">เลือกแพ็กเกจ →</button>
+    </article>
+  </div>
 
-        <div class="card" data-viewer-key="product-follow">
-          <span class="service-tag">FOLLOW</span>
-          <div class="icon">◆</div>
-          <h3>บริการยอดติดตาม</h3>
-          <p>เลือกแพ็กเกจบริการโปรโมตผู้ติดตามสำหรับบัญชีของคุณ</p>
-          <div class="price">เริ่มต้น ฿299</div>
-          <button class="buy" data-action="addToCart" data-name="บริการยอดติดตาม" data-price="299">เพิ่มลงตะกร้า</button>
-        </div>
+  <div class="prime-platform-wrap">
+    <div class="prime-section-label"><div><h3>▦ สินค้าแยกตามแพลตฟอร์ม</h3><p>เลือกบริการตามแพลตฟอร์มที่คุณต้องการ</p></div></div>
+    <div class="prime-platform-tabs">
+      <button class="prime-store-tab active" type="button" onclick="filterPrimeProducts('', 'all', this)">ทั้งหมด</button>
+      <button class="prime-store-tab" type="button" onclick="filterPrimeProducts('', 'Instagram', this)">◎ Instagram</button>
+      <button class="prime-store-tab" type="button" onclick="filterPrimeProducts('', 'TikTok', this)">♪ TikTok</button>
+      <button class="prime-store-tab" type="button" onclick="filterPrimeProducts('', 'Facebook', this)">f Facebook</button>
+      <button class="prime-store-tab" type="button" onclick="filterPrimeProducts('', 'YouTube', this)">▶ YouTube</button>
+      <button class="prime-store-tab" type="button" onclick="filterPrimeProducts('', 'X', this)">𝕏 X</button>
+    </div>
+    <div class="prime-mini-grid">
+      <div class="prime-mini-card" data-platform="TikTok"><span class="mini-status">● พร้อมให้บริการ</span><h5>TikTok Likes</h5><p>เพิ่มยอดไลค์ TikTok</p><strong>เริ่มต้น ฿10</strong><button type="button" data-action="showSocial" data-name="TikTok">เลือกแพ็กเกจ →</button></div>
+      <div class="prime-mini-card" data-platform="TikTok"><span class="mini-status">● พร้อมให้บริการ</span><h5>TikTok Views</h5><p>เพิ่มยอดวิว TikTok</p><strong>เริ่มต้น ฿15</strong><button type="button" data-action="showSocial" data-name="TikTok">เลือกแพ็กเกจ →</button></div>
+      <div class="prime-mini-card" data-platform="TikTok"><span class="mini-status">● พร้อมให้บริการ</span><h5>TikTok Followers</h5><p>เพิ่มผู้ติดตาม TikTok</p><strong>เริ่มต้น ฿25</strong><button type="button" data-action="showSocial" data-name="TikTok">เลือกแพ็กเกจ →</button></div>
+      <div class="prime-mini-card" data-platform="TikTok"><span class="mini-status">● พร้อมให้บริการ</span><h5>TikTok Shares</h5><p>เพิ่มยอดแชร์ TikTok</p><strong>เริ่มต้น ฿20</strong><button type="button" data-action="showSocial" data-name="TikTok">เลือกแพ็กเกจ →</button></div>
+      <div class="prime-mini-card" data-platform="TikTok"><span class="mini-status">● พร้อมให้บริการ</span><h5>TikTok Comments</h5><p>เพิ่มยอดคอมเมนต์</p><strong>เริ่มต้น ฿15</strong><button type="button" data-action="showSocial" data-name="TikTok">เลือกแพ็กเกจ →</button></div>
+    </div>
+  </div>
 
-      </div>
-    </section>
+  <div class="prime-benefits">
+    <div class="prime-benefit"><i>🛡</i><span><b>ปลอดภัย</b>ระบบร้านค้าเป็นระบบ</span></div>
+    <div class="prime-benefit"><i>⚡</i><span><b>เริ่มงานเร็ว</b>ตรวจสอบสถานะได้</span></div>
+    <div class="prime-benefit"><i>◉</i><span><b>ราคาชัดเจน</b>เห็นรายละเอียดก่อนสั่ง</span></div>
+    <div class="prime-benefit"><i>⌘</i><span><b>หลายแพลตฟอร์ม</b>เลือกบริการได้ง่าย</span></div>
+    <div class="prime-benefit"><i>♧</i><span><b>ดูแลสมาชิก</b>ติดต่อ PRIME ได้</span></div>
+  </div>
+</section>
 
 
 
@@ -1546,6 +1639,34 @@ function initRealtimeViewerCounters(){
   },{threshold:.15});
   cards.forEach(card=>io.observe(card));
 }
+
+function filterPrimeProducts(query,filter,source){
+  const q=String(query||"").trim().toLowerCase();
+  const f=String(filter||"all");
+  document.querySelectorAll("#products .prime-product-card").forEach(card=>{
+    const text=card.textContent.toLowerCase();
+    const platform=card.dataset.platform||"";
+    const tags=card.dataset.tags||"";
+    const okQ=!q||text.includes(q);
+    const okF=f==="all"||platform===f||tags.split(" ").includes(f);
+    card.classList.toggle("is-hidden",!(okQ&&okF));
+  });
+  document.querySelectorAll("#products .prime-store-tab").forEach(x=>x.classList.remove("active"));
+  if(source)source.classList.add("active");
+}
+function initPrimeShopTimer(){
+  let end=Date.now()+((2*60*60+35*60+18)*1000);
+  const tick=()=>{
+    const left=Math.max(0,end-Date.now()),sec=Math.floor(left/1000);
+    const h=Math.floor(sec/3600),m=Math.floor((sec%3600)/60),s=sec%60;
+    const a=document.getElementById("shopHours"),b=document.getElementById("shopMinutes"),d=document.getElementById("shopSeconds");
+    if(a)a.textContent=String(h).padStart(2,"0");if(b)b.textContent=String(m).padStart(2,"0");if(d)d.textContent=String(s).padStart(2,"0");
+    if(left<=0)end=Date.now()+((2*60*60+35*60+18)*1000);
+  };
+  tick();setInterval(tick,1000);
+}
+document.addEventListener("DOMContentLoaded",initPrimeShopTimer);
+
 document.addEventListener("DOMContentLoaded",initRealtimeViewerCounters);
 document.addEventListener("DOMContentLoaded",updateLoginButton);
 document.addEventListener("DOMContentLoaded",initPromoCarousel);
