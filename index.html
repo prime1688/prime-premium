@@ -417,7 +417,7 @@
     @media (max-width:600px){#social .card .buy{min-height:48px}}
 
 
-.social-order-card{max-width:760px!important}.social-modal-head{display:flex;justify-content:space-between;gap:14px;align-items:flex-start}.social-modal-head h2{margin:8px 0 4px}.social-modal-head p{color:#999;margin:0;font-size:13px}.modal-x{background:#25122f;color:#d69cff;border:1px solid #5d3277;border-radius:50%;width:40px;height:40px;font-size:26px;cursor:pointer}.social-service-cards{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:18px 0}.social-service-card{position:relative;text-align:left;background:#121015;border:1px solid #302638;color:#fff;border-radius:15px;padding:14px;cursor:pointer;min-height:125px;display:flex;flex-direction:column;gap:8px}.social-service-card.selected{border:2px solid #b95cff;background:#1c1025;box-shadow:0 0 22px #7d2db355}.ssc-icon{font-size:26px;color:#c36cff}.ssc-info{display:flex;flex-direction:column;gap:3px}.ssc-info strong{font-size:16px}.ssc-info small,.ssc-price small{color:#999;font-size:11px}.ssc-price{color:#d28cff;font-weight:900;font-size:18px;margin-top:auto}.ssc-check{position:absolute;right:10px;top:9px;color:#d28cff;font-size:20px}.social-label{display:block;color:#ddd;font-weight:800;font-size:13px;margin:13px 0 7px}.quantity-control{display:flex;align-items:center;gap:10px}.qty-btn{width:54px;height:52px;border:1px solid #5d3277;background:#21112c;color:#d28cff;border-radius:13px;font-size:30px;font-weight:900;cursor:pointer}.qty-btn:disabled{opacity:.35}.qty-number{flex:1;text-align:center}.qty-number input{width:100%;box-sizing:border-box;background:#0d0b0f;border:1px solid #3b3042;border-radius:13px;color:#fff;text-align:center;font-size:22px;font-weight:900;padding:12px}.qty-number span{display:block;color:#999;font-size:11px;margin-top:4px}.social-summary{background:#100d14;border:1px solid #342542;border-radius:15px;padding:14px;margin:15px 0}.social-summary div{display:flex;justify-content:space-between;padding:5px 0;color:#aaa}.social-summary strong{color:#d28cff;font-size:18px}.social-summary div:last-child{border-top:1px solid #29202e;margin-top:6px;padding-top:10px}.social-summary div:last-child strong{font-size:24px}@media(max-width:600px){.social-service-cards{grid-template-columns:repeat(2,1fr)}.social-order-card{max-height:90vh;overflow:auto}.social-service-card{min-height:110px;padding:12px}}
+.social-order-card{max-width:760px!important}.social-modal-head{display:flex;justify-content:space-between;gap:14px;align-items:flex-start}.social-modal-head h2{margin:8px 0 4px}.social-modal-head p{color:#999;margin:0;font-size:13px}.modal-x{background:#25122f;color:#d69cff;border:1px solid #5d3277;border-radius:50%;width:40px;height:40px;font-size:26px;cursor:pointer}.social-service-cards{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:18px 0}.social-service-card{position:relative;text-align:left;background:#121015;border:1px solid #302638;color:#fff;border-radius:15px;padding:14px;cursor:pointer;min-height:125px;display:flex;flex-direction:column;gap:8px}.social-service-card.selected{border:2px solid #b95cff;background:#1c1025;box-shadow:0 0 22px #7d2db355}.social-service-card.service-closed{opacity:.58;cursor:not-allowed;border-color:#2a2430;background:#0d0c0f;box-shadow:none}.social-service-card.service-closed .ssc-icon,.social-service-card.service-closed .ssc-info strong{color:#777}.ssc-closed-label{color:#ffb45c!important;font-size:14px!important}.ssc-status{position:absolute;right:10px;top:9px;padding:3px 7px;border-radius:999px;background:#302019;color:#ffb45c;font-size:9px;font-weight:900}.ssc-icon{font-size:26px;color:#c36cff}.ssc-info{display:flex;flex-direction:column;gap:3px}.ssc-info strong{font-size:16px}.ssc-info small,.ssc-price small{color:#999;font-size:11px}.ssc-price{color:#d28cff;font-weight:900;font-size:18px;margin-top:auto}.ssc-check{position:absolute;right:10px;top:9px;color:#d28cff;font-size:20px}.social-label{display:block;color:#ddd;font-weight:800;font-size:13px;margin:13px 0 7px}.quantity-control{display:flex;align-items:center;gap:10px}.qty-btn{width:54px;height:52px;border:1px solid #5d3277;background:#21112c;color:#d28cff;border-radius:13px;font-size:30px;font-weight:900;cursor:pointer}.qty-btn:disabled{opacity:.35}.qty-number{flex:1;text-align:center}.qty-number input{width:100%;box-sizing:border-box;background:#0d0b0f;border:1px solid #3b3042;border-radius:13px;color:#fff;text-align:center;font-size:22px;font-weight:900;padding:12px}.qty-number span{display:block;color:#999;font-size:11px;margin-top:4px}.social-summary{background:#100d14;border:1px solid #342542;border-radius:15px;padding:14px;margin:15px 0}.social-summary div{display:flex;justify-content:space-between;padding:5px 0;color:#aaa}.social-summary strong{color:#d28cff;font-size:18px}.social-summary div:last-child{border-top:1px solid #29202e;margin-top:6px;padding-top:10px}.social-summary div:last-child strong{font-size:24px}@media(max-width:600px){.social-service-cards{grid-template-columns:repeat(2,1fr)}.social-order-card{max-height:90vh;overflow:auto}.social-service-card{min-height:110px;padding:12px}}
 
     /* PRIME full-width 16:9 premium carousel */
     .promo-carousel{max-width:1180px;margin:18px auto 12px;padding:0 18px;position:relative}
@@ -1119,7 +1119,7 @@ const SOCIAL_RULES={
 let socialServices=[],selectedSocialService=null,socialPlatformCurrent="";
 async function loadSocialServices(platform){
   if(!requireSupabase())return [];
-  const {data,error}=await supabaseClient.from("services").select("id,name,platform,price,min_quantity,provider_service_id,provider_min_quantity,provider_max_quantity,provider_name").eq("platform",platform).eq("active",true).order("id");
+  const {data,error}=await supabaseClient.from("services").select("id,name,platform,price,min_quantity,active,provider_service_id,provider_min_quantity,provider_max_quantity,provider_name").eq("platform",platform).order("id");
   if(error){alert("โหลดบริการไม่สำเร็จ: "+error.message);return [];}
   return (data||[]).filter(x=>SOCIAL_RULES[platform]?.[x.name]).map(x=>{
     const base=SOCIAL_RULES[platform][x.name];
@@ -1133,8 +1133,22 @@ function formatNumber(n){return Number(n).toLocaleString("th-TH");}
 function socialTotal(qty,rule){return Math.ceil(Number(qty)/rule.min)*rule.price;}
 function renderSocialServices(){
   const el=document.getElementById("socialServiceCards");if(!el)return;
-  el.innerHTML=socialServices.map(x=>{const r=x.rule,active=selectedSocialService?.id===x.id;return '<button type="button" class="social-service-card '+(active?"selected":"")+'" data-service-id="'+x.id+'"><span class="ssc-icon">'+({Likes:"♥",Shares:"↗",Views:"◉",Followers:"●"}[x.name]||"•")+'</span><span class="ssc-info"><strong>'+r.label+'</strong><small>ขั้นต่ำ '+formatNumber(r.min)+' '+r.unit+'</small></span><span class="ssc-price">฿'+formatNumber(r.price)+'<small>/ '+formatNumber(r.min)+'</small></span><span class="ssc-check">'+(active?"✓":"")+'</span></button>'}).join("");
-  el.querySelectorAll("[data-service-id]").forEach(btn=>btn.addEventListener("click",()=>{selectedSocialService=socialServices.find(x=>x.id===Number(btn.dataset.serviceId))||null;const q=document.getElementById("socialQuantity"),r=selectedSocialService.rule;q.min=r.min;q.step=r.min;q.value=r.min;updateSocialSummary();renderSocialServices()}));
+  el.innerHTML=socialServices.map(x=>{
+    const r=x.rule,selected=selectedSocialService?.id===x.id,isOpen=x.active!==false;
+    return '<button type="button" class="social-service-card '+(selected?"selected ":"")+(isOpen?"":"service-closed")+'" data-service-id="'+x.id+'" '+(isOpen?"":"disabled")+'>'+
+      '<span class="ssc-icon">'+({Likes:"♥",Shares:"↗",Views:"◉",Followers:"●"}[x.name]||"•")+'</span>'+
+      '<span class="ssc-info"><strong>'+r.label+'</strong><small>ขั้นต่ำ '+formatNumber(r.min)+' '+r.unit+'</small></span>'+
+      (isOpen?'<span class="ssc-price">฿'+formatNumber(r.price)+'<small>/ '+formatNumber(r.min)+'</small></span>':'<span class="ssc-price ssc-closed-label">ปิดปรับปรุง</span>')+
+      '<span class="ssc-check">'+(selected?"✓":"")+'</span>'+
+      (isOpen?"":'<span class="ssc-status">ปิดปรับปรุง</span>')+
+      '</button>';
+  }).join("");
+  el.querySelectorAll("[data-service-id]:not(:disabled)").forEach(btn=>btn.addEventListener("click",()=>{
+    selectedSocialService=socialServices.find(x=>x.id===Number(btn.dataset.serviceId))||null;
+    if(!selectedSocialService?.active)return;
+    const q=document.getElementById("socialQuantity"),r=selectedSocialService.rule;
+    q.min=r.min;q.step=r.min;q.value=r.min;updateSocialSummary();renderSocialServices();
+  }));
 }
 function updateSocialSummary(){
   if(!selectedSocialService)return;const r=selectedSocialService.rule;
@@ -1145,12 +1159,12 @@ function changeSocialQuantity(direction){if(!selectedSocialService)return;const 
 async function openSocialOrder(platform){
   const s=await getSession();if(!s){alert("กรุณาเข้าสู่ระบบก่อนสั่งซื้อ");return}
   socialPlatformCurrent=platform;socialServices=await loadSocialServices(platform);if(!socialServices.length){alert("ยังไม่มีบริการสำหรับ "+platform);return}
-  selectedSocialService=socialServices[0];document.getElementById("socialPlatform").textContent=platform;document.getElementById("socialTargetUrl").value="";
+  selectedSocialService=socialServices.find(x=>x.active!==false)||null;if(!selectedSocialService)return alert("ยังไม่มีบริการที่เปิดใช้งานสำหรับ "+platform);document.getElementById("socialPlatform").textContent=platform;document.getElementById("socialTargetUrl").value="";
   const q=document.getElementById("socialQuantity"),r=selectedSocialService.rule;q.min=r.min;q.step=r.min;q.value=r.min;renderSocialServices();updateSocialSummary();document.getElementById("socialOrderModal").classList.add("show");
 }
 async function placeSocialOrder(){
   recordLiveActivity("ordering","กำลังสั่งซื้อบริการ "+(selectedSocialService?.rule?.label||"โซเชียล"));
-  if(!selectedSocialService)return alert("กรุณาเลือกบริการ");
+  if(!selectedSocialService)return alert("กรุณาเลือกบริการ");if(selectedSocialService.active===false)return alert("บริการนี้ปิดปรับปรุงชั่วคราว");
   const url=document.getElementById("socialTargetUrl").value.trim(),r=selectedSocialService.rule,qty=Math.ceil((Number(document.getElementById("socialQuantity").value)||r.min)/r.min)*r.min;
   const providerServiceId=Number(selectedSocialService.provider_service_id||0);
   if(!providerServiceId)return alert("บริการนี้ยังไม่ได้เชื่อมต่อกับ SMMGo กรุณารอการตั้งค่าบริการ");
