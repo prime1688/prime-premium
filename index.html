@@ -400,6 +400,13 @@
     .live-copy{min-width:0;flex:1}.live-copy strong{display:block;color:#eee;font-size:12px}.live-copy span{display:block;color:#918895;font-size:11px;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
     .live-time{color:#6f6674;font-size:9px;white-space:nowrap}
     .live-empty{padding:16px;text-align:center;color:#777;font-size:11px;width:100%}
+
+    /* Realtime viewer counters */
+    .viewer-count{display:flex;align-items:center;gap:6px;margin:10px 0 14px;color:#aaa;font-size:12px;font-weight:700;min-height:18px}
+    .viewer-dot{width:7px;height:7px;flex:0 0 7px;border-radius:50%;background:#63e36e;box-shadow:0 0 9px rgba(99,227,110,.85);animation:viewerPulse 1.5s ease-in-out infinite}
+    .viewer-number{display:inline-block;color:#bfffc5;font-variant-numeric:tabular-nums;min-width:2ch;transition:opacity .16s ease,transform .16s ease}
+    .viewer-number.viewer-changing{opacity:.58;transform:translateY(-1px)}
+    @keyframes viewerPulse{50%{opacity:.42;transform:scale(.78)}}
     @keyframes livePulse{50%{opacity:.35;transform:scale(.72)}}
     @keyframes liveIn{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
     @media(max-width:600px){.live-activity-wrap{padding:0 12px;margin:6px auto 14px}.live-head{padding:9px 11px}.live-row{padding:9px 11px}.live-copy strong{font-size:11px}.live-copy span{font-size:10px}.live-time{font-size:8px}}
@@ -703,11 +710,11 @@
     <section class="section" id="social">
       <div class="section-title">ช่องทางโซเชียล</div>
       <div class="products">
-        <div class="card"><span class="service-tag">INSTAGRAM</span><div class="icon">◎</div><h3>Instagram</h3><p>บริการสำหรับ Instagram ทั้งยอดไลค์ ยอดติดตาม และการโปรโมตคอนเทนต์</p><button class="buy" data-action="showSocial" data-name="Instagram">ดูบริการ</button></div>
-        <div class="card"><span class="service-tag">TIKTOK</span><div class="icon">♪</div><h3>TikTok</h3><p>บริการสำหรับ TikTok ทั้งยอดไลค์ ยอดวิว และยอดติดตาม</p><button class="buy" data-action="showSocial" data-name="TikTok">ดูบริการ</button></div>
-        <div class="card"><span class="service-tag">FACEBOOK</span><div class="icon">f</div><h3>Facebook</h3><p>บริการสำหรับ Facebook ทั้งยอดไลค์ ยอดแชร์ และการโปรโมตโพสต์</p><button class="buy" data-action="showSocial" data-name="Facebook">ดูบริการ</button></div>
-        <div class="card"><span class="service-tag">YOUTUBE</span><div class="icon">▶</div><h3>YouTube</h3><p>บริการสำหรับ YouTube ทั้งยอดวิว ยอดไลค์ และยอดติดตามช่อง</p><button class="buy" data-action="showSocial" data-name="YouTube">ดูบริการ</button></div>
-        <div class="card"><span class="service-tag">X</span><div class="icon">𝕏</div><h3>X</h3><p>บริการสำหรับ X ทั้งยอดไลค์ ยอดรีโพสต์ และการโปรโมตโพสต์</p><button class="buy" data-action="showSocial" data-name="X">ดูบริการ</button></div>
+        <div class="card" data-viewer-key="social-instagram"><span class="service-tag">INSTAGRAM</span><div class="icon">◎</div><h3>Instagram</h3><p>บริการสำหรับ Instagram ทั้งยอดไลค์ ยอดติดตาม และการโปรโมตคอนเทนต์</p><div class="viewer-count"><span class="viewer-dot"></span><span>กำลังดูหน้านี้อยู่</span> <span class="viewer-number" data-viewer-number>1</span> <span>คน</span></div><button class="buy" data-action="showSocial" data-name="Instagram">ดูบริการ</button></div>
+        <div class="card" data-viewer-key="social-tiktok"><span class="service-tag">TIKTOK</span><div class="icon">♪</div><h3>TikTok</h3><p>บริการสำหรับ TikTok ทั้งยอดไลค์ ยอดวิว และยอดติดตาม</p><div class="viewer-count"><span class="viewer-dot"></span><span>กำลังดูหน้านี้อยู่</span> <span class="viewer-number" data-viewer-number>1</span> <span>คน</span></div><button class="buy" data-action="showSocial" data-name="TikTok">ดูบริการ</button></div>
+        <div class="card" data-viewer-key="social-facebook"><span class="service-tag">FACEBOOK</span><div class="icon">f</div><h3>Facebook</h3><p>บริการสำหรับ Facebook ทั้งยอดไลค์ ยอดแชร์ และการโปรโมตโพสต์</p><div class="viewer-count"><span class="viewer-dot"></span><span>กำลังดูหน้านี้อยู่</span> <span class="viewer-number" data-viewer-number>1</span> <span>คน</span></div><button class="buy" data-action="showSocial" data-name="Facebook">ดูบริการ</button></div>
+        <div class="card" data-viewer-key="social-youtube"><span class="service-tag">YOUTUBE</span><div class="icon">▶</div><h3>YouTube</h3><p>บริการสำหรับ YouTube ทั้งยอดวิว ยอดไลค์ และยอดติดตามช่อง</p><div class="viewer-count"><span class="viewer-dot"></span><span>กำลังดูหน้านี้อยู่</span> <span class="viewer-number" data-viewer-number>1</span> <span>คน</span></div><button class="buy" data-action="showSocial" data-name="YouTube">ดูบริการ</button></div>
+        <div class="card" data-viewer-key="social-x"><span class="service-tag">X</span><div class="icon">𝕏</div><h3>X</h3><p>บริการสำหรับ X ทั้งยอดไลค์ ยอดรีโพสต์ และการโปรโมตโพสต์</p><div class="viewer-count"><span class="viewer-dot"></span><span>กำลังดูหน้านี้อยู่</span> <span class="viewer-number" data-viewer-number>1</span> <span>คน</span></div><button class="buy" data-action="showSocial" data-name="X">ดูบริการ</button></div>
         <div class="card"><span class="service-tag">LINE</span><div class="icon">L</div><h3>LINE</h3><p>ช่องทางติดต่อ PRIME สำหรับสอบถามบริการและแจ้งปัญหา</p><a class="buy" href="https://lin.ee/sZghOhY" target="_blank" rel="noopener noreferrer">ติดต่อเรา</a></div>
       </div>
     </section>
@@ -720,39 +727,39 @@
 
       <div class="products">
 
-        <div class="card">
+        <div class="card" data-viewer-key="product-topup">
           <span class="service-tag">เติมเครดิต</span>
           <div class="icon">฿</div>
           <h3>เติมเงินเข้า PRIME</h3>
           <p>เติมเครดิตเพื่อใช้สั่งซื้อบริการในร้าน</p>
-          <button class="buy" data-action="openTopup">เติมเงิน</button>
+          <div class="viewer-count"><span class="viewer-dot"></span><span>กำลังดูสินค้านี้อยู่</span> <span class="viewer-number" data-viewer-number>1</span> <span>คน</span></div><button class="buy" data-action="openTopup">เติมเงิน</button>
         </div>
 
-        <div class="card">
+        <div class="card" data-viewer-key="product-like">
           <span class="service-tag">LIKE</span>
           <div class="icon">♥</div>
           <h3>บริการยอดไลค์</h3>
           <p>เลือกแพ็กเกจบริการโปรโมตยอดไลค์สำหรับโพสต์ของคุณ</p>
           <div class="price">เริ่มต้น ฿100</div>
-          <button class="buy" data-action="addToCart" data-name="บริการยอดไลค์" data-price="100">เพิ่มลงตะกร้า</button>
+          <div class="viewer-count"><span class="viewer-dot"></span><span>กำลังดูสินค้านี้อยู่</span> <span class="viewer-number" data-viewer-number>1</span> <span>คน</span></div><button class="buy" data-action="addToCart" data-name="บริการยอดไลค์" data-price="100">เพิ่มลงตะกร้า</button>
         </div>
 
-        <div class="card">
+        <div class="card" data-viewer-key="product-share">
           <span class="service-tag">SHARE</span>
           <div class="icon">↗</div>
           <h3>บริการยอดแชร์</h3>
           <p>เลือกแพ็กเกจบริการโปรโมตการแชร์สำหรับคอนเทนต์ของคุณ</p>
           <div class="price">เริ่มต้น ฿199</div>
-          <button class="buy" data-action="addToCart" data-name="บริการยอดแชร์" data-price="199">เพิ่มลงตะกร้า</button>
+          <div class="viewer-count"><span class="viewer-dot"></span><span>กำลังดูสินค้านี้อยู่</span> <span class="viewer-number" data-viewer-number>1</span> <span>คน</span></div><button class="buy" data-action="addToCart" data-name="บริการยอดแชร์" data-price="199">เพิ่มลงตะกร้า</button>
         </div>
 
-        <div class="card">
+        <div class="card" data-viewer-key="product-follow">
           <span class="service-tag">FOLLOW</span>
           <div class="icon">◆</div>
           <h3>บริการยอดติดตาม</h3>
           <p>เลือกแพ็กเกจบริการโปรโมตผู้ติดตามสำหรับบัญชีของคุณ</p>
           <div class="price">เริ่มต้น ฿299</div>
-          <button class="buy" data-action="addToCart" data-name="บริการยอดติดตาม" data-price="299">เพิ่มลงตะกร้า</button>
+          <div class="viewer-count"><span class="viewer-dot"></span><span>กำลังดูสินค้านี้อยู่</span> <span class="viewer-number" data-viewer-number>1</span> <span>คน</span></div><button class="buy" data-action="addToCart" data-name="บริการยอดติดตาม" data-price="299">เพิ่มลงตะกร้า</button>
         </div>
 
       </div>
@@ -1196,6 +1203,56 @@ function initPromoCarousel(){
   thumbs?.querySelectorAll(".promo-thumb").forEach((d,n)=>d.addEventListener("click",()=>{promoState.index=n;render();restartPromo();}));
   let startX=0,dx=0;root.addEventListener("touchstart",e=>{startX=e.touches[0].clientX;dx=0},{passive:true});root.addEventListener("touchmove",e=>{dx=e.touches[0].clientX-startX},{passive:true});root.addEventListener("touchend",()=>{if(Math.abs(dx)>35)go(dx<0?1:-1,true)});
   function restartPromo(){clearInterval(promoState.timer);promoState.timer=setInterval(()=>go(1),4000)}render();restartPromo();
+}
+
+// PRIME realtime viewer counters
+const primeViewerChannels = new Map();
+const primeViewerClientId = (crypto.randomUUID ? crypto.randomUUID() : Math.random().toString(36).slice(2));
+function animateViewerNumber(el,value){
+  if(!el)return;
+  const next=Math.max(1,Number(value)||1);
+  if(el.textContent!==String(next)){
+    el.classList.add("viewer-changing");
+    setTimeout(()=>{el.textContent=String(next);el.classList.remove("viewer-changing")},90);
+  }
+}
+function updateViewerCount(key,count){
+  document.querySelectorAll('[data-viewer-key="'+key+'"] [data-viewer-number]').forEach(el=>animateViewerNumber(el,count));
+}
+function startViewerChannel(card){
+  if(!supabaseClient || !card || primeViewerChannels.has(card)) return;
+  const key=card.dataset.viewerKey;
+  if(!key)return;
+  const channel=supabaseClient.channel("prime-viewers-"+key,{config:{presence:{key:primeViewerClientId}}});
+  channel.on("presence",{event:"sync"},()=>{
+    const state=channel.presenceState();
+    const count=Object.keys(state).length;
+    updateViewerCount(key,count);
+  }).subscribe(async status=>{
+    if(status==="SUBSCRIBED"){
+      await channel.track({viewer:true,view:key,at:Date.now()});
+    }
+  });
+  primeViewerChannels.set(card,{channel,key});
+}
+function stopViewerChannel(card){
+  const item=primeViewerChannels.get(card);
+  if(!item)return;
+  item.channel.untrack().catch(()=>{});
+  supabaseClient.removeChannel(item.channel);
+  primeViewerChannels.delete(card);
+  updateViewerCount(item.key,1);
+}
+function initRealtimeViewerCounters(){
+  const cards=[...document.querySelectorAll("[data-viewer-key]")];
+  if(!cards.length || !supabaseClient)return;
+  const io=new IntersectionObserver(entries=>{
+    entries.forEach(entry=>{
+      if(entry.isIntersecting) startViewerChannel(entry.target);
+      else stopViewerChannel(entry.target);
+    });
+  },{threshold:.15});
+  cards.forEach(card=>io.observe(card));
 }
 document.addEventListener("DOMContentLoaded",updateLoginButton);
 document.addEventListener("DOMContentLoaded",initPromoCarousel);
