@@ -945,6 +945,24 @@ function transactionStatus(status){
   const map={pending:"รอตรวจสอบ",approved:"สำเร็จ",rejected:"ไม่อนุมัติ",completed:"สำเร็จ"};
   return map[status]||status||"ไม่ทราบสถานะ";
 }
+async function openWithdraw(){
+  const s=await getSession();
+  if(!s){alert("กรุณาเข้าสู่ระบบก่อน");return;}
+  const m=await loadMember();
+  const amount=prompt("จำนวนเงินที่ต้องการถอน (บาท)\nเครดิตคงเหลือ: ฿"+Number(m?.credit||0).toFixed(2));
+  if(amount===null)return;
+  const bank=prompt("ชื่อธนาคาร");
+  if(bank===null)return;
+  const name=prompt("ชื่อบัญชี");
+  if(name===null)return;
+  const account=prompt("เลขบัญชีธนาคาร");
+  if(account===null)return;
+  const {data,error}=await supabaseClient.rpc("request_withdrawal",{p_amount:Number(amount),p_bank_name:bank,p_account_name:name,p_account_number:account});
+  if(error){alert("ส่งคำขอถอนไม่สำเร็จ: "+error.message);return;}
+  if(!data?.success){alert(data?.message||"ไม่สามารถถอนเงินได้");return;}
+  await updateLoginButton();
+  alert("ส่งคำขอถอนเงินแล้ว\nยอดถอน ฿"+Number(amount).toFixed(2)+"\nสถานะ: รอตรวจสอบ");
+}
 async function openTransactions(){
   const el=document.getElementById("transactionItems");
   el.innerHTML='<div class="empty-state">กำลังโหลด...</div>';
@@ -1302,7 +1320,7 @@ document.addEventListener("DOMContentLoaded",()=>{
   document.addEventListener("click",(event)=>{
     const b=event.target.closest("button[data-action]"); if(!b)return;
     const a=b.dataset.action;
-    if(a==="login") login(); else if(a==="logout") logout(); else if(a==="goProducts") goProducts(); else if(a==="openTopup") openTopup(); else if(a==="openTransactions") openTransactions(); else if(a==="openOrders") openOrders(); else if(a==="openFreeRewards") openFreeRewards(); else if(a==="openTerms") document.getElementById("termsModal")?.classList.add("show"); else if(a==="openCart") openCart(); else if(a==="openWithdraw") alert("การถอนเงินจะเปิดใช้งานเมื่อมีเครดิตและระบบบัญชีพร้อม"); else if(a==="vipOnly") alert("ฟังก์ชันนี้สำหรับสมาชิก VIP เท่านั้น"); else if(a==="addToCart") addToCart(b.dataset.name,Number(b.dataset.price)); else if(a==="removeFromCart") removeFromCart(Number(b.dataset.index)); else if(a==="clearCart") clearCart(); else if(a==="showSocial") showSocial(b.dataset.name); else if(a==="closeModal") closeModal(b.dataset.modal); else if(a==="createTopup") createTopup(); else if(a==="checkout") checkout(); else if(a==="placeSocialOrder") placeSocialOrder();
+    if(a==="login") login(); else if(a==="logout") logout(); else if(a==="goProducts") goProducts(); else if(a==="openTopup") openTopup(); else if(a==="openTransactions") openTransactions(); else if(a==="openOrders") openOrders(); else if(a==="openFreeRewards") openFreeRewards(); else if(a==="openTerms") document.getElementById("termsModal")?.classList.add("show"); else if(a==="openCart") openCart(); else if(a==="openWithdraw") openWithdraw(); else if(a==="vipOnly") alert("ฟังก์ชันนี้สำหรับสมาชิก VIP เท่านั้น"); else if(a==="addToCart") addToCart(b.dataset.name,Number(b.dataset.price)); else if(a==="removeFromCart") removeFromCart(Number(b.dataset.index)); else if(a==="clearCart") clearCart(); else if(a==="showSocial") showSocial(b.dataset.name); else if(a==="closeModal") closeModal(b.dataset.modal); else if(a==="createTopup") createTopup(); else if(a==="checkout") checkout(); else if(a==="placeSocialOrder") placeSocialOrder();
   });
 });</script>
   <div class="modal" id="topupModal">
