@@ -388,6 +388,22 @@
       .promo-dot{width:6px;height:6px}.promo-dot.active{width:18px}
     }
 
+    .live-activity-wrap{max-width:1100px;margin:8px auto 18px;padding:0 20px}
+    .live-activity{background:linear-gradient(180deg,rgba(22,12,30,.96),rgba(11,9,13,.96));border:1px solid #4b2862;border-radius:16px;overflow:hidden;box-shadow:0 0 24px rgba(181,108,255,.10)}
+    .live-head{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 14px;border-bottom:1px solid #281c30}
+    .live-title{display:flex;align-items:center;gap:8px;color:#fff;font-weight:900;font-size:13px}
+    .live-dot{width:8px;height:8px;border-radius:50%;background:#63e36e;box-shadow:0 0 10px #63e36e;animation:livePulse 1.4s infinite}
+    .live-status{color:#8d8491;font-size:10px}
+    .live-feed{min-height:54px;display:flex;align-items:center}
+    .live-row{width:100%;display:flex;align-items:center;gap:10px;padding:10px 14px;animation:liveIn .28s ease}
+    .live-icon{width:34px;height:34px;flex:0 0 34px;border-radius:11px;background:#21112c;color:#d09aff;display:grid;place-items:center;font-size:17px}
+    .live-copy{min-width:0;flex:1}.live-copy strong{display:block;color:#eee;font-size:12px}.live-copy span{display:block;color:#918895;font-size:11px;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .live-time{color:#6f6674;font-size:9px;white-space:nowrap}
+    .live-empty{padding:16px;text-align:center;color:#777;font-size:11px;width:100%}
+    @keyframes livePulse{50%{opacity:.35;transform:scale(.72)}}
+    @keyframes liveIn{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
+    @media(max-width:600px){.live-activity-wrap{padding:0 12px;margin:6px auto 14px}.live-head{padding:9px 11px}.live-row{padding:9px 11px}.live-copy strong{font-size:11px}.live-copy span{font-size:10px}.live-time{font-size:8px}}
+
     /* Floating quick menu */
     .floating-menu{
       position:fixed;
@@ -675,6 +691,13 @@
       </div>
     </section>
 
+    <section class="live-activity-wrap" aria-live="polite">
+      <div class="live-activity">
+        <div class="live-head"><div class="live-title"><span class="live-dot"></span><span>รายงานสด</span></div><span class="live-status" id="liveActivityStatus">กำลังเชื่อมต่อ...</span></div>
+        <div class="live-feed" id="liveActivityFeed"><div class="live-empty">กำลังโหลดกิจกรรมล่าสุด...</div></div>
+      </div>
+    </section>
+
     <section class="section" id="dashboardSection" style="display:none;padding-bottom:10px"><div class="section-title">ภาพรวมบัญชี</div><div class="dash-grid" style="padding:0;max-width:none"><div class="dash-card"><small>เครดิต</small><strong id="dashCredit">฿0.00</strong></div><div class="dash-card"><small>ออเดอร์ทั้งหมด</small><strong id="dashOrderCount">0</strong></div><div class="dash-card"><small>กำลังดำเนินการ</small><strong id="dashProcessing">0</strong></div><div class="dash-card"><small>สำเร็จแล้ว</small><strong id="dashCompleted">0</strong></div></div></section>
 
     <section class="section" id="social">
@@ -750,11 +773,42 @@ const SUPABASE_KEY = "sb_publishable_WIFz-7unS6IQFspqOSoj_Q_BST2Hr4o";
 const supabaseClient = window.supabase ? window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY) : null;
 function requireSupabase(){ if(!supabaseClient){ alert("ระบบเชื่อมต่อฐานข้อมูลยังไม่พร้อม กรุณารีเฟรชหน้าเว็บแล้วลองใหม่"); return false; } return true; }
 
+let liveActivityChannel=null,liveActivityTimer=null;
+const liveActivityIcons={viewing:"◉",payment:"฿",ordering:"🛒",ordered:"✓"};
+const liveActivityLabels={viewing:"กำลังดูแพ็กเกจ",payment:"กำลังชำระเงิน",ordering:"กำลังสั่งซื้อ",ordered:"สั่งซื้อสำเร็จ"};
+function liveActivityTime(ts){const sec=Math.max(0,Math.floor((Date.now()-new Date(ts).getTime())/1000));if(sec<5)return"เมื่อสักครู่";if(sec<60)return sec+" วินาทีที่แล้ว";const m=Math.floor(sec/60);return m+" นาทีที่แล้ว";}
+function renderLiveActivities(rows){
+  const feed=document.getElementById("liveActivityFeed");if(!feed)return;
+  const now=Date.now();
+  const fresh=(rows||[]).filter(x=>new Date(x.expires_at).getTime()>now).sort((a,b)=>new Date(b.created_at)-new Date(a.created_at)).slice(0,8);
+  if(!fresh.length){feed.innerHTML='<div class="live-empty">ยังไม่มีกิจกรรมสดในขณะนี้</div>';return;}
+  const x=fresh[0];
+  feed.innerHTML='<div class="live-row"><div class="live-icon">'+(liveActivityIcons[x.activity_type]||"•")+'</div><div class="live-copy"><strong>'+escapeHtml(x.display_name||"ผู้เยี่ยมชม")+' · '+(liveActivityLabels[x.activity_type]||"กิจกรรม")+'</strong><span>'+escapeHtml(x.detail||"กำลังใช้งาน PRIME")+'</span></div><div class="live-time">'+liveActivityTime(x.created_at)+'</div></div>';
+}
+async function loadLiveActivities(){
+  if(!supabaseClient)return;
+  const {data}=await supabaseClient.from("live_activity").select("id,activity_type,detail,display_name,created_at,expires_at").gt("expires_at",new Date().toISOString()).order("created_at",{ascending:false}).limit(8);
+  renderLiveActivities(data||[]);
+}
+async function recordLiveActivity(type,detail){
+  if(!supabaseClient)return;
+  try{await supabaseClient.rpc("record_live_activity",{p_type:type,p_detail:detail});}catch(e){}
+}
+function initLiveActivity(){
+  loadLiveActivities();
+  clearInterval(liveActivityTimer);liveActivityTimer=setInterval(loadLiveActivities,15000);
+  try{
+    liveActivityChannel=supabaseClient.channel("prime-live-activity").on("postgres_changes",{event:"INSERT",schema:"public",table:"live_activity"},()=>loadLiveActivities()).subscribe(status=>{
+      const el=document.getElementById("liveActivityStatus");if(el)el.textContent=status==="SUBSCRIBED"?"LIVE":"กำลังเชื่อมต่อ...";
+    });
+  }catch(e){}
+}
+
 function goProducts(){document.getElementById("products")?.scrollIntoView({behavior:"smooth",block:"start"});}
 const PAYMENT_QR_PAYLOAD="00020101021130840016A00000067701011201150107537000882050219AD1749906T0883804DN0318PRIMEENTERTAINMENT53037645802TH6208070400006304E5FD";
 let qrTimer=null,qrSeconds=300;
 function paymentQrUrl(){return "https://api.qrserver.com/v1/create-qr-code/?size=420x420&margin=12&data="+encodeURIComponent(PAYMENT_QR_PAYLOAD);}
-function showSocial(name){openSocialOrder(name);}
+function showSocial(name){recordLiveActivity("viewing","กำลังดูแพ็กเกจ "+name);openSocialOrder(name);}
 function normalizePhone(v){let p=String(v||"").trim().replace(/[\s-]/g,"");if(p.startsWith("0"))p="+66"+p.slice(1);else if(p.startsWith("66"))p="+"+p;return p;}
 function validThaiPhone(p){return /^\+66\d{9}$/.test(p);}
 function cart(){try{return JSON.parse(localStorage.getItem("prime_cart")||"[]")}catch{return[]}}
@@ -766,6 +820,7 @@ function updateCartCount(){
 }
 function openCart(){renderCart();document.getElementById("cartModal").classList.add("show");}
 function openTopup(){
+  recordLiveActivity("payment","กำลังเปิดหน้าชำระเงิน / เติมเครดิต");
   const img=document.getElementById("paymentQr");
   if(img)img.src=paymentQrUrl();
   document.getElementById("topupModal").classList.add("show");
@@ -982,14 +1037,16 @@ async function openSocialOrder(platform){
   const q=document.getElementById("socialQuantity"),r=selectedSocialService.rule;q.min=r.min;q.step=r.min;q.value=r.min;renderSocialServices();updateSocialSummary();document.getElementById("socialOrderModal").classList.add("show");
 }
 async function placeSocialOrder(){
+  recordLiveActivity("ordering","กำลังสั่งซื้อบริการ "+(selectedSocialService?.rule?.label||"โซเชียล"));
   if(!selectedSocialService)return alert("กรุณาเลือกบริการ");
   const url=document.getElementById("socialTargetUrl").value.trim(),r=selectedSocialService.rule,qty=Math.ceil((Number(document.getElementById("socialQuantity").value)||r.min)/r.min)*r.min;
   if(!url)return alert("กรุณาใส่ลิงก์เป้าหมาย");if(!/^https?:\/\//i.test(url))return alert("กรุณาใส่ลิงก์ที่ขึ้นต้นด้วย https:// หรือ http://");
   const {data,error}=await supabaseClient.rpc("place_social_order",{p_service_id:selectedSocialService.id,p_target_url:url,p_quantity:qty});
   if(error)return alert("สั่งซื้อไม่สำเร็จ: "+error.message);if(!data?.success)return alert(data?.message||"เครดิตไม่เพียงพอ");
-  closeModal("socialOrderModal");await updateLoginButton();alert("สั่งซื้อสำเร็จ\n"+r.label+" "+formatNumber(qty)+" "+r.unit+"\nยอดที่หัก ฿"+formatNumber(data.total)+"\nเครดิตคงเหลือ ฿"+formatNumber(data.credit));
+  closeModal("socialOrderModal");recordLiveActivity("ordered","สั่งซื้อบริการ "+r.label+" จำนวน "+formatNumber(qty)+" "+r.unit);await updateLoginButton();alert("สั่งซื้อสำเร็จ\n"+r.label+" "+formatNumber(qty)+" "+r.unit+"\nยอดที่หัก ฿"+formatNumber(data.total)+"\nเครดิตคงเหลือ ฿"+formatNumber(data.credit));
 }
 async function createTopup(){
+  recordLiveActivity("payment","กำลังแจ้งชำระเงิน");
   const amount=Number(document.getElementById("topupAmount").value);
   if(!amount||amount<=0){alert("กรุณาระบุจำนวนเงิน");return;}
   const s=await getSession();
@@ -1143,6 +1200,7 @@ function initPromoCarousel(){
 document.addEventListener("DOMContentLoaded",updateLoginButton);
 document.addEventListener("DOMContentLoaded",initPromoCarousel);
 document.addEventListener("DOMContentLoaded",initPrimeLanguage);
+document.addEventListener("DOMContentLoaded",initLiveActivity);
 document.addEventListener("DOMContentLoaded",()=>{
   document.addEventListener("click",(event)=>{
     const b=event.target.closest("button[data-action]"); if(!b)return;
