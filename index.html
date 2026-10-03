@@ -869,7 +869,12 @@ function updateCartCount(){
   const f=document.getElementById("floatingCartCount");if(f)f.textContent=count;
 }
 function openCart(){renderCart();document.getElementById("cartModal").classList.add("show");}
-function openTopup(){
+async function openTopup(){
+  const session=await getSession();
+  if(!session){
+    alert("กรุณาเข้าสู่ระบบก่อนเติมเงิน");
+    return;
+  }
   recordLiveActivity("payment","กำลังเปิดหน้าชำระเงิน / เติมเครดิต");
   const img=document.getElementById("paymentQr");
   if(img)img.src=paymentQrUrl();
