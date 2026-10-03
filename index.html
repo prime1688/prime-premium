@@ -747,7 +747,7 @@
 
 
 
-    <section class="section" id="dashboardSection" style="display:none;padding-bottom:10px"><div class="section-title">ภาพรวมบัญชี</div><div class="dash-grid" style="padding:0;max-width:none"><div class="dash-card"><small>เครดิต</small><strong id="dashCredit">฿0.00</strong></div><div class="dash-card"><small>ออเดอร์ทั้งหมด</small><strong id="dashOrderCount">0</strong></div><div class="dash-card"><small>กำลังดำเนินการ</small><strong id="dashProcessing">0</strong></div><div class="dash-card"><small>สำเร็จแล้ว</small><strong id="dashCompleted">0</strong></div></div></section>
+    <section class="section" id="dashboardSection" style="display:none;padding-bottom:10px"><div class="section-title">ภาพรวมบัญชี</div><div class="dash-grid" style="padding:0;max-width:none"><div class="dash-card"><small>เครดิต</small><strong id="dashCredit">฿0.00</strong></div><div class="dash-card"><small>ออเดอร์ทั้งหมด</small><strong id="dashOrderCount">0</strong></div><div class="dash-card"><small>กำลังดำเนินการ</small><strong id="dashProcessing">0</strong></div><div class="dash-card"><small>สำเร็จแล้ว</small><strong id="dashCompleted">0</strong></div></div><div style="margin-top:12px"><button id="adminSyncSmmBtn" class="secondary" type="button" data-action="syncSmmCatalog" style="display:none">🔄 ซิงก์บริการ SMMGo</button></div></section>
 
     <section class="section" id="social">
       <div class="section-title">ช่องทางโซเชียล</div>
@@ -1035,6 +1035,25 @@ async function openTransactions(){
     const date=x.created_at?new Date(x.created_at).toLocaleString("th-TH"):"-";
     return '<div class="tx-row"><div class="tx-top"><strong>'+String(x.type||"รายการ")+'</strong><strong>฿'+amount+'</strong></div><div class="muted">'+date+' · <span class="'+cls+'">'+transactionStatus(x.status,x.verification_status)+'</span></div><div class="muted">'+String(x.description||"")+'</div></div>';
   }).join("");
+}
+async function syncSmmCatalog(){
+  const btn=document.getElementById("adminSyncSmmBtn");
+  const s=await getSession();
+  if(!s){alert("กรุณาเข้าสู่ระบบก่อน");return;}
+  if(btn){btn.disabled=true;btn.textContent="กำลังซิงก์บริการ...";}
+  try{
+    const {data,error}=await supabaseClient.functions.invoke("sync-smm-catalog",{body:{}});
+    if(error){
+      let msg=error.message||"ซิงก์บริการไม่สำเร็จ";
+      try{if(error.context){const t=await error.context.text();const j=JSON.parse(t);msg=j?.message||msg;}}catch(e){}
+      if(/เฉพาะผู้ดูแลระบบ|403|Forbidden/i.test(msg)){if(btn)btn.style.display="none";return;}
+      throw new Error(msg);
+    }
+    if(!data?.success)throw new Error(data?.message||"ซิงก์บริการไม่สำเร็จ");
+    alert("ซิงก์บริการสำเร็จ\\nจับคู่แล้ว "+Number(data.matched||0)+" รายการ\\nยังจับคู่ไม่ได้ "+Number(data.skipped||0)+" รายการ");
+    await loadSocialServices(socialPlatformCurrent||"Instagram");
+  }catch(e){alert(e?.message||"ซิงก์บริการไม่สำเร็จ");}
+  finally{if(btn){btn.disabled=false;btn.textContent="🔄 ซิงก์บริการ SMMGo";}}
 }
 async function updateLoginButton(){
   const s=await getSession(),logged=!!s,phone=localStorage.getItem("prime_phone")||"";
@@ -1404,7 +1423,7 @@ document.addEventListener("DOMContentLoaded",()=>{
   document.addEventListener("click",(event)=>{
     const b=event.target.closest("button[data-action]"); if(!b)return;
     const a=b.dataset.action;
-    if(a==="login") login(); else if(a==="logout") logout(); else if(a==="goProducts") goProducts(); else if(a==="openTopup") openTopup(); else if(a==="openTransactions") openTransactions(); else if(a==="openOrders") openOrders(); else if(a==="openFreeRewards") openFreeRewards(); else if(a==="openTerms") document.getElementById("termsModal")?.classList.add("show"); else if(a==="openCart") openCart(); else if(a==="openWithdraw") openWithdraw(); else if(a==="vipOnly") alert("ฟังก์ชันนี้สำหรับสมาชิก VIP เท่านั้น"); else if(a==="addToCart") addToCart(b.dataset.name,Number(b.dataset.price)); else if(a==="removeFromCart") removeFromCart(Number(b.dataset.index)); else if(a==="clearCart") clearCart(); else if(a==="showSocial") showSocial(b.dataset.name); else if(a==="closeModal") closeModal(b.dataset.modal); else if(a==="createTopup") createTopup(); else if(a==="topupSuccessHistory"){closeTopupSuccess();openTransactions();} else if(a==="topupSuccessDone"){closeTopupSuccess();window.scrollTo({top:0,behavior:"smooth"});} else if(a==="topupErrorDone"){closeTopupError();} else if(a==="checkout") checkout(); else if(a==="placeSocialOrder") placeSocialOrder();
+    if(a==="login") login(); else if(a==="logout") logout(); else if(a==="goProducts") goProducts(); else if(a==="openTopup") openTopup(); else if(a==="openTransactions") openTransactions(); else if(a==="openOrders") openOrders(); else if(a==="openFreeRewards") openFreeRewards(); else if(a==="openTerms") document.getElementById("termsModal")?.classList.add("show"); else if(a==="openCart") openCart(); else if(a==="openWithdraw") openWithdraw(); else if(a==="vipOnly") alert("ฟังก์ชันนี้สำหรับสมาชิก VIP เท่านั้น"); else if(a==="addToCart") addToCart(b.dataset.name,Number(b.dataset.price)); else if(a==="removeFromCart") removeFromCart(Number(b.dataset.index)); else if(a==="clearCart") clearCart(); else if(a==="showSocial") showSocial(b.dataset.name); else if(a==="closeModal") closeModal(b.dataset.modal); else if(a==="createTopup") createTopup(); else if(a==="topupSuccessHistory"){closeTopupSuccess();openTransactions();} else if(a==="topupSuccessDone"){closeTopupSuccess();window.scrollTo({top:0,behavior:"smooth"});} else if(a==="topupErrorDone"){closeTopupError();} else if(a==="checkout") checkout(); else if(a==="placeSocialOrder") placeSocialOrder(); else if(a==="syncSmmCatalog") syncSmmCatalog();
   });
 });</script>
   <div class="modal" id="topupModal">
