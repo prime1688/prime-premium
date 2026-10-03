@@ -1359,79 +1359,149 @@ ko:{
 let primeCurrentLanguage=localStorage.getItem("prime_language")||"th";
 const primeOriginalText=new WeakMap(),primeOriginalAttr=new WeakMap();
 let primeTranslating=false;
+function primeLanguagePairs(){
+  const pairs=[];
+  const add=(dict)=>{
+    Object.entries(dict||{}).forEach(([source,target])=>{
+      if(typeof source==="string"&&source.trim()&&typeof target==="string"&&target.trim()&&source!==target)pairs.push([source,target]);
+    });
+  };
+  Object.values(PRIME_LANG||{}).forEach(add);
+  Object.values(PRIME_EXTRA_LANG||{}).forEach(add);
+  return pairs.sort((x,y)=>y[0].length-x[0].length);
+}
+function primeLanguageReversePairs(){
+  const pairs=[];
+  const add=(dict)=>{
+    Object.entries(dict||{}).forEach(([source,target])=>{
+      if(typeof source==="string"&&source.trim()&&typeof target==="string"&&target.trim()&&source!==target)pairs.push([target,source]);
+    });
+  };
+  Object.values(PRIME_LANG||{}).forEach(add);
+  Object.values(PRIME_EXTRA_LANG||{}).forEach(add);
+  return pairs.sort((x,y)=>y[0].length-x[0].length);
+}
+let primeForwardPairs=null,primeReversePairs=null;
 function primeCanonicalText(raw){
-  const s=String(raw??"");
-  const trim=s.trim();
+  const s=String(raw??""),trim=s.trim();
   if(!trim)return s;
-  for(const lang of Object.keys(PRIME_LANG)){
-    const dict=PRIME_LANG[lang]||{};
-    for(const key of Object.keys(dict)){if(dict[key]===trim)return s.replace(trim,key);}
-    const extra=PRIME_EXTRA_LANG[lang]||{};
-    for(const key of Object.keys(extra)){if(extra[key]===trim)return s.replace(trim,key);}
+  primeReversePairs??=primeLanguageReversePairs();
+  for(const [translated,source] of primeReversePairs){
+    if(trim===translated)return s.replace(trim,source);
   }
-  const patterns=[
-    [/^Viewing this page now (\\d+) people$/,"กำลังดูหน้านี้อยู่ $1 คน"],
-    [/^正在查看此页面 (\\d+) 人$/,"กำลังดูหน้านี้อยู่ $1 คน"],
-    [/^このページを閲覧中 (\\d+) 人$/,"กำลังดูหน้านี้อยู่ $1 คน"],
-    [/^현재 이 페이지를 보고 있는 사람 (\\d+)명$/,"กำลังดูหน้านี้อยู่ $1 คน"],
-    [/^Viewing this product now (\\d+) people$/,"กำลังดูสินค้านี้อยู่ $1 คน"],
-    [/^正在查看此产品 (\\d+) 人$/,"กำลังดูสินค้านี้อยู่ $1 คน"],
-    [/^この商品を閲覧中 (\\d+) 人$/,"กำลังดูสินค้านี้อยู่ $1 คน"],
-    [/^현재 이 상품을 보고 있는 사람 (\\d+)명$/,"กำลังดูสินค้านี้อยู่ $1 คน"]
+  // If a translated sentence contains a dynamic value, recover its Thai source.
+  const dyn=[
+    [/^Viewing this page now\\s+(\\d+)\\s+people$/,"กำลังดูหน้านี้อยู่ $1 คน"],
+    [/^正在查看此页面\\s*(\\d+)\\s*人$/,"กำลังดูหน้านี้อยู่ $1 คน"],
+    [/^このページを閲覧中\\s*(\\d+)\\s*人$/,"กำลังดูหน้านี้อยู่ $1 คน"],
+    [/^현재 이 페이지를 보고 있는 사람\\s*(\\d+)명$/,"กำลังดูหน้านี้อยู่ $1 คน"],
+    [/^Viewing this product now\\s+(\\d+)\\s+people$/,"กำลังดูสินค้านี้อยู่ $1 คน"],
+    [/^正在查看此产品\\s*(\\d+)\\s*人$/,"กำลังดูสินค้านี้อยู่ $1 คน"],
+    [/^この商品を閲覧中\\s*(\\d+)\\s*人$/,"กำลังดูสินค้านี้อยู่ $1 คน"],
+    [/^현재 이 상품을 보고 있는 사람\\s*(\\d+)명$/,"กำลังดูสินค้านี้อยู่ $1 คน"]
   ];
-  for(const [re,repl] of patterns)if(re.test(trim))return s.replace(trim,trim.replace(re,repl));
+  for(const [re,repl] of dyn){if(re.test(trim))return s.replace(trim,trim.replace(re,repl));}
   return s;
 }
-function primeRememberText(n){
-  if(!primeOriginalText.has(n))primeOriginalText.set(n,primeCanonicalText(n.nodeValue||""));
-  return primeOriginalText.get(n);
-}
-function primeRememberAttr(el,name){
-  let m=primeOriginalAttr.get(el);
-  if(!m){m={};primeOriginalAttr.set(el,m);}
-  if(!(name in m))m[name]=primeCanonicalText(el.getAttribute(name)||"");
-  return m[name];
-}
 function primeTranslateText(value,lang=primeCurrentLanguage){
-  const dict=PRIME_LANG[lang]||PRIME_LANG.th,raw=String(value??""),trimmed=raw.trim();
+  const raw=String(value??"");
+  const canonical=primeCanonicalText(raw);
+  const trimmed=canonical.trim();
   if(!trimmed)return raw;
+  const dict=PRIME_LANG[lang]||PRIME_LANG.th;
   const extra=PRIME_EXTRA_LANG[lang]||{};
-  if(extra[trimmed]!==undefined)return raw.replace(trimmed,extra[trimmed]);
-  if(dict[trimmed]!==undefined)return raw.replace(trimmed,dict[trimmed]);
-  const m1=trimmed.match(/^รางวัลวันนี้ <strong>฿([0-9.,]+)<\/strong> · รับได้วันละ 1 ครั้ง$/);
-  const m2=trimmed.match(/^🎉 <b>สมาชิกใหม่<\/b> รับรางวัลวันนี้ <strong>฿([0-9.,]+)<\/strong>$/);
+  if(extra[trimmed]!==undefined)return canonical.replace(trimmed,extra[trimmed]);
+  if(dict[trimmed]!==undefined)return canonical.replace(trimmed,dict[trimmed]);
+
+  const m1=trimmed.match(/^รางวัลวันนี้ <strong>฿([0-9.,]+)<\\/strong> · รับได้วันละ 1 ครั้ง$/);
+  const m2=trimmed.match(/^🎉 <b>สมาชิกใหม่<\\/b> รับรางวัลวันนี้ <strong>฿([0-9.,]+)<\\/strong>$/);
   const m3=trimmed.match(/^จำนวน ([0-9,]+) (.+)$/);
   const m4=trimmed.match(/^ขั้นต่ำ ([0-9,]+) (.+)$/);
   const m5=trimmed.match(/^สั่งซื้อ ฿([0-9.,]+)$/);
-  if(trimmed==="กำลังดูหน้านี้อยู่"){if(lang==="en")return "Viewing this page now";if(lang==="zh-CN")return "正在查看此页面";if(lang==="ja")return "このページを閲覧中";if(lang==="ko")return "현재 이 페이지를 보고 있는 사람";}
-  if(trimmed==="คน"){if(lang==="en")return "people";if(lang==="zh-CN")return "人";if(lang==="ja")return "人";if(lang==="ko")return "명";}
-  if(trimmed==="✓ รับรางวัลวันนี้แล้ว"){if(lang==="en")return "✓ Reward claimed today";if(lang==="zh-CN")return "✓ 今日奖励已领取";if(lang==="ja")return "✓ 今日の報酬を受取済み";if(lang==="ko")return "✓ 오늘의 보상을 받았습니다";}
-  if(trimmed==="รับรางวัลไม่สำเร็จ"){if(lang==="en")return "Failed to claim reward";if(lang==="zh-CN")return "领取奖励失败";if(lang==="ja")return "報酬の受け取りに失敗しました";if(lang==="ko")return "보상 수령에 실패했습니다";}
-  const n=(m1||m2||m3||m4||m5)?.[1],u=(m3||m4)?.[2];
-  if(m1){if(lang==="en")return "🎁 Today's reward <strong>฿"+n+"</strong> · 1 claim per day";if(lang==="zh-CN")return "🎁 今日奖励 <strong>฿"+n+"</strong> · 每天可领取1次";if(lang==="ja")return "🎁 今日の報酬 <strong>฿"+n+"</strong> · 1日1回";if(lang==="ko")return "🎁 오늘의 보상 <strong>฿"+n+"</strong> · 하루 1회";}
-  if(m2){if(lang==="en")return "🎉 <b>New member</b> Today's reward <strong>฿"+n+"</strong>";if(lang==="zh-CN")return "🎉 <b>新会员</b> 今日奖励 <strong>฿"+n+"</strong>";if(lang==="ja")return "🎉 <b>新規会員</b> 今日の報酬 <strong>฿"+n+"</strong>";if(lang==="ko")return "🎉 <b>신규 회원</b> 오늘의 보상 <strong>฿"+n+"</strong>";}
-  if(m3){if(lang==="en")return "Quantity "+n+" "+u;if(lang==="zh-CN")return "数量 "+n+" "+u;if(lang==="ja")return "数量 "+n+" "+u;if(lang==="ko")return "수량 "+n+" "+u;}
-  if(m4){if(lang==="en")return "Minimum "+n+" "+u;if(lang==="zh-CN")return "最低 "+n+" "+u;if(lang==="ja")return "最低 "+n+" "+u;if(lang==="ko")return "최소 "+n+" "+u;}
-  if(m5){if(lang==="en")return "Order ฿"+n;if(lang==="zh-CN")return "购买 ฿"+n;if(lang==="ja")return "注文 ฿"+n;if(lang==="ko")return "주문 ฿"+n;}
-  return raw;
+  if(m1){
+    const n=m1[1];
+    if(lang==="en")return canonical.replace(trimmed,"🎁 Today's reward <strong>฿"+n+"</strong> · 1 claim per day");
+    if(lang==="zh-CN")return canonical.replace(trimmed,"🎁 今日奖励 <strong>฿"+n+"</strong> · 每天可领取1次");
+    if(lang==="ja")return canonical.replace(trimmed,"🎁 今日の報酬 <strong>฿"+n+"</strong> · 1日1回");
+    if(lang==="ko")return canonical.replace(trimmed,"🎁 오늘의 보상 <strong>฿"+n+"</strong> · 하루 1회");
+  }
+  if(m2){
+    const n=m2[1];
+    if(lang==="en")return canonical.replace(trimmed,"🎉 <b>New member</b> Today's reward <strong>฿"+n+"</strong>");
+    if(lang==="zh-CN")return canonical.replace(trimmed,"🎉 <b>新会员</b> 今日奖励 <strong>฿"+n+"</strong>");
+    if(lang==="ja")return canonical.replace(trimmed,"🎉 <b>新規会員</b> 今日の報酬 <strong>฿"+n+"</strong>");
+    if(lang==="ko")return canonical.replace(trimmed,"🎉 <b>신규 회원</b> 오늘의 보상 <strong>฿"+n+"</strong>");
+  }
+  if(m3){
+    const n=m3[1],u=m3[2];
+    if(lang==="en")return canonical.replace(trimmed,"Quantity "+n+" "+u);
+    if(lang==="zh-CN")return canonical.replace(trimmed,"数量 "+n+" "+u);
+    if(lang==="ja")return canonical.replace(trimmed,"数量 "+n+" "+u);
+    if(lang==="ko")return canonical.replace(trimmed,"수량 "+n+" "+u);
+  }
+  if(m4){
+    const n=m4[1],u=m4[2];
+    if(lang==="en")return canonical.replace(trimmed,"Minimum "+n+" "+u);
+    if(lang==="zh-CN")return canonical.replace(trimmed,"最低 "+n+" "+u);
+    if(lang==="ja")return canonical.replace(trimmed,"最低 "+n+" "+u);
+    if(lang==="ko")return canonical.replace(trimmed,"최소 "+n+" "+u);
+  }
+  if(m5){
+    const n=m5[1];
+    if(lang==="en")return canonical.replace(trimmed,"Order ฿"+n);
+    if(lang==="zh-CN")return canonical.replace(trimmed,"购买 ฿"+n);
+    if(lang==="ja")return canonical.replace(trimmed,"注文 ฿"+n);
+    if(lang==="ko")return canonical.replace(trimmed,"주문 ฿"+n);
+  }
+
+  // Fallback: translate phrases inside longer/dynamic strings.
+  primeForwardPairs??=primeLanguagePairs();
+  let out=canonical;
+  for(const [source,target] of primeForwardPairs){
+    if(source.length>1 && out.includes(source))out=out.split(source).join(target);
+  }
+  return raw.replace(trimmed,out.trim());
 }
 function primeTranslateSubtree(root,lang=primeCurrentLanguage){
-  const w=document.createTreeWalker(root,NodeFilter.SHOW_TEXT),nodes=[];let n;
+  const w=document.createTreeWalker(root,NodeFilter.SHOW_TEXT,{
+    acceptNode(node){
+      const p=node.parentElement;
+      if(p && /^(SCRIPT|STYLE|NOSCRIPT|TEMPLATE)$/i.test(p.tagName))return NodeFilter.FILTER_REJECT;
+      return NodeFilter.FILTER_ACCEPT;
+    }
+  });
+  const nodes=[];let n;
   while(n=w.nextNode())nodes.push(n);
-  nodes.forEach(node=>{const original=primeRememberText(node),translated=primeTranslateText(original,lang);if(node.nodeValue!==translated)node.nodeValue=translated;});
-  root.querySelectorAll?.("*").forEach(el=>["placeholder","aria-label","title","alt"].forEach(name=>{if(el.hasAttribute(name)){const original=primeRememberAttr(el,name),translated=primeTranslateText(original,lang);if(el.getAttribute(name)!==translated)el.setAttribute(name,translated);}}));
+  nodes.forEach(node=>{
+    const original=primeRememberText(node);
+    const translated=primeTranslateText(original,lang);
+    if(node.nodeValue!==translated)node.nodeValue=translated;
+  });
+  root.querySelectorAll?.("*").forEach(el=>{
+    if(/^(SCRIPT|STYLE|NOSCRIPT|TEMPLATE)$/i.test(el.tagName))return;
+    ["placeholder","aria-label","title","alt"].forEach(name=>{
+      if(el.hasAttribute(name)){
+        const original=primeRememberAttr(el,name),translated=primeTranslateText(original,lang);
+        if(el.getAttribute(name)!==translated)el.setAttribute(name,translated);
+      }
+    });
+  });
 }
 function primeTranslatePage(lang){
   primeCurrentLanguage=PRIME_LANG[lang]?lang:"th";
-  const obs=window.__primeLangObserver;obs?.disconnect();primeTranslating=true;
+  const obs=window.__primeLangObserver;obs?.disconnect();
+  primeTranslating=true;
   primeTranslateSubtree(document.body,primeCurrentLanguage);
   document.documentElement.lang=primeCurrentLanguage;
-  const toggle=document.getElementById("primeLangToggle"),flags={th:"🇹🇭",en:"🇬🇧","zh-CN":"🇨🇳",ja:"🇯🇵",ko:"🇰🇷"};if(toggle)toggle.textContent=flags[primeCurrentLanguage];
-  primeTranslating=false;obs?.observe(document.body,{subtree:true,childList:true,characterData:true});
+  const toggle=document.getElementById("primeLangToggle"),flags={th:"🇹🇭",en:"🇬🇧","zh-CN":"🇨🇳",ja:"🇯🇵",ko:"🇰🇷"};
+  if(toggle)toggle.textContent=flags[primeCurrentLanguage];
+  primeTranslating=false;
+  obs?.observe(document.body,{subtree:true,childList:true,characterData:true});
 }
 function setPrimeLanguage(lang){
   if(!PRIME_LANG[lang])lang="th";
   localStorage.setItem("prime_language",lang);
+  primeForwardPairs=null;primeReversePairs=null;
   primeTranslatePage(lang);
   if(typeof renderFreeRewards==="function" && document.getElementById("freeRewardsModal")?.classList.contains("show")) renderFreeRewards();
   if(typeof openTransactions==="function" && document.getElementById("transactionsModal")?.classList.contains("show")) openTransactions();
@@ -1439,17 +1509,29 @@ function setPrimeLanguage(lang){
   document.getElementById("primeLanguage")?.classList.remove("open");
 }
 function initPrimeLanguage(){
-  const box=document.getElementById("primeLanguage"),toggle=document.getElementById("primeLangToggle");if(!box||!toggle)return;
+  const box=document.getElementById("primeLanguage"),toggle=document.getElementById("primeLangToggle");
+  if(!box||!toggle)return;
   toggle.addEventListener("click",e=>{e.stopPropagation();box.classList.toggle("open");});
   box.querySelectorAll("[data-lang]").forEach(b=>b.addEventListener("click",e=>{e.stopPropagation();setPrimeLanguage(b.dataset.lang);}));
   document.addEventListener("click",()=>box.classList.remove("open"));
   window.__primeLangObserver=new MutationObserver(mutations=>{
-    if(primeTranslating)return;window.__primeLangObserver.disconnect();primeTranslating=true;
+    if(primeTranslating)return;
+    window.__primeLangObserver.disconnect();primeTranslating=true;
     for(const m of mutations){
-      if(m.type==="characterData"&&m.target){const original=primeRememberText(m.target);m.target.nodeValue=primeTranslateText(original,primeCurrentLanguage);}
-      m.addedNodes?.forEach(node=>{if(node.nodeType===Node.ELEMENT_NODE)primeTranslateSubtree(node,primeCurrentLanguage);else if(node.nodeType===Node.TEXT_NODE){const original=primeRememberText(node);node.nodeValue=primeTranslateText(original,primeCurrentLanguage);}});
+      if(m.type==="characterData"&&m.target){
+        const original=primeRememberText(m.target);
+        m.target.nodeValue=primeTranslateText(original,primeCurrentLanguage);
+      }
+      m.addedNodes?.forEach(node=>{
+        if(node.nodeType===Node.ELEMENT_NODE)primeTranslateSubtree(node,primeCurrentLanguage);
+        else if(node.nodeType===Node.TEXT_NODE){
+          const original=primeRememberText(node);
+          node.nodeValue=primeTranslateText(original,primeCurrentLanguage);
+        }
+      });
     }
-    primeTranslating=false;window.__primeLangObserver.observe(document.body,{subtree:true,childList:true,characterData:true});
+    primeTranslating=false;
+    window.__primeLangObserver.observe(document.body,{subtree:true,childList:true,characterData:true});
   });
   window.__primeLangObserver.observe(document.body,{subtree:true,childList:true,characterData:true});
   primeTranslatePage(localStorage.getItem("prime_language")||"th");
