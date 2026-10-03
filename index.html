@@ -341,7 +341,7 @@
     .promo-stage{display:grid;grid-template-columns:.92fr 1.45fr .92fr .92fr;gap:8px;min-height:250px;transition:transform .55s ease}
     .promo-panel{position:relative;min-width:0;height:250px;overflow:hidden;border:1px solid #4a2670;border-radius:20px;background:#0d0912;box-shadow:0 12px 40px rgba(0,0,0,.38),0 0 28px rgba(181,108,255,.12)}
     .promo-panel.promo-ad{background:#111;display:flex;align-items:stretch;justify-content:center}
-    .promo-ad img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .55s ease,filter .55s ease}
+    .promo-ad img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .55s ease,filter .55s ease}.promo-rotating-ad img{transition:opacity .22s ease,transform .55s ease,filter .55s ease}
     .promo-ad:hover img{transform:scale(1.04);filter:brightness(1.08)}
     .promo-ad-caption{position:absolute;left:8px;right:8px;bottom:8px;padding:8px 10px;border-radius:12px;background:rgba(0,0,0,.68);backdrop-filter:blur(8px);color:#fff;display:flex;flex-direction:column;gap:2px}.promo-ad-caption strong{font-size:14px}.promo-ad-caption span{font-size:10px;color:#ddd}
     .promo-prime{display:flex;flex-direction:column;align-items:center;justify-content:center;background:radial-gradient(circle at 50% 50%,#35124d 0,#10081a 44%,#050505 100%);text-align:center}
@@ -551,11 +551,9 @@
         <img src="https://st.bigc-cs.com/cdn-cgi/image/format%3Dwebp%2Cquality%3D90/public/media/catalog/product/47/88/8853333027747/8853333027747_4-20260424093318-.jpg" alt="Malee COCO Coconut Matcha">
         <div class="promo-ad-caption"><strong>Malee COCO</strong><span>น้ำมะพร้าวผสมชาเขียวมัทฉะ</span></div>
       </article>
-      <article class="promo-panel promo-ad promo-prime-service">
-        <div class="service-glow">PRIME</div>
-        <strong>บริการโซเชียล</strong>
-        <span>ครบ จบ ในที่เดียว</span>
-        <div class="service-icons">◎　♪　▶　f</div>
+      <article class="promo-panel promo-ad promo-rotating-ad" id="promoRotatingAd">
+        <img id="promoRotatingAdImg" src="https://sghimages.shobserver.com/img/catch/2024/08/04/8b60d226-125f-40fb-87c9-f5cb69fc7a9d.jpg" alt="โฆษณาเจอราเนียม">
+        <div class="promo-ad-caption" id="promoRotatingCaption"><strong>เจอราเนียม</strong><span>ดอกไม้ตกแต่งบ้าน</span></div>
       </article>
     </div>
     <button class="promo-arrow promo-prev" type="button" aria-label="เลื่อนไปซ้าย">‹</button>
@@ -933,6 +931,22 @@ async function checkout(){
   alert("สั่งซื้อสำเร็จ\nหักเครดิต ฿"+total.toFixed(2)+" แล้ว");
 }
 if(supabaseClient){supabaseClient.auth.onAuthStateChange(()=>{setTimeout(updateLoginButton,0);});}
+const promoAdState={index:0,timer:null};
+const promoAds=[
+  {src:"https://sghimages.shobserver.com/img/catch/2024/08/04/8b60d226-125f-40fb-87c9-f5cb69fc7a9d.jpg",title:"เจอราเนียม",sub:"ดอกไม้ตกแต่งบ้าน"},
+  {src:"https://down-th.img.susercontent.com/file/th-11134207-7r992-luud9mujzf3id2",title:"D-nee Berry Crush",sub:"Yogurt Body Bath"},
+  {src:"https://cdn-optimized.imweb.me/thumbnail/20250220/db4ebd9271311.jpg?w=750",title:"อาหลิว เส้นบุก",sub:"ปรุงรสหม่าล่า"}
+];
+function initRotatingPromoAd(){
+  const img=document.getElementById("promoRotatingAdImg"),cap=document.getElementById("promoRotatingCaption");
+  if(!img||!cap)return;
+  const show=()=>{
+    const ad=promoAds[promoAdState.index];
+    img.style.opacity="0";
+    setTimeout(()=>{img.src=ad.src;img.alt=ad.title;cap.innerHTML="<strong>"+ad.title+"</strong><span>"+ad.sub+"</span>";img.style.opacity="1";},220);
+  };
+  promoAdState.timer=setInterval(()=>{promoAdState.index=(promoAdState.index+1)%promoAds.length;show();},3000);
+}
 const promoState={index:0,timer:null};
 function initPromoCarousel(){
   const root=document.getElementById("promoCarousel"),stage=document.getElementById("promoStage"),dots=document.getElementById("promoDots");
@@ -959,6 +973,7 @@ function initPromoCarousel(){
   restartPromo();
 }
 document.addEventListener("DOMContentLoaded",updateLoginButton);
+document.addEventListener("DOMContentLoaded",initRotatingPromoAd);
 document.addEventListener("DOMContentLoaded",initPromoCarousel);
 document.addEventListener("DOMContentLoaded",()=>{ 
   document.addEventListener("click",(event)=>{
