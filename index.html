@@ -525,7 +525,9 @@
     .prime-carousel .promo-stage{aspect-ratio:16/7.2!important;border-radius:25px!important}
     .prime-carousel .promo-panel{border-radius:25px!important;border:2px solid #64269a!important}
     .prime-carousel .promo-panel.promo-active{border-color:#cf69ff!important;box-shadow:0 0 0 2px rgba(192,84,255,.15),0 0 40px rgba(181,108,255,.28)!important}
-    .prime-carousel .promo-ad img{object-fit:cover!important}
+    .prime-carousel .promo-ad img{width:50%!important;height:100%!important;object-fit:contain!important;display:block!important;margin:0 auto!important;background:#08060b}
+    .prime-carousel .promo-panel{background:#08060b!important}
+    @media(max-width:600px){.prime-carousel .promo-ad img{width:50%!important;height:100%!important;object-fit:contain!important}}
     .promo-thumbs{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-top:10px}
     .promo-thumb{height:105px;border:2px solid #32134b;border-radius:14px;padding:0;overflow:hidden;background:#0b0710;cursor:pointer;opacity:.78;transition:.2s;box-shadow:0 0 0 transparent}
     .promo-thumb img{width:100%;height:100%;object-fit:cover;display:block}.promo-thumb.active{opacity:1;border-color:#bd54ff;box-shadow:0 0 20px rgba(189,84,255,.45)}
@@ -560,11 +562,11 @@
 
   <section class="promo-carousel prime-carousel" id="promoCarousel" aria-label="PRIME โฆษณา 5 รายการ">
     <div class="promo-stage" id="promoStage">
-      <article class="promo-panel promo-ad promo-active"><img src="assets/prime-paikhoo-v2.jpg" alt="ยาดมตราไผ่คู่"><span class="promo-number">01 / 05</span></article>
-      <article class="promo-panel promo-ad"><img src="assets/prime-malee-v2.jpg" alt="Malee Coconut Matcha"><span class="promo-number">02 / 05</span></article>
-      <article class="promo-panel promo-ad"><img src="assets/prime-aliu-v2.jpg" alt="อาหลิว ขนมเส้นบุกหม่าล่า"><span class="promo-number">03 / 05</span></article>
-      <article class="promo-panel promo-ad"><img src="assets/prime-dnee-v2.jpg" alt="D-nee Yogurt Body Bath"><span class="promo-number">04 / 05</span></article>
-      <article class="promo-panel promo-ad"><img src="assets/prime-chaindrite-v2.jpg" alt="เชนไดร้ท์ ยาจุดกันยุง"><span class="promo-number">05 / 05</span></article>
+      <article class="promo-panel promo-ad promo-active"><img src="https://down-th.img.susercontent.com/file/th-11134208-81ztp-mjqdbjqtv6kl90" alt="ยาดมตราไผ่คู่"><span class="promo-number">01 / 05</span></article>
+      <article class="promo-panel promo-ad"><img src="https://down-th.img.susercontent.com/file/sg-11134201-823ph-mp7e288n7n654d" alt="Malee Coconut Matcha"><span class="promo-number">02 / 05</span></article>
+      <article class="promo-panel promo-ad"><img src="https://media.allonline.7eleven.co.th/pdmain/684672-02-allonline-sm.jpg" alt="อาหลิว ขนมเส้นบุกหม่าล่า"><span class="promo-number">03 / 05</span></article>
+      <article class="promo-panel promo-ad"><img src="https://cosmenet-private.s3-bkk.nipa.cloud/upload/Maker/product-info/dnee/dnee-peachypopsyogurtbodybath600x600.jpg" alt="D-nee Yogurt Body Bath"><span class="promo-number">04 / 05</span></article>
+      <article class="promo-panel promo-ad"><img src="https://st.bigc-cs.com/cdn-cgi/image/format%3Dwebp%2Cquality%3D90/public/media/catalog/product/85/88/8851495016685/8851495016685_1-20260604173841-.jpg" alt="เชนไดร้ท์ ยาจุดกันยุง"><span class="promo-number">05 / 05</span></article>
     </div>
     <button class="promo-arrow promo-prev" type="button" aria-label="โฆษณาก่อนหน้า">‹</button>
     <button class="promo-arrow promo-next" type="button" aria-label="โฆษณาถัดไป">›</button>
