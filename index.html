@@ -256,6 +256,110 @@
       font-weight: 800;
     }
 
+    .withdraw-highlight{
+      position:relative;
+      overflow:hidden;
+      background:linear-gradient(135deg,#21112c,#120b18);
+      color:#d8b2ff;
+      border:2px solid #8b42c9;
+      padding:15px 28px;
+      border-radius:16px;
+      font-weight:900;
+      font-size:17px;
+      letter-spacing:.2px;
+      cursor:pointer;
+      box-shadow:0 0 0 3px rgba(181,108,255,.10),0 8px 28px rgba(181,108,255,.20);
+      transition:transform .18s ease,box-shadow .2s ease,border-color .2s ease;
+    }
+    .withdraw-highlight:hover{
+      transform:translateY(-2px);
+      border-color:#c56cff;
+      box-shadow:0 0 0 4px rgba(181,108,255,.13),0 12px 34px rgba(181,108,255,.30);
+    }
+    .withdraw-notice-card{
+      width:min(470px,100%)!important;
+      text-align:center;
+      position:relative;
+      overflow:hidden;
+      background:
+        radial-gradient(circle at 50% 0%,rgba(181,108,255,.24),transparent 44%),
+        linear-gradient(180deg,#180c24,#09070d)!important;
+      border:1px solid #a94fff!important;
+      box-shadow:0 0 0 1px rgba(181,108,255,.15),0 0 70px rgba(181,108,255,.28),0 30px 90px rgba(0,0,0,.8)!important;
+      animation:withdrawNoticeIn .42s cubic-bezier(.2,.9,.3,1.2);
+    }
+    .withdraw-notice-close{
+      position:absolute;
+      right:13px;
+      top:13px;
+      width:38px;
+      height:38px;
+      border-radius:50%;
+      border:1px solid #7133a0;
+      background:#160d20;
+      color:#e4c5ff;
+      font-size:25px;
+      line-height:1;
+      cursor:pointer;
+      box-shadow:0 0 15px rgba(181,108,255,.2);
+    }
+    .withdraw-notice-icon{
+      width:104px;
+      height:104px;
+      margin:3px auto 17px;
+      border-radius:50%;
+      display:grid;
+      place-items:center;
+      background:radial-gradient(circle,#5b1b80 0%,#241033 48%,#100a15 72%);
+      border:3px solid #d58aff;
+      color:#fff;
+      font-size:52px;
+      box-shadow:0 0 18px rgba(213,138,255,.75),0 0 48px rgba(181,108,255,.38),inset 0 0 28px rgba(213,138,255,.25);
+    }
+    .withdraw-notice-title{
+      font-size:30px;
+      font-weight:950;
+      margin:0 0 12px;
+      color:#fff;
+      text-shadow:0 0 18px rgba(213,138,255,.6);
+    }
+    .withdraw-notice-text{
+      color:#d8c7e5;
+      font-size:17px;
+      font-weight:700;
+      line-height:1.7;
+      margin:0 auto 8px;
+      max-width:350px;
+    }
+    .withdraw-notice-sub{
+      color:#888;
+      font-size:12px;
+      margin:0 auto 20px;
+    }
+    .withdraw-notice-done{
+      width:100%;
+      padding:15px;
+      border:1px solid #e1b4ff;
+      border-radius:14px;
+      background:linear-gradient(135deg,#d58aff,#9c42ef);
+      color:#08050b;
+      font-size:16px;
+      font-weight:950;
+      cursor:pointer;
+      box-shadow:0 8px 30px rgba(181,108,255,.3);
+    }
+    @keyframes withdrawNoticeIn{
+      from{opacity:0;transform:translateY(18px) scale(.88)}
+      to{opacity:1;transform:translateY(0) scale(1)}
+    }
+    @media(max-width:600px){
+      .withdraw-highlight{padding:12px 18px;font-size:15px}
+      .withdraw-notice-card{padding:22px!important}
+      .withdraw-notice-icon{width:90px;height:90px;font-size:46px}
+      .withdraw-notice-title{font-size:25px}
+      .withdraw-notice-text{font-size:15px}
+    }
+
     .account-bar {
       max-width: 1100px;
       margin: 20px auto 0;
@@ -807,6 +911,7 @@
   <div class="account-bar prime-account" id="accountBar">
     <div class="account-box">สมาชิก: <strong id="accountPhone">-</strong></div>
     <button class="topup-highlight" type="button" data-action="openTopup">เติมเงิน</button>
+    <button class="withdraw-highlight" type="button" data-action="openWithdrawNotice">ถอนเงิน</button>
   </div>
 
   <section class="promo-carousel prime-carousel" id="promoCarousel" aria-label="PRIME โฆษณา 5 รายการ">
@@ -1181,6 +1286,11 @@ function transactionStatus(status,verification){
   const map={pending:"รอตรวจสอบ",approved:"สำเร็จ",rejected:"ไม่อนุมัติ",completed:"สำเร็จ"};
   return map[status]||status||"ไม่ทราบสถานะ";
 }
+function openWithdrawNotice(){
+  const modal=document.getElementById("withdrawNoticeModal");
+  if(modal) modal.classList.add("show");
+}
+
 async function openWithdraw(){
   const s=await getSession();
   if(!s){alert("กรุณาเข้าสู่ระบบก่อน");return;}
@@ -1692,7 +1802,7 @@ document.addEventListener("DOMContentLoaded",()=>{
   document.addEventListener("click",(event)=>{
     const b=event.target.closest("button[data-action]"); if(!b)return;
     const a=b.dataset.action;
-    if(a==="login") login(); else if(a==="loginContinue") performLogin(); else if(a==="logout") logout(); else if(a==="goProducts") goProducts(); else if(a==="openSignupPopup") document.getElementById("signupPopup")?.classList.add("show"); else if(a==="signupContinue"){performSignup();} else if(a==="signupSuccessDone"){closeSignupSuccess();} else if(a==="loginSuccessDone"){closeLoginSuccess();} else if(a==="openTopup") openTopup(); else if(a==="openTransactions") openTransactions(); else if(a==="openOrders") openOrders(); else if(a==="openFreeRewards") openFreeRewards(); else if(a==="openTerms") document.getElementById("termsModal")?.classList.add("show"); else if(a==="openCart") openCart(); else if(a==="openWithdraw") openWithdraw(); else if(a==="vipOnly") alert("ฟังก์ชันนี้สำหรับสมาชิก VIP เท่านั้น"); else if(a==="addToCart") addToCart(b.dataset.name,Number(b.dataset.price)); else if(a==="removeFromCart") removeFromCart(Number(b.dataset.index)); else if(a==="clearCart") clearCart(); else if(a==="showSocial") showSocial(b.dataset.name); else if(a==="closeModal") closeModal(b.dataset.modal); else if(a==="createTopup") createTopup(); else if(a==="topupSuccessHistory"){closeTopupSuccess();openTransactions();} else if(a==="topupSuccessDone"){closeTopupSuccess();window.scrollTo({top:0,behavior:"smooth"});} else if(a==="topupErrorDone"){closeTopupError();} else if(a==="checkout") checkout(); else if(a==="placeSocialOrder") placeSocialOrder(); else if(a==="syncSmmCatalog") syncSmmCatalog();
+    if(a==="login") login(); else if(a==="loginContinue") performLogin(); else if(a==="logout") logout(); else if(a==="goProducts") goProducts(); else if(a==="openSignupPopup") document.getElementById("signupPopup")?.classList.add("show"); else if(a==="signupContinue"){performSignup();} else if(a==="signupSuccessDone"){closeSignupSuccess();} else if(a==="loginSuccessDone"){closeLoginSuccess();} else if(a==="openTopup") openTopup(); else if(a==="openTransactions") openTransactions(); else if(a==="openOrders") openOrders(); else if(a==="openFreeRewards") openFreeRewards(); else if(a==="openTerms") document.getElementById("termsModal")?.classList.add("show"); else if(a==="openCart") openCart(); else if(a==="openWithdrawNotice") openWithdrawNotice(); else if(a==="openWithdraw") openWithdraw(); else if(a==="vipOnly") alert("ฟังก์ชันนี้สำหรับสมาชิก VIP เท่านั้น"); else if(a==="addToCart") addToCart(b.dataset.name,Number(b.dataset.price)); else if(a==="removeFromCart") removeFromCart(Number(b.dataset.index)); else if(a==="clearCart") clearCart(); else if(a==="showSocial") showSocial(b.dataset.name); else if(a==="closeModal") closeModal(b.dataset.modal); else if(a==="createTopup") createTopup(); else if(a==="topupSuccessHistory"){closeTopupSuccess();openTransactions();} else if(a==="topupSuccessDone"){closeTopupSuccess();window.scrollTo({top:0,behavior:"smooth"});} else if(a==="topupErrorDone"){closeTopupError();} else if(a==="checkout") checkout(); else if(a==="placeSocialOrder") placeSocialOrder(); else if(a==="syncSmmCatalog") syncSmmCatalog();
   });
 });</script>
   <div class="modal" id="loginPopup">
@@ -1767,6 +1877,17 @@ document.addEventListener("DOMContentLoaded",()=>{
         <button class="close-btn" data-action="closeModal" data-modal="topupModal">ปิด</button>
         <button class="primary" data-action="createTopup">ตรวจสอบสลิปและเติมเครดิต</button>
       </div>
+    </div>
+  </div>
+
+  <div class="modal" id="withdrawNoticeModal" role="dialog" aria-modal="true">
+    <div class="modal-card withdraw-notice-card">
+      <button class="withdraw-notice-close" type="button" data-action="closeModal" data-modal="withdrawNoticeModal" aria-label="ปิด">×</button>
+      <div class="withdraw-notice-icon">🏦</div>
+      <div class="withdraw-notice-title">ระบบถอนเงิน</div>
+      <p class="withdraw-notice-text">ระบบธนาคารอยู่ในช่วง<br>การอัพเดท</p>
+      <p class="withdraw-notice-sub">กรุณารอสักครู่แล้วกลับมาใช้งานใหม่</p>
+      <button class="withdraw-notice-done" type="button" data-action="closeModal" data-modal="withdrawNoticeModal">ตกลง</button>
     </div>
   </div>
 
