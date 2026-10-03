@@ -1261,7 +1261,6 @@ async function checkout(){
 const PRIME_LANG={th:{}};
 const PRIME_EXTRA_LANG={th:{}};
 let primeCurrentLanguage="th";
-let primeTranslating=false;
 function primeRememberText(node){if(!primeOriginalText.has(node))primeOriginalText.set(node,node.nodeValue||"");return primeOriginalText.get(node);}
 function primeRememberAttr(el,name){let m=primeOriginalAttr.get(el);if(!m){m={};primeOriginalAttr.set(el,m);}if(!(name in m))m[name]=el.getAttribute(name)||"";return m[name];}
 function primeTranslateText(value){return String(value??"");}
