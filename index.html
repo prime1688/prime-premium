@@ -1111,9 +1111,13 @@ let topupSubmitting=false;
 function fileToSlipBase64(file){
   return new Promise((resolve,reject)=>{
     if(!file)return reject(new Error("กรุณาแนบรูปสลิป"));
-    if(!/^image\\/(jpeg|png|webp)$/i.test(file.type) && !/\\.(jpe?g|png|webp)$/i.test(file.name||"")){
-      return reject(new Error("รองรับไฟล์รูปสลิป JPG, JPEG, PNG หรือ WEBP"));
-    }
+    const type=String(file.type||"").toLowerCase();
+    const name=String(file.name||"").toLowerCase();
+    const allowedTypes=["image/jpeg","image/png","image/webp"];
+    const allowedExt=[".jpg",".jpeg",".png",".webp"];
+    const okType=allowedTypes.includes(type);
+    const okExt=allowedExt.some(ext=>name.endsWith(ext));
+    if(!okType && !okExt)return reject(new Error("รองรับไฟล์รูปสลิป JPG, JPEG, PNG หรือ WEBP"));
     const reader=new FileReader();
     reader.onerror=()=>reject(new Error("อ่านรูปสลิปไม่สำเร็จ"));
     reader.onload=()=>{
