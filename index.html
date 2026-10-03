@@ -320,6 +320,22 @@
     .tx-top { display:flex; justify-content:space-between; gap:10px; }
     .muted { color:#888; font-size:13px; }
     .empty-state { color:#888; text-align:center; padding:20px 0; }
+    .reward-modal-card{max-width:430px!important;background:linear-gradient(180deg,#160d20,#0d0a10)!important;border:1px solid #7133a0!important;box-shadow:0 0 45px rgba(181,108,255,.18)}
+    .reward-head{text-align:center;margin-bottom:16px}.reward-head .gift{font-size:42px;filter:drop-shadow(0 0 12px rgba(181,108,255,.5))}
+    .reward-head h2{margin:5px 0;color:#fff}.reward-head p{color:#aaa;font-size:13px;margin:0}
+    .reward-progress{background:#0b080d;border:1px solid #33213f;border-radius:14px;padding:12px;margin-bottom:14px;text-align:center}
+    .reward-progress strong{display:block;color:#d09aff;font-size:22px}.reward-progress span{font-size:11px;color:#888}
+    .reward-calendar{background:#0b080d;border:1px solid #2e1c38;border-radius:16px;padding:10px}
+    .reward-week,.reward-days{display:grid;grid-template-columns:repeat(7,1fr);gap:5px}
+    .reward-week div{text-align:center;color:#777;font-size:10px;padding:4px 0}
+    .reward-day{min-height:48px;border:1px solid #24162d;border-radius:10px;background:#120d16;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px}
+    .reward-day.empty{background:transparent;border-color:transparent}.reward-day .date{font-size:10px;color:#888}
+    .reward-day .amount{font-size:10px;font-weight:900;color:#d09aff}.reward-day.today{border-color:#b56cff;box-shadow:0 0 14px rgba(181,108,255,.22)}
+    .reward-day.claimed{background:#241433;border-color:#7133a0}.reward-day.claimed .date{color:#fff}.reward-day.claimed .amount{color:#7ee787}
+    .reward-day.locked{opacity:.42}
+    .reward-claim{width:100%;margin-top:14px;padding:14px;border:0;border-radius:13px;background:linear-gradient(135deg,#d58aff,#a94fff);color:#09060b;font-size:16px;font-weight:900;cursor:pointer;box-shadow:0 8px 25px rgba(181,108,255,.25)}
+    .reward-claim:disabled{background:#28202c;color:#777;box-shadow:none;cursor:not-allowed}
+
 
     .footer {
       border-top: 1px solid #222;
@@ -775,13 +791,48 @@ function orderStatusText(s){return {pending:"รอดำเนินการ",
 async function openFreeRewards(){
   const s=await getSession();
   if(!s){alert("กรุณาเข้าสู่ระบบก่อนรับรางวัลฟรี");return;}
-  const {data,error}=await supabaseClient.rpc("claim_free_reward");
-  if(error){alert("รับรางวัลไม่สำเร็จ: "+error.message);return;}
-  if(!data?.success){alert(data?.message||"วันนี้รับรางวัลไปแล้ว");return;}
-  await updateLoginButton();
-  const amount=Number(data.amount||0).toFixed(2);
-  alert((data.reward_type==="welcome"?"🎁 รางวัลสมาชิกใหม่":"🎁 รางวัลฟรีประจำวัน")+"\nรับเครดิตฟรี ฿"+amount+" สำเร็จ\nเครดิตคงเหลือ ฿"+Number(data.credit||0).toFixed(2));
+  const modal=document.getElementById("freeRewardsModal");
+  if(modal) modal.classList.add("show");
+  await renderFreeRewards();
 }
+async function renderFreeRewards(){
+  const s=await getSession(); if(!s)return;
+  const grid=document.getElementById("rewardDays"), info=document.getElementById("rewardInfo"), btn=document.getElementById("rewardClaimBtn");
+  if(!grid)return;
+  const now=new Date(), y=now.getFullYear(), m=now.getMonth();
+  const todayISO=new Intl.DateTimeFormat("en-CA",{timeZone:"Asia/Bangkok"}).format(now);
+  const first=new Date(y,m,1), lastDay=new Date(y,m+1,0).getDate(), offset=first.getDay();
+  const monthName=new Intl.DateTimeFormat("th-TH",{month:"long",year:"numeric",timeZone:"Asia/Bangkok"}).format(now);
+  const res=await supabaseClient.from("free_rewards").select("reward_date,amount,reward_type").eq("user_id",s.user.id);
+  const rows=res.data||[], claimed=new Map(rows.map(function(x){return [String(x.reward_date),x];}));
+  const member=await loadMember();
+  const memberCreated=member?.created_at;
+  const isNewToday=memberCreated ? new Intl.DateTimeFormat("en-CA",{timeZone:"Asia/Bangkok"}).format(new Date(memberCreated))===todayISO && rows.length===0 : false;
+  const todayReward=isNewToday?20:1;
+  const ml=document.getElementById("rewardMonth"); if(ml)ml.textContent=monthName;
+  if(info)info.innerHTML=isNewToday?'🎉 <b>สมาชิกใหม่</b> รับรางวัลวันนี้ <strong>฿20</strong>':'🎁 รางวัลวันนี้ <strong>฿1</strong> · รับได้วันละ 1 ครั้ง';
+  grid.innerHTML="";
+  for(let i=0;i<offset;i++)grid.innerHTML+='<div class="reward-day empty"></div>';
+  for(let d=1;d<=lastDay;d++){
+    const dt=new Date(y,m,d), iso=new Intl.DateTimeFormat("en-CA",{timeZone:"Asia/Bangkok"}).format(dt);
+    const hit=claimed.get(iso), isToday=iso===todayISO, isPast=iso<todayISO;
+    const amount=hit?Number(hit.amount):(isToday?todayReward:1);
+    grid.innerHTML+='<div class="reward-day '+(isToday?'today ':'')+(hit?'claimed ':'')+(isPast&&!hit?'locked':'')+'"><span class="date">'+d+'</span><span class="amount">'+(hit?'✓ ':'')+'฿'+amount+'</span></div>';
+  }
+  const todayClaimed=claimed.has(todayISO);
+  if(btn){
+    btn.disabled=todayClaimed;
+    btn.textContent=todayClaimed?'✓ รับรางวัลวันนี้แล้ว':'🎁 รับรางวัลวันนี้';
+    btn.onclick=async function(){
+      btn.disabled=true; btn.textContent="กำลังรับรางวัล...";
+      const out=await supabaseClient.rpc("claim_free_reward");
+      if(out.error){alert("รับรางวัลไม่สำเร็จ: "+out.error.message);await renderFreeRewards();return;}
+      if(!out.data?.success){alert(out.data?.message||"วันนี้รับรางวัลไปแล้ว");await renderFreeRewards();return;}
+      await updateLoginButton(); await renderFreeRewards();
+    };
+  }
+}
+
 async function openOrders(){
   const el=document.getElementById("orderItems"); el.innerHTML="<div class=\"empty-state\">กำลังโหลด...</div>"; document.getElementById("ordersModal").classList.add("show");
   const rows=await loadOrders(); if(!rows.length){el.innerHTML="<div class=\"empty-state\">ยังไม่มีออเดอร์</div>";return;}
@@ -1022,6 +1073,19 @@ document.addEventListener("DOMContentLoaded",()=>{
       <div class="modal-actions">
         <button class="close-btn" data-action="closeModal" data-modal="transactionModal">ปิด</button>
       </div>
+    </div>
+  </div>
+
+  <div class="modal" id="freeRewardsModal">
+    <div class="modal-card reward-modal-card">
+      <div class="reward-head"><div class="gift">🎁</div><h2>รางวัลฟรี</h2><p id="rewardMonth">กำลังโหลด...</p></div>
+      <div class="reward-progress" id="rewardInfo">กำลังโหลด...</div>
+      <div class="reward-calendar">
+        <div class="reward-week"><div>อา</div><div>จ</div><div>อ</div><div>พ</div><div>พฤ</div><div>ศ</div><div>ส</div></div>
+        <div class="reward-days" id="rewardDays"></div>
+      </div>
+      <button class="reward-claim" id="rewardClaimBtn">🎁 รับรางวัลวันนี้</button>
+      <div class="modal-actions"><button class="close-btn" data-action="closeModal" data-modal="freeRewardsModal">ปิด</button></div>
     </div>
   </div>
 
