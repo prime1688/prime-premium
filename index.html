@@ -1413,8 +1413,8 @@ function primeTranslateText(value,lang=primeCurrentLanguage){
   if(extra[trimmed]!==undefined)return canonical.replace(trimmed,extra[trimmed]);
   if(dict[trimmed]!==undefined)return canonical.replace(trimmed,dict[trimmed]);
 
-  const m1=trimmed.match(/^รางวัลวันนี้ <strong>฿([0-9.,]+)<\\/strong> · รับได้วันละ 1 ครั้ง$/);
-  const m2=trimmed.match(/^🎉 <b>สมาชิกใหม่<\\/b> รับรางวัลวันนี้ <strong>฿([0-9.,]+)<\\/strong>$/);
+  const m1=trimmed.match(/^รางวัลวันนี้ <strong>฿([0-9.,]+)<\/strong> · รับได้วันละ 1 ครั้ง$/);
+  const m2=trimmed.match(/^🎉 <b>สมาชิกใหม่<\/b> รับรางวัลวันนี้ <strong>฿([0-9.,]+)<\/strong>$/);
   const m3=trimmed.match(/^จำนวน ([0-9,]+) (.+)$/);
   const m4=trimmed.match(/^ขั้นต่ำ ([0-9,]+) (.+)$/);
   const m5=trimmed.match(/^สั่งซื้อ ฿([0-9.,]+)$/);
