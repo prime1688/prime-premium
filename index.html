@@ -395,6 +395,72 @@
     .reward-claim:disabled{background:#28202c;color:#777;box-shadow:none;cursor:not-allowed}
 
 
+
+    /* PRIME signup success popup */
+    .signup-success-card{
+      width:min(470px,100%)!important;
+      text-align:center;
+      position:relative;
+      overflow:hidden;
+      background:
+        radial-gradient(circle at 50% 0%,rgba(181,108,255,.22),transparent 42%),
+        linear-gradient(180deg,#180c24,#09070d)!important;
+      border:1px solid #a94fff!important;
+      box-shadow:0 0 0 1px rgba(181,108,255,.15),0 0 70px rgba(181,108,255,.28),0 30px 90px rgba(0,0,0,.8)!important;
+      animation:signupSuccessIn .42s cubic-bezier(.2,.9,.3,1.2);
+    }
+    .signup-success-card::before{
+      content:"";
+      position:absolute;left:-20%;right:-20%;top:104px;height:1px;
+      background:linear-gradient(90deg,transparent,#d58aff,transparent);
+      box-shadow:0 0 18px #b56cff;
+      animation:signupScan 2.2s ease-in-out infinite;
+      pointer-events:none;
+    }
+    .signup-success-close{
+      position:absolute;right:13px;top:13px;width:38px;height:38px;
+      border-radius:50%;border:1px solid #7133a0;background:#160d20;
+      color:#e4c5ff;font-size:25px;line-height:1;cursor:pointer;
+      box-shadow:0 0 15px rgba(181,108,255,.2);
+    }
+    .signup-success-icon{
+      width:104px;height:104px;margin:3px auto 17px;border-radius:50%;
+      display:grid;place-items:center;position:relative;
+      background:radial-gradient(circle,#5b1b80 0%,#241033 48%,#100a15 72%);
+      border:3px solid #d58aff;color:#fff;font-size:55px;font-weight:900;
+      box-shadow:0 0 18px rgba(213,138,255,.75),0 0 48px rgba(181,108,255,.38),inset 0 0 28px rgba(213,138,255,.25);
+      animation:signupCheck .65s cubic-bezier(.2,.9,.3,1.35);
+    }
+    .signup-success-icon::after{
+      content:"";position:absolute;inset:-11px;border:1px solid rgba(213,138,255,.45);
+      border-radius:50%;animation:signupOrbit 2.8s linear infinite;
+    }
+    .signup-success-title{
+      font-size:30px;font-weight:950;letter-spacing:.2px;margin:0 0 7px;
+      color:#fff;text-shadow:0 0 18px rgba(213,138,255,.6);
+    }
+    .signup-success-subtitle{color:#d8c7e5;font-size:16px;font-weight:700;margin-bottom:6px}
+    .signup-success-brand{color:#b56cff;font-size:19px;font-weight:950;letter-spacing:2px;margin-bottom:19px}
+    .signup-success-note{
+      color:#999;font-size:12px;line-height:1.6;margin:0 auto 18px;max-width:340px;
+    }
+    .signup-success-start{
+      width:100%;padding:15px;border:1px solid #e1b4ff;border-radius:14px;
+      background:linear-gradient(135deg,#d58aff,#9c42ef);
+      color:#08050b;font-size:16px;font-weight:950;cursor:pointer;
+      box-shadow:0 8px 30px rgba(181,108,255,.3);
+    }
+    .signup-success-start:active{transform:scale(.98)}
+    @keyframes signupSuccessIn{from{opacity:0;transform:translateY(18px) scale(.88)}to{opacity:1;transform:translateY(0) scale(1)}}
+    @keyframes signupCheck{from{opacity:0;transform:scale(.45) rotate(-18deg)}to{opacity:1;transform:scale(1) rotate(0)}}
+    @keyframes signupOrbit{to{transform:rotate(360deg)}}
+    @keyframes signupScan{0%,100%{opacity:.25;transform:translateY(-8px)}50%{opacity:1;transform:translateY(18px)}}
+    @media(max-width:600px){
+      .signup-success-card{padding:22px!important}
+      .signup-success-icon{width:90px;height:90px;font-size:48px}
+      .signup-success-title{font-size:25px}
+    }
+
     .footer {
       border-top: 1px solid #222;
       padding: 30px 20px;
@@ -1107,6 +1173,12 @@ async function performLogin(){
   await updateLoginButton();
   alert("เข้าสู่ PRIME สำเร็จ");
 }
+function showSignupSuccess(){
+  document.getElementById("signupSuccessModal")?.classList.add("show");
+}
+function closeSignupSuccess(){
+  document.getElementById("signupSuccessModal")?.classList.remove("show");
+}
 async function performSignup(){
   if(!requireSupabase())return;
   const p=document.getElementById("signupPhone")?.value.trim()||"";
@@ -1127,7 +1199,7 @@ async function performSignup(){
     localStorage.setItem("prime_logged_in","1");
     document.getElementById("signupPopup")?.classList.remove("show");
     await updateLoginButton();
-    alert("สมัครสมาชิกสำเร็จและเข้าสู่ระบบแล้ว");
+    showSignupSuccess();
   }else{
     document.getElementById("signupPopup")?.classList.remove("show");
     alert("สมัครสมาชิกสำเร็จ กรุณาเข้าสู่ระบบด้วยเบอร์และ PIN 6 หลัก");
@@ -1488,7 +1560,7 @@ document.addEventListener("DOMContentLoaded",()=>{
   document.addEventListener("click",(event)=>{
     const b=event.target.closest("button[data-action]"); if(!b)return;
     const a=b.dataset.action;
-    if(a==="login") login(); else if(a==="loginContinue") performLogin(); else if(a==="logout") logout(); else if(a==="goProducts") goProducts(); else if(a==="openSignupPopup") document.getElementById("signupPopup")?.classList.add("show"); else if(a==="signupContinue"){performSignup();} else if(a==="openTopup") openTopup(); else if(a==="openTransactions") openTransactions(); else if(a==="openOrders") openOrders(); else if(a==="openFreeRewards") openFreeRewards(); else if(a==="openTerms") document.getElementById("termsModal")?.classList.add("show"); else if(a==="openCart") openCart(); else if(a==="openWithdraw") openWithdraw(); else if(a==="vipOnly") alert("ฟังก์ชันนี้สำหรับสมาชิก VIP เท่านั้น"); else if(a==="addToCart") addToCart(b.dataset.name,Number(b.dataset.price)); else if(a==="removeFromCart") removeFromCart(Number(b.dataset.index)); else if(a==="clearCart") clearCart(); else if(a==="showSocial") showSocial(b.dataset.name); else if(a==="closeModal") closeModal(b.dataset.modal); else if(a==="createTopup") createTopup(); else if(a==="topupSuccessHistory"){closeTopupSuccess();openTransactions();} else if(a==="topupSuccessDone"){closeTopupSuccess();window.scrollTo({top:0,behavior:"smooth"});} else if(a==="topupErrorDone"){closeTopupError();} else if(a==="checkout") checkout(); else if(a==="placeSocialOrder") placeSocialOrder(); else if(a==="syncSmmCatalog") syncSmmCatalog();
+    if(a==="login") login(); else if(a==="loginContinue") performLogin(); else if(a==="logout") logout(); else if(a==="goProducts") goProducts(); else if(a==="openSignupPopup") document.getElementById("signupPopup")?.classList.add("show"); else if(a==="signupContinue"){performSignup();} else if(a==="signupSuccessDone"){closeSignupSuccess();} else if(a==="openTopup") openTopup(); else if(a==="openTransactions") openTransactions(); else if(a==="openOrders") openOrders(); else if(a==="openFreeRewards") openFreeRewards(); else if(a==="openTerms") document.getElementById("termsModal")?.classList.add("show"); else if(a==="openCart") openCart(); else if(a==="openWithdraw") openWithdraw(); else if(a==="vipOnly") alert("ฟังก์ชันนี้สำหรับสมาชิก VIP เท่านั้น"); else if(a==="addToCart") addToCart(b.dataset.name,Number(b.dataset.price)); else if(a==="removeFromCart") removeFromCart(Number(b.dataset.index)); else if(a==="clearCart") clearCart(); else if(a==="showSocial") showSocial(b.dataset.name); else if(a==="closeModal") closeModal(b.dataset.modal); else if(a==="createTopup") createTopup(); else if(a==="topupSuccessHistory"){closeTopupSuccess();openTransactions();} else if(a==="topupSuccessDone"){closeTopupSuccess();window.scrollTo({top:0,behavior:"smooth"});} else if(a==="topupErrorDone"){closeTopupError();} else if(a==="checkout") checkout(); else if(a==="placeSocialOrder") placeSocialOrder(); else if(a==="syncSmmCatalog") syncSmmCatalog();
   });
 });</script>
   <div class="modal" id="loginPopup">
@@ -1520,6 +1592,18 @@ document.addEventListener("DOMContentLoaded",()=>{
       <input id="signupPinConfirm" type="password" inputmode="numeric" maxlength="6" placeholder="••••••">
       <button class="auth-main" type="button" data-action="signupContinue">สมัครสมาชิก</button>
     </div>
+  </div>
+</div>
+
+<div class="modal" id="signupSuccessModal" role="dialog" aria-modal="true">
+  <div class="modal-card signup-success-card">
+    <button class="signup-success-close" type="button" data-action="signupSuccessDone" aria-label="ปิด">×</button>
+    <div class="signup-success-icon">✓</div>
+    <div class="signup-success-title">สมัครสมาชิกสำเร็จ</div>
+    <div class="signup-success-subtitle">และเข้าสู่ระบบเรียบร้อยแล้ว</div>
+    <div class="signup-success-brand">PRIME</div>
+    <p class="signup-success-note">บัญชีของคุณพร้อมใช้งานแล้ว<br>ยินดีต้อนรับเข้าสู่ PRIME</p>
+    <button class="signup-success-start" type="button" data-action="signupSuccessDone">เริ่มใช้งาน PRIME&nbsp; →</button>
   </div>
 </div>
 
