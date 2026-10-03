@@ -336,6 +336,93 @@
 
 .social-order-card{max-width:760px!important}.social-modal-head{display:flex;justify-content:space-between;gap:14px;align-items:flex-start}.social-modal-head h2{margin:8px 0 4px}.social-modal-head p{color:#999;margin:0;font-size:13px}.modal-x{background:#25122f;color:#d69cff;border:1px solid #5d3277;border-radius:50%;width:40px;height:40px;font-size:26px;cursor:pointer}.social-service-cards{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:18px 0}.social-service-card{position:relative;text-align:left;background:#121015;border:1px solid #302638;color:#fff;border-radius:15px;padding:14px;cursor:pointer;min-height:125px;display:flex;flex-direction:column;gap:8px}.social-service-card.selected{border:2px solid #b95cff;background:#1c1025;box-shadow:0 0 22px #7d2db355}.ssc-icon{font-size:26px;color:#c36cff}.ssc-info{display:flex;flex-direction:column;gap:3px}.ssc-info strong{font-size:16px}.ssc-info small,.ssc-price small{color:#999;font-size:11px}.ssc-price{color:#d28cff;font-weight:900;font-size:18px;margin-top:auto}.ssc-check{position:absolute;right:10px;top:9px;color:#d28cff;font-size:20px}.social-label{display:block;color:#ddd;font-weight:800;font-size:13px;margin:13px 0 7px}.quantity-control{display:flex;align-items:center;gap:10px}.qty-btn{width:54px;height:52px;border:1px solid #5d3277;background:#21112c;color:#d28cff;border-radius:13px;font-size:30px;font-weight:900;cursor:pointer}.qty-btn:disabled{opacity:.35}.qty-number{flex:1;text-align:center}.qty-number input{width:100%;box-sizing:border-box;background:#0d0b0f;border:1px solid #3b3042;border-radius:13px;color:#fff;text-align:center;font-size:22px;font-weight:900;padding:12px}.qty-number span{display:block;color:#999;font-size:11px;margin-top:4px}.social-summary{background:#100d14;border:1px solid #342542;border-radius:15px;padding:14px;margin:15px 0}.social-summary div{display:flex;justify-content:space-between;padding:5px 0;color:#aaa}.social-summary strong{color:#d28cff;font-size:18px}.social-summary div:last-child{border-top:1px solid #29202e;margin-top:6px;padding-top:10px}.social-summary div:last-child strong{font-size:24px}@media(max-width:600px){.social-service-cards{grid-template-columns:repeat(2,1fr)}.social-order-card{max-height:90vh;overflow:auto}.social-service-card{min-height:110px;padding:12px}}
 
+    /* Floating quick menu */
+    .floating-menu{
+      position:fixed;
+      right:18px;
+      top:50%;
+      transform:translateY(-50%);
+      z-index:40;
+      width:82px;
+      padding:7px;
+      border:1px solid #3b2450;
+      border-radius:22px;
+      background:rgba(12,8,16,.92);
+      backdrop-filter:blur(14px);
+      box-shadow:0 12px 38px rgba(0,0,0,.45),0 0 28px rgba(181,108,255,.12);
+      display:flex;
+      flex-direction:column;
+      gap:6px;
+    }
+    .floating-menu-item{
+      position:relative;
+      min-height:76px;
+      width:100%;
+      border:1px solid transparent;
+      border-radius:16px;
+      background:#17111c;
+      color:#fff;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      gap:3px;
+      cursor:pointer;
+      transition:transform .18s ease,border-color .2s ease,background .2s ease,box-shadow .2s ease;
+    }
+    .floating-menu-item:hover{
+      transform:translateY(-2px);
+      border-color:#8d4fba;
+      background:#21142b;
+      box-shadow:0 8px 22px rgba(181,108,255,.18);
+    }
+    .floating-icon{
+      width:34px;
+      height:34px;
+      display:grid;
+      place-items:center;
+      border-radius:50%;
+      background:#261336;
+      color:#d09aff;
+      font-size:19px;
+      line-height:1;
+    }
+    .floating-label{
+      color:#ddd;
+      font-size:10px;
+      font-weight:800;
+      white-space:nowrap;
+    }
+    .floating-badge{
+      position:absolute;
+      top:3px;
+      right:5px;
+      min-width:18px;
+      height:18px;
+      padding:0 5px;
+      border-radius:999px;
+      display:grid;
+      place-items:center;
+      background:#b56cff;
+      color:#080808;
+      font-size:10px;
+      font-weight:900;
+    }
+    @media(max-width:600px){
+      .floating-menu{
+        right:8px;
+        width:70px;
+        padding:5px;
+        border-radius:19px;
+      }
+      .floating-menu-item{
+        min-height:68px;
+        border-radius:14px;
+      }
+      .floating-icon{width:30px;height:30px;font-size:17px}
+      .floating-label{font-size:9px}
+    }
+
     /* PRIME one-page layout */
     .quick-nav{max-width:1100px;margin:14px auto 0;padding:0 20px;display:flex;gap:8px;position:sticky;top:74px;z-index:9}
     .quick-nav a{flex:1;text-align:center;text-decoration:none;background:#111;color:#ddd;border:1px solid #292929;border-radius:11px;padding:9px 10px;font-size:13px;font-weight:800}
@@ -412,8 +499,22 @@
   <div class="account-bar" id="accountBar">
     <div class="account-box">สมาชิก: <strong id="accountPhone">-</strong></div>
     <button class="topup-highlight" type="button" data-action="openTopup">เติมเงิน</button>
-    <button class="secondary" type="button" data-action="openCart">ตะกร้า (<span id="cartCount">0</span>)</button>
-    <button class="secondary" type="button" data-action="openTransactions">รายการเงิน</button>
+  </div>
+
+  <div class="floating-menu" aria-label="เมนูลัด">
+    <button type="button" class="floating-menu-item" data-action="openCart" aria-label="ตะกร้า">
+      <span class="floating-icon">🛒</span>
+      <span class="floating-label">ตะกร้า</span>
+      <span class="floating-badge" id="floatingCartCount">0</span>
+    </button>
+    <button type="button" class="floating-menu-item" data-action="openTransactions" aria-label="รายการเงิน">
+      <span class="floating-icon">▣</span>
+      <span class="floating-label">รายการเงิน</span>
+    </button>
+    <button type="button" class="floating-menu-item" data-action="openOrders" aria-label="ออเดอร์ของฉัน">
+      <span class="floating-icon">▤</span>
+      <span class="floating-label">ออเดอร์ของฉัน</span>
+    </button>
   </div>
 
 
