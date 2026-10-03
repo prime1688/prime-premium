@@ -704,10 +704,20 @@
     body{top:0!important}
 
     .prime-credit{display:flex;flex-direction:column;min-width:92px}.prime-credit small{color:#ddd;font-size:10px}.prime-credit strong{color:#fff;font-size:17px}
-    .prime-menu-item.prime-credit-top{cursor:default;background:rgba(22,10,34,.8);border-color:#7133a0;min-width:105px;justify-content:center}
+    .prime-menu-item.prime-credit-top,.prime-menu-item.prime-stat-menu{cursor:default;background:rgba(22,10,34,.8);border-color:#7133a0;justify-content:center}
+    .prime-menu-item.prime-credit-top{min-width:105px}
     .prime-credit-top strong{color:#d09aff;font-size:14px}
-    .prime-credit-top:hover{transform:none;background:rgba(22,10,34,.8);box-shadow:0 0 18px rgba(181,108,255,.18)}
-    @media(max-width:900px){.prime-menu-item.prime-credit-top{min-width:88px;padding:9px 8px;font-size:10px}.prime-credit-top strong{font-size:11px}}
+    .prime-menu-item.prime-stat-menu{min-width:112px;gap:5px}
+    .prime-stat-menu b{font-size:12px;color:#ddd}
+    .prime-stat-menu strong{color:#d09aff;font-size:15px;min-width:18px;text-align:center}
+    .prime-menu-item.prime-credit-top:hover,.prime-menu-item.prime-stat-menu:hover{transform:none;background:rgba(22,10,34,.8);box-shadow:0 0 18px rgba(181,108,255,.18)}
+    @media(max-width:900px){
+      .prime-menu-item.prime-credit-top{min-width:82px;padding:9px 7px;font-size:10px}
+      .prime-credit-top strong{font-size:11px}
+      .prime-menu-item.prime-stat-menu{min-width:88px;padding:8px 7px;gap:4px}
+      .prime-stat-menu b{font-size:9px}
+      .prime-stat-menu strong{font-size:12px}
+    }
 
     .prime-avatar{width:42px;height:42px;border-radius:50%;background:#f3eaff;color:#7c4aa5;display:grid;place-items:center;font-size:25px}
     .prime-login{background:#171018!important;border-color:#4d3a52!important;padding:10px 13px!important}
@@ -782,9 +792,10 @@
       <a class="prime-brand" href="#top" aria-label="PRIME หน้าหลัก"><img class="prime-brand-logo" src="./B0F7735A-8D3D-4F25-8590-A6B80EE4E429.png" alt="PRIME"></a>
       <nav class="prime-menu" aria-label="เมนู PRIME">
         <a class="prime-menu-item active" href="#top"><span>⌂</span>หน้าหลัก</a>
-        <button class="prime-menu-item" type="button" data-action="openTopup"><span>▣</span>เติมเงิน</button>
+        <div class="prime-menu-item prime-stat-menu"><span>▤</span><b>ออเดอร์ทั้งหมด</b><strong id="headerOrderCount">0</strong></div>
+        <div class="prime-menu-item prime-stat-menu"><span>◌</span><b>ดำเนินการ</b><strong id="headerProcessingCount">0</strong></div>
+        <div class="prime-menu-item prime-stat-menu"><span>✓</span><b>สำเร็จ</b><strong id="headerCompletedCount">0</strong></div>
         <div class="prime-menu-item prime-credit-top" aria-label="ยอดเครดิต"><span>฿</span><strong id="headerCredit">฿0.00</strong></div>
-        <a class="prime-menu-item" href="https://lin.ee/sZghOhY" target="_blank" rel="noopener noreferrer"><span>☊</span>ติดต่อเรา</a>
       </nav>
       <div class="prime-user-box">
         <a class="prime-line" href="https://lin.ee/sZghOhY" target="_blank" rel="noopener noreferrer" aria-label="LINE">LINE</a>
@@ -1230,7 +1241,7 @@ async function updateLoginButton(){
   document.querySelectorAll(".auth-only-menu").forEach(el=>el.classList.toggle("auth-visible",logged));
   const hero=document.getElementById("heroSection");if(hero)hero.style.display=logged?"none":"";
   const dash=document.getElementById("dashboardSection"); if(dash)dash.style.display=logged?"block":"none";
-  if(logged){const adminBtn=document.getElementById("adminSyncSmmBtn");if(adminBtn)adminBtn.style.display="none";const m=await loadMember();const credit=Number(m?.credit||0);document.getElementById("accountPhone").textContent=phone||m?.phone||"-";const hc=document.getElementById("headerCredit");if(hc)hc.textContent="฿"+credit.toFixed(2);const dc=document.getElementById("dashCredit");if(dc)dc.textContent="฿"+credit.toFixed(2);const orders=await loadOrders();const oc=document.getElementById("dashOrderCount"),op=document.getElementById("dashProcessing"),od=document.getElementById("dashCompleted");if(oc)oc.textContent=orders.length;if(op)op.textContent=orders.filter(x=>x.status==="processing"||x.status==="pending").length;if(od)od.textContent=orders.filter(x=>x.status==="completed").length;}
+  if(logged){const adminBtn=document.getElementById("adminSyncSmmBtn");if(adminBtn)adminBtn.style.display="none";const m=await loadMember();const credit=Number(m?.credit||0);document.getElementById("accountPhone").textContent=phone||m?.phone||"-";const hc=document.getElementById("headerCredit");if(hc)hc.textContent="฿"+credit.toFixed(2);const dc=document.getElementById("dashCredit");if(dc)dc.textContent="฿"+credit.toFixed(2);const orders=await loadOrders();const total=orders.length,processing=orders.filter(x=>x.status==="processing"||x.status==="pending").length,completed=orders.filter(x=>x.status==="completed").length;const oc=document.getElementById("dashOrderCount"),op=document.getElementById("dashProcessing"),od=document.getElementById("dashCompleted"),hcO=document.getElementById("headerOrderCount"),hcP=document.getElementById("headerProcessingCount"),hcC=document.getElementById("headerCompletedCount");if(oc)oc.textContent=total;if(op)op.textContent=processing;if(od)od.textContent=completed;if(hcO)hcO.textContent=total;if(hcP)hcP.textContent=processing;if(hcC)hcC.textContent=completed;}
   updateCartCount();
 }
 function login(){
