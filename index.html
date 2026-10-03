@@ -866,6 +866,7 @@ function paymentQrUrl(){return "https://api.qrserver.com/v1/create-qr-code/?size
 function showSocial(name){recordLiveActivity("viewing","กำลังดูแพ็กเกจ "+name);openSocialOrder(name);}
 function normalizePhone(v){let p=String(v||"").trim().replace(/[\s-]/g,"");if(p.startsWith("0"))p="+66"+p.slice(1);else if(p.startsWith("66"))p="+"+p;return p;}
 function validThaiPhone(p){return /^\+66\d{9}$/.test(p);}
+function primeAuthEmail(phone){const digits=normalizePhone(phone).replace(/\D/g,"");return "prime_"+digits+"@prime1688.com";}
 function cart(){try{return JSON.parse(localStorage.getItem("prime_cart")||"[]")}catch{return[]}}
 function saveCart(c){localStorage.setItem("prime_cart",JSON.stringify(c));updateCartCount();}
 function updateCartCount(){
@@ -1088,11 +1089,12 @@ async function performLogin(){
   const pin=document.getElementById("loginPin")?.value||"";
   if(!validThaiPhone(p)){alert("กรุณากรอกเบอร์โทรไทยให้ถูกต้อง เช่น 0812345678");return;}
   if(!/^\d{6}$/.test(pin)){alert("กรุณากรอกรหัส 6 หลัก");return;}
-  const {data,error}=await supabaseClient.auth.signInWithPassword({phone:p,password:pin});
+  const authEmail=primeAuthEmail(p);
+  const {data,error}=await supabaseClient.auth.signInWithPassword({email:authEmail,password:pin});
   if(error){
     const msg=String(error.message||"");
     if(/email not confirmed|phone not confirmed/i.test(msg)){
-      alert("เบอร์นี้ยังไม่ได้ยืนยัน กรุณายืนยันเบอร์โทรก่อนเข้าสู่ระบบ");
+      alert("บัญชีนี้ยังไม่ได้ยืนยัน กรุณาตรวจสอบการยืนยันอีเมลใน Supabase");
     }else{
       alert("เบอร์โทรหรือรหัส 6 หลักไม่ถูกต้อง");
     }
@@ -1113,7 +1115,8 @@ async function performSignup(){
   if(!/^0\d{9}$/.test(p)){alert("กรุณากรอกเบอร์โทรศัพท์ 10 หลัก เช่น 0812345678");return;}
   if(!/^\d{6}$/.test(pin)){alert("กรุณากรอกรหัส 6 หลัก");return;}
   if(pin!==cp){alert("รหัสยืนยันไม่ตรงกัน");return;}
-  const {data,error}=await supabaseClient.auth.signUp({phone:normalizePhone(p),password:pin,options:{data:{phone:normalizePhone(p)}}});
+  const authEmail=primeAuthEmail(p);
+  const {data,error}=await supabaseClient.auth.signUp({email:authEmail,password:pin,options:{data:{phone:normalizePhone(p)}}});
   if(error){
     const msg=String(error.message||"");
     if(/already registered|already exists|user already/i.test(msg)){alert("เบอร์นี้สมัครสมาชิกแล้ว กรุณาเข้าสู่ระบบ");return;}
@@ -1127,7 +1130,7 @@ async function performSignup(){
     alert("สมัครสมาชิกสำเร็จและเข้าสู่ระบบแล้ว");
   }else{
     document.getElementById("signupPopup")?.classList.remove("show");
-    alert("สมัครสมาชิกสำเร็จ กรุณายืนยันเบอร์โทรศัพท์ก่อนเข้าสู่ระบบ");
+    alert("สมัครสมาชิกสำเร็จ กรุณาเข้าสู่ระบบด้วยเบอร์และ PIN 6 หลัก");
   }
 }
 
