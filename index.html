@@ -808,9 +808,13 @@ async function renderFreeRewards(){
   const member=await loadMember();
   const memberCreated=member?.created_at;
   const isNewToday=memberCreated ? new Intl.DateTimeFormat("en-CA",{timeZone:"Asia/Bangkok"}).format(new Date(memberCreated))===todayISO && rows.length===0 : false;
-  const todayReward=isNewToday?20:1;
+  let todayReward=isNewToday?20:null;
+  if(!isNewToday){
+    const preview=await supabaseClient.rpc("get_free_reward_preview");
+    if(preview.data?.success) todayReward=Number(preview.data.amount);
+  }
   const ml=document.getElementById("rewardMonth"); if(ml)ml.textContent=monthName;
-  if(info)info.innerHTML=isNewToday?'🎉 <b>สมาชิกใหม่</b> รับรางวัลวันนี้ <strong>฿20</strong>':'🎁 รางวัลวันนี้ <strong>฿1</strong> · รับได้วันละ 1 ครั้ง';
+  if(info)info.innerHTML=isNewToday?'🎉 <b>สมาชิกใหม่</b> รับรางวัลวันนี้ <strong>฿20</strong>':'🎁 รางวัลวันนี้ <strong>฿'+todayReward+'</strong> · รับได้วันละ 1 ครั้ง';
   grid.innerHTML="";
   for(let i=0;i<offset;i++)grid.innerHTML+='<div class="reward-day empty"></div>';
   for(let d=1;d<=lastDay;d++){
