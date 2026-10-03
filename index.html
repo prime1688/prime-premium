@@ -551,8 +551,7 @@
     .prime-language.open .prime-lang-menu{display:flex}
     .prime-lang-menu button{width:38px;height:38px;border:1px solid #30203b;background:#0d0911;border-radius:10px;font-size:20px;cursor:pointer}
     .prime-lang-menu button:hover{border-color:#b96cff;background:#24112f}
-    #google_translate_element{display:none!important}
-    .goog-te-banner-frame.skiptranslate{display:none!important}
+        .goog-te-banner-frame.skiptranslate{display:none!important}
     body{top:0!important}
 
     .prime-credit{display:flex;flex-direction:column;min-width:92px}.prime-credit small{color:#ddd;font-size:10px}.prime-credit strong{color:#fff;font-size:17px}
@@ -1050,14 +1049,30 @@ async function checkout(){
   alert("สั่งซื้อสำเร็จ\nหักเครดิต ฿"+total.toFixed(2)+" แล้ว");
 }
 
-function googleTranslateElementInit(){new google.translate.TranslateElement({pageLanguage:"th",includedLanguages:"th,en,zh-CN,ja,ko",autoDisplay:false},'google_translate_element');}
+const PRIME_LANG={
+th:{},
+en:{
+"หน้าหลัก":"Home","เติมเงิน":"Top Up","ติดต่อเรา":"Contact Us","ยอดเครดิต":"Credit","เข้าสู่ระบบ":"Log In","ออกจากระบบ":"Log Out","สมาชิก":"Member","ออเดอร์ของฉัน":"My Orders","รายการเงิน":"Transactions","รางวัลฟรี":"Free Rewards","เงื่อนไขและข้อกำหนด":"Terms & Conditions","รับรางวัลวันนี้":"Claim Today's Reward","ปิด":"Close"
+},
+"zh-CN":{"หน้าหลัก":"首页","เติมเงิน":"充值","ติดต่อเรา":"联系我们","ยอดเครดิต":"余额","เข้าสู่ระบบ":"登录","ออกจากระบบ":"退出登录","สมาชิก":"会员","ออเดอร์ของฉัน":"我的订单","รายการเงิน":"资金记录","รางวัลฟรี":"免费奖励","เงื่อนไขและข้อกำหนด":"条款与条件","รับรางวัลวันนี้":"领取今日奖励","ปิด":"关闭"},
+ja:{"หน้าหลัก":"ホーム","เติมเงิน":"チャージ","ติดต่อเรา":"お問い合わせ","ยอดเครดิต":"クレジット","เข้าสู่ระบบ":"ログイン","ออกจากระบบ":"ログアウト","สมาชิก":"会員","ออเดอร์ของฉัน":"注文履歴","รายการเงิน":"取引履歴","รางวัลฟรี":"無料報酬","เงื่อนไขและข้อกำหนด":"利用規約","รับรางวัลวันนี้":"今日の報酬を受け取る","ปิด":"閉じる"},
+ko:{"หน้าหลัก":"홈","เติมเงิน":"충전","ติดต่อเรา":"문의하기","ยอดเครดิต":"크레딧","เข้าสู่ระบบ":"로그인","ออกจากระบบ":"로그아웃","สมาชิก":"회원","ออเดอร์ของฉัน":"주문 내역","รายการเงิน":"거래 내역","รางวัลฟรี":"무료 보상","เงื่อนไขและข้อกำหนด":"이용약관","รับรางวัลวันนี้":"오늘의 보상 받기","ปิด":"닫기"}
+};
+function applyPrimeLanguage(lang){
+  const dict=PRIME_LANG[lang]||{};
+  document.querySelectorAll("body *").forEach(el=>{
+    if(el.children.length===0){
+      const raw=(el.textContent||"").trim();
+      if(raw&&dict[raw]) el.textContent=dict[raw];
+    }
+  });
+}
 function setPrimeLanguage(lang){
   const box=document.getElementById("primeLanguage");
   const flagMap={th:"🇹🇭",en:"🇬🇧","zh-CN":"🇨🇳",ja:"🇯🇵",ko:"🇰🇷"};
-  const combo=document.querySelector(".goog-te-combo");
-  if(combo){combo.value=lang;combo.dispatchEvent(new Event("change"));}
   localStorage.setItem("prime_language",lang);
   const toggle=document.getElementById("primeLangToggle");if(toggle)toggle.textContent=flagMap[lang]||"🌐";
+  applyPrimeLanguage(lang);
   box?.classList.remove("open");
 }
 function initPrimeLanguage(){
@@ -1209,7 +1224,5 @@ document.addEventListener("DOMContentLoaded",()=>{
       </div>
     </div>
   </div>
-  <div id="google_translate_element"></div>
-  <script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 </body>
 </html>
