@@ -886,7 +886,80 @@
 .prime-mini-card{border:1px solid #29202f;border-radius:14px;background:#0b090e;padding:12px}.prime-mini-card .mini-status{font-size:8px;color:#6dff9a;font-weight:900}.prime-mini-card h5{color:#eee;margin:9px 0 5px;font-size:12px}.prime-mini-card p{color:#7f7487;font-size:10px;margin:0 0 9px}.prime-mini-card strong{color:#d68aff}.prime-mini-card button{width:100%;margin-top:8px;border:1px solid #8d45c7;background:#160d1d;color:#dcb0ff;border-radius:9px;padding:8px;font-size:10px;font-weight:900;cursor:pointer}
 .prime-benefits{margin-top:20px;border:1px solid #4c2864;border-radius:17px;background:linear-gradient(135deg,#130b1c,#09070d);padding:16px;display:grid;grid-template-columns:repeat(5,1fr);gap:12px}.prime-benefit{display:flex;align-items:center;gap:9px;color:#d9cedf;font-size:11px}.prime-benefit b{display:block;color:#fff;font-size:12px}.prime-benefit i{font-style:normal;font-size:23px;color:#c77cff;filter:drop-shadow(0 0 8px rgba(199,124,255,.5))}
 @media(max-width:850px){.prime-store-featured{grid-template-columns:1fr}.prime-product-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.prime-mini-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.prime-benefits{grid-template-columns:repeat(2,1fr)}}
-@media(max-width:600px){#products.prime-store{padding:30px 12px 50px}.prime-store-head{display:block}.prime-store-title{font-size:28px}.prime-store-search{margin-top:14px}.prime-feature{min-height:145px;padding:16px}.prime-feature h3{font-size:18px}.prime-product-grid{gap:9px}.prime-product-card{padding:11px;border-radius:15px}.prime-product-icon{height:78px;font-size:39px}.prime-product-card h4{font-size:14px}.prime-price{font-size:17px}.prime-benefits{grid-template-columns:1fr 1fr}.prime-benefit{font-size:9px}.prime-benefit b{font-size:10px}}
+@media(max-width:600px){
+  #products.prime-store{
+    width:100%;
+    max-width:100%;
+    min-width:0;
+    overflow:hidden;
+    padding:30px 12px 50px;
+  }
+  #products.prime-store *{min-width:0}
+  .prime-store-head{
+    display:block;
+    width:100%;
+    max-width:100%;
+  }
+  .prime-store-title{
+    font-size:28px;
+    white-space:normal;
+    overflow-wrap:anywhere;
+  }
+  .prime-store-sub{
+    max-width:100%;
+    overflow-wrap:anywhere;
+  }
+  .prime-store-search{
+    width:100%;
+    max-width:100%;
+    min-width:0;
+    margin-top:14px;
+    padding:11px 13px;
+    overflow:hidden;
+  }
+  .prime-store-search input{
+    min-width:0;
+    width:0;
+    flex:1 1 auto;
+    font-size:16px;
+  }
+  .prime-store-tabs{
+    width:100%;
+    max-width:100%;
+    overflow-x:auto;
+    overflow-y:hidden;
+    -webkit-overflow-scrolling:touch;
+  }
+  .prime-store-featured,
+  .prime-product-grid,
+  .prime-platform-wrap,
+  .prime-benefits{
+    width:100%;
+    max-width:100%;
+    min-width:0;
+  }
+  .prime-feature{
+    min-width:0;
+    min-height:145px;
+    padding:16px;
+  }
+  .prime-feature h3{
+    font-size:18px;
+    overflow-wrap:anywhere;
+  }
+  .prime-product-grid{gap:9px}
+  .prime-product-card{
+    min-width:0;
+    padding:11px;
+    border-radius:15px;
+  }
+  .prime-product-icon{height:78px;font-size:39px}
+  .prime-product-card h4{font-size:14px;overflow-wrap:anywhere}
+  .prime-price{font-size:17px}
+  .prime-benefits{grid-template-columns:1fr 1fr}
+  .prime-benefit{font-size:9px}
+  .prime-benefit b{font-size:10px}
+}
 
 </style>
 </head>
@@ -1769,29 +1842,42 @@ function initRealtimeViewerCounters(){
 let primeProductFilter="all";
 function filterPrimeProducts(query,filter,source){
   const q=String(query??"").trim().toLowerCase();
+
+  // พิมพ์ค้นหา = ค้นหาทุกสินค้า ไม่ติดหมวดเดิม
+  if(q && filter===undefined) primeProductFilter="all";
   if(filter!==undefined && filter!==null && String(filter)!=="") primeProductFilter=String(filter);
+
   const f=primeProductFilter||"all";
-  document.querySelectorAll("#products .prime-product-card").forEach(card=>{
+  const cards=document.querySelectorAll("#products .prime-product-card");
+
+  cards.forEach(card=>{
     const text=card.textContent.toLowerCase();
-    const platform=card.dataset.platform||"";
-    const tags=(card.dataset.tags||"").split(/\s+/).filter(Boolean);
-    const okQ=!q||text.includes(q);
-    const okF=f==="all"||platform===f||tags.includes(f);
+    const platform=(card.dataset.platform||"").toLowerCase();
+    const tags=(card.dataset.tags||"").toLowerCase().split(/\s+/).filter(Boolean);
+    const okQ=!q || text.includes(q);
+    const okF=f==="all" || platform===String(f).toLowerCase() || tags.includes(String(f).toLowerCase());
     card.classList.toggle("is-hidden",!(okQ&&okF));
   });
-  document.querySelectorAll("#products .prime-store-tab").forEach(x=>x.classList.remove("active"));
-  if(source)source.classList.add("active");
+
+  if(source){
+    document.querySelectorAll("#products .prime-store-tab").forEach(x=>x.classList.remove("active"));
+    source.classList.add("active");
+  }else if(q){
+    document.querySelectorAll("#products .prime-store-tab").forEach(x=>x.classList.remove("active"));
+    const all=document.querySelector('#products .prime-store-tab[onclick*="\'all\'"]');
+    if(all)all.classList.add("active");
+  }
 }
 window.filterPrimeProducts=filterPrimeProducts;
 document.addEventListener("DOMContentLoaded",()=>{
   const search=document.getElementById("primeProductSearch");
   if(search){
-    search.addEventListener("input",()=>filterPrimeProducts(search.value));
+    search.addEventListener("input",()=>{
+      filterPrimeProducts(search.value,"all");
+    });
     search.addEventListener("click",e=>e.stopPropagation());
+    search.addEventListener("touchstart",e=>e.stopPropagation(),{passive:true});
   }
-  document.querySelectorAll("#products.prime-store button").forEach(btn=>{
-    btn.addEventListener("click",e=>e.stopPropagation());
-  });
 });
 function initPrimeShopTimer(){
   let end=Date.now()+((2*60*60+35*60+18)*1000);
