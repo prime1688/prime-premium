@@ -597,6 +597,10 @@
       <span class="floating-icon">▤</span>
       <span class="floating-label">ออเดอร์ของฉัน</span>
     </button>
+    <button type="button" class="floating-menu-item" data-action="openFreeRewards" aria-label="รางวัลฟรี">
+      <span class="floating-icon">🎁</span>
+      <span class="floating-label">รางวัลฟรี</span>
+    </button>
     <button type="button" class="floating-menu-item" data-action="openTerms" aria-label="เงื่อนไขและข้อกำหนด">
       <span class="floating-icon">⚖</span>
       <span class="floating-label">เงื่อนไขและข้อกำหนด</span>
@@ -979,7 +983,7 @@ document.addEventListener("DOMContentLoaded",()=>{
   document.addEventListener("click",(event)=>{
     const b=event.target.closest("button[data-action]"); if(!b)return;
     const a=b.dataset.action;
-    if(a==="login") login(); else if(a==="logout") logout(); else if(a==="goProducts") goProducts(); else if(a==="openTopup") openTopup(); else if(a==="openTransactions") openTransactions(); else if(a==="openOrders") openOrders(); else if(a==="openTerms") document.getElementById("termsModal")?.classList.add("show"); else if(a==="openCart") openCart(); else if(a==="openWithdraw") alert("การถอนเงินจะเปิดใช้งานเมื่อมีเครดิตและระบบบัญชีพร้อม"); else if(a==="vipOnly") alert("ฟังก์ชันนี้สำหรับสมาชิก VIP เท่านั้น"); else if(a==="addToCart") addToCart(b.dataset.name,Number(b.dataset.price)); else if(a==="removeFromCart") removeFromCart(Number(b.dataset.index)); else if(a==="clearCart") clearCart(); else if(a==="showSocial") showSocial(b.dataset.name); else if(a==="closeModal") closeModal(b.dataset.modal); else if(a==="createTopup") createTopup(); else if(a==="checkout") checkout(); else if(a==="placeSocialOrder") placeSocialOrder();
+    if(a==="login") login(); else if(a==="logout") logout(); else if(a==="goProducts") goProducts(); else if(a==="openTopup") openTopup(); else if(a==="openTransactions") openTransactions(); else if(a==="openOrders") openOrders(); else if(a==="openFreeRewards") alert("รางวัลฟรีสำหรับสมาชิก\nฟังก์ชันนี้จะเปิดใช้งานเร็วๆ นี้"); else if(a==="openTerms") document.getElementById("termsModal")?.classList.add("show"); else if(a==="openCart") openCart(); else if(a==="openWithdraw") alert("การถอนเงินจะเปิดใช้งานเมื่อมีเครดิตและระบบบัญชีพร้อม"); else if(a==="vipOnly") alert("ฟังก์ชันนี้สำหรับสมาชิก VIP เท่านั้น"); else if(a==="addToCart") addToCart(b.dataset.name,Number(b.dataset.price)); else if(a==="removeFromCart") removeFromCart(Number(b.dataset.index)); else if(a==="clearCart") clearCart(); else if(a==="showSocial") showSocial(b.dataset.name); else if(a==="closeModal") closeModal(b.dataset.modal); else if(a==="createTopup") createTopup(); else if(a==="checkout") checkout(); else if(a==="placeSocialOrder") placeSocialOrder();
   });
 });</script>
   <div class="modal" id="topupModal">
