@@ -805,6 +805,9 @@ async function renderFreeRewards(){
   const monthName=new Intl.DateTimeFormat("th-TH",{month:"long",year:"numeric",timeZone:"Asia/Bangkok"}).format(now);
   const res=await supabaseClient.from("free_rewards").select("reward_date,amount,reward_type").eq("user_id",s.user.id);
   const rows=res.data||[], claimed=new Map(rows.map(function(x){return [String(x.reward_date),x];}));
+  const cal=await supabaseClient.rpc("get_free_reward_calendar",{p_year:y,p_month:m+1});
+  const calendarRows=Array.isArray(cal.data)?cal.data:[];
+  const calendarMap=new Map(calendarRows.map(function(x){return [String(x.date),x];}));
   const member=await loadMember();
   const memberCreated=member?.created_at;
   const isNewToday=memberCreated ? new Intl.DateTimeFormat("en-CA",{timeZone:"Asia/Bangkok"}).format(new Date(memberCreated))===todayISO && rows.length===0 : false;
@@ -819,8 +822,8 @@ async function renderFreeRewards(){
   for(let i=0;i<offset;i++)grid.innerHTML+='<div class="reward-day empty"></div>';
   for(let d=1;d<=lastDay;d++){
     const dt=new Date(y,m,d), iso=new Intl.DateTimeFormat("en-CA",{timeZone:"Asia/Bangkok"}).format(dt);
-    const hit=claimed.get(iso), isToday=iso===todayISO, isPast=iso<todayISO;
-    const amount=hit?Number(hit.amount):(isToday?todayReward:1);
+    const hit=claimed.get(iso), calHit=calendarMap.get(iso), isToday=iso===todayISO, isPast=iso<todayISO;
+    const amount=hit?Number(hit.amount):(calHit?Number(calHit.amount):(isToday?todayReward:1));
     grid.innerHTML+='<div class="reward-day '+(isToday?'today ':'')+(hit?'claimed ':'')+(isPast&&!hit?'locked':'')+'"><span class="date">'+d+'</span><span class="amount">'+(hit?'✓ ':'')+'฿'+amount+'</span></div>';
   }
   const todayClaimed=claimed.has(todayISO);
