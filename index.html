@@ -1208,12 +1208,18 @@ function initPromoCarousel(){
 // PRIME realtime viewer counters
 const primeViewerChannels = new Map();
 const primeViewerClientId = (crypto.randomUUID ? crypto.randomUUID() : Math.random().toString(36).slice(2));
+const primeViewerState = new Map();
+
+function viewerSeed(key){
+  let h=0; for(let i=0;i<key.length;i++) h=((h<<5)-h+key.charCodeAt(i))|0;
+  return 3 + Math.abs(h)%18;
+}
 function animateViewerNumber(el,value){
   if(!el)return;
-  const next=Math.max(1,Number(value)||1);
+  const next=Math.max(1,Math.round(Number(value)||1));
   if(el.textContent!==String(next)){
     el.classList.add("viewer-changing");
-    setTimeout(()=>{el.textContent=String(next);el.classList.remove("viewer-changing")},90);
+    setTimeout(()=>{el.textContent=String(next);el.classList.remove("viewer-changing")},120);
   }
 }
 function updateViewerCount(key,count){
@@ -1223,17 +1229,18 @@ function startViewerChannel(card){
   if(!supabaseClient || !card || primeViewerChannels.has(card)) return;
   const key=card.dataset.viewerKey;
   if(!key)return;
+  if(!primeViewerState.has(key)) primeViewerState.set(key,{base:viewerSeed(key),real:1});
   const channel=supabaseClient.channel("prime-viewers-"+key,{config:{presence:{key:primeViewerClientId}}});
   channel.on("presence",{event:"sync"},()=>{
     const state=channel.presenceState();
-    const count=Object.keys(state).length;
-    updateViewerCount(key,count);
+    const real=Math.max(1,Object.keys(state).length);
+    const s=primeViewerState.get(key); s.real=real;
+    updateViewerCount(key,Math.max(s.base,real));
   }).subscribe(async status=>{
-    if(status==="SUBSCRIBED"){
-      await channel.track({viewer:true,view:key,at:Date.now()});
-    }
+    if(status==="SUBSCRIBED") await channel.track({viewer:true,view:key,at:Date.now()});
   });
   primeViewerChannels.set(card,{channel,key});
+  updateViewerCount(key,primeViewerState.get(key).base);
 }
 function stopViewerChannel(card){
   const item=primeViewerChannels.get(card);
@@ -1241,7 +1248,13 @@ function stopViewerChannel(card){
   item.channel.untrack().catch(()=>{});
   supabaseClient.removeChannel(item.channel);
   primeViewerChannels.delete(card);
-  updateViewerCount(item.key,1);
+}
+function tickGeneratedViewerCounts(){
+  primeViewerState.forEach((s,key)=>{
+    const delta=Math.random()<.5?-1:1;
+    s.base=Math.max(2,Math.min(99,s.base+delta));
+    updateViewerCount(key,Math.max(s.base,s.real||1));
+  });
 }
 function initRealtimeViewerCounters(){
   const cards=[...document.querySelectorAll("[data-viewer-key]")];
@@ -1253,6 +1266,7 @@ function initRealtimeViewerCounters(){
     });
   },{threshold:.15});
   cards.forEach(card=>io.observe(card));
+  setInterval(tickGeneratedViewerCounts,3500);
 }
 document.addEventListener("DOMContentLoaded",updateLoginButton);
 document.addEventListener("DOMContentLoaded",initPromoCarousel);
