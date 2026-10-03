@@ -1359,6 +1359,16 @@ ko:{
 let primeCurrentLanguage=localStorage.getItem("prime_language")||"th";
 const primeOriginalText=new WeakMap(),primeOriginalAttr=new WeakMap();
 let primeTranslating=false;
+function primeRememberText(node){
+  if(!primeOriginalText.has(node))primeOriginalText.set(node,node.nodeValue||"");
+  return primeOriginalText.get(node);
+}
+function primeRememberAttr(el,name){
+  let m=primeOriginalAttr.get(el);
+  if(!m){m={};primeOriginalAttr.set(el,m);}
+  if(!(name in m))m[name]=el.getAttribute(name)||"";
+  return m[name];
+}
 function primeLanguagePairs(){
   const pairs=[];
   const add=(dict)=>{
