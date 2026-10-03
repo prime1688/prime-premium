@@ -841,17 +841,19 @@
     @media(max-width:600px){.prime-nav{display:block;padding:10px}.prime-brand{display:block;height:38px;margin-bottom:9px}.prime-brand-logo{height:38px;max-width:125px}.prime-menu{width:100%;gap:5px}.prime-menu-item{font-size:10px;padding:8px 9px}.prime-menu-item em{font-size:6px}.prime-user-box{position:absolute;right:9px;top:9px;background:transparent;border:0}.prime-login{font-size:10px!important}.prime-account{padding-top:9px!important}.prime-carousel .promo-stage{aspect-ratio:1320/484!important}.prime-carousel .promo-panel{border-radius:16px!important}.promo-thumbs{grid-template-columns:repeat(5,1fr);gap:4px}.promo-thumb{height:48px;border-radius:7px}}
   
 /* PRIME STORE - premium recommended products */
-#products.prime-store{max-width:1180px;margin:0 auto;padding:42px 20px 70px;scroll-margin-top:90px;position:relative;z-index:1}
+#products.prime-store{max-width:1180px;margin:0 auto;padding:42px 20px 70px;scroll-margin-top:90px;position:relative;z-index:100;isolation:isolate}
 #products.prime-store .prime-store-head,
 #products.prime-store .prime-store-tabs,
 #products.prime-store .prime-store-featured,
 #products.prime-store .prime-product-grid,
 #products.prime-store .prime-platform-wrap,
-#products.prime-store .prime-benefits{position:relative;z-index:2}
-#products.prime-store .prime-store-search{position:relative;z-index:20;pointer-events:auto;cursor:text}
-#products.prime-store .prime-store-search input{pointer-events:auto;touch-action:auto;-webkit-user-select:text;user-select:text}
+#products.prime-store .prime-benefits{position:relative;z-index:10;pointer-events:auto}
+#products.prime-store .prime-store-search{position:relative;z-index:100;pointer-events:auto;cursor:text}
+#products.prime-store .prime-store-search input{position:relative;z-index:101;pointer-events:auto;touch-action:auto;-webkit-user-select:text;user-select:text}
 #products.prime-store .prime-store-tab,
-#products.prime-store button{pointer-events:auto}
+#products.prime-store button,
+#products.prime-store .feature-btn,
+#products.prime-store .prime-select-btn{position:relative;z-index:20;pointer-events:auto;cursor:pointer}
 .prime-store-head{display:flex;align-items:flex-end;justify-content:space-between;gap:18px;margin-bottom:18px}
 .prime-store-title{font-size:34px;font-weight:950;color:#fff;text-shadow:0 0 22px rgba(181,108,255,.38);margin:0}
 .prime-store-sub{color:#a99ab4;font-size:14px;margin:6px 0 0}
@@ -1781,6 +1783,16 @@ function filterPrimeProducts(query,filter,source){
   if(source)source.classList.add("active");
 }
 window.filterPrimeProducts=filterPrimeProducts;
+document.addEventListener("DOMContentLoaded",()=>{
+  const search=document.getElementById("primeProductSearch");
+  if(search){
+    search.addEventListener("input",()=>filterPrimeProducts(search.value));
+    search.addEventListener("click",e=>e.stopPropagation());
+  }
+  document.querySelectorAll("#products.prime-store button").forEach(btn=>{
+    btn.addEventListener("click",e=>e.stopPropagation());
+  });
+});
 function initPrimeShopTimer(){
   let end=Date.now()+((2*60*60+35*60+18)*1000);
   const tick=()=>{
