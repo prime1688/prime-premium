@@ -342,6 +342,15 @@
         font-size:16px;
       }
     }
+    .topup-error-card{width:min(470px,100%)!important;text-align:center;background:linear-gradient(180deg,#160d20,#09070d)!important;border:1px solid #8b42c9!important;box-shadow:0 0 0 1px rgba(181,108,255,.12),0 0 60px rgba(181,108,255,.20),0 25px 80px rgba(0,0,0,.65)!important}
+    .topup-error-icon{width:92px;height:92px;margin:4px auto 12px;border-radius:50%;display:grid;place-items:center;background:radial-gradient(circle,#5a1020 0%,#160d20 68%);border:3px solid #ff5268;color:#fff;font-size:50px;font-weight:900;box-shadow:0 0 28px rgba(255,82,104,.55),inset 0 0 25px rgba(255,82,104,.18);animation:topupErrorPop .45s ease-out}
+    .topup-error-title{font-size:29px;font-weight:900;margin:4px 0 10px;color:#ff7180}
+    .topup-error-desc{color:#ddd;font-size:15px;line-height:1.65;margin-bottom:15px}
+    .topup-error-info{padding:14px;border:1px solid #5b285f;border-radius:17px;background:#0e0a13;text-align:left;margin-bottom:16px}
+    .topup-error-info small{display:block;color:#999;margin-bottom:4px}.topup-error-info strong{display:block;color:#ddd;font-size:15px;word-break:break-word}
+    .topup-error-info span{display:block;color:#777;font-size:11px;margin-top:5px}
+    .topup-error-home{width:100%;padding:14px;border:0;border-radius:13px;background:linear-gradient(135deg,#d58aff,#8f35e9);color:#09060b;font-size:15px;font-weight:900;cursor:pointer}
+    @keyframes topupErrorPop{from{opacity:0;transform:scale(.6)}to{opacity:1;transform:scale(1)}}
     .topup-success-card{width:min(470px,100%)!important;text-align:center;background:linear-gradient(180deg,#160d20,#09070d)!important;border:1px solid #8b42c9!important;box-shadow:0 0 0 1px rgba(181,108,255,.12),0 0 60px rgba(181,108,255,.24),0 25px 80px rgba(0,0,0,.65)!important;overflow:hidden}
     .topup-success-check{width:92px;height:92px;margin:4px auto 12px;border-radius:50%;display:grid;place-items:center;background:radial-gradient(circle,#4b176d 0%,#160d20 68%);border:3px solid #c56cff;color:#fff;font-size:52px;font-weight:900;box-shadow:0 0 28px rgba(197,108,255,.7),inset 0 0 25px rgba(197,108,255,.22);animation:topupSuccessPop .55s cubic-bezier(.2,.9,.3,1.3)}
     .topup-success-title{font-size:30px;font-weight:900;margin:4px 0 16px;color:#fff}
@@ -896,6 +905,14 @@ function showTopupSuccess(amount,credit){
   if(t){const now=new Date();t.textContent="ทำรายการสำเร็จ • "+now.toLocaleString("th-TH",{dateStyle:"medium",timeStyle:"short"});}
   modal.classList.add("show");
 }
+function showTopupError(ref){
+  const modal=document.getElementById("topupErrorModal");if(!modal)return;
+  const r=document.getElementById("topupErrorRef"),t=document.getElementById("topupErrorTime");
+  if(r)r.textContent=ref||"เลขอ้างอิงไม่พร้อมใช้งาน";
+  if(t){const now=new Date();t.textContent="ตรวจสอบเมื่อ "+now.toLocaleString("th-TH",{dateStyle:"medium",timeStyle:"short"});}
+  modal.classList.add("show");
+}
+function closeTopupError(){document.getElementById("topupErrorModal")?.classList.remove("show");}
 function closeTopupSuccess(){document.getElementById("topupSuccessModal")?.classList.remove("show");}
 function closeModal(id){document.getElementById(id).classList.remove("show");if(id==="topupModal")clearInterval(qrTimer);}
 function addToCart(name,price){
@@ -1187,7 +1204,14 @@ async function createTopup(){
       try{if(error.context){const t=await error.context.text();const j=JSON.parse(t);msg=j.message||msg;}}catch(e){}
       throw new Error(msg);
     }
-    if(!data?.success)throw new Error(data?.message||"สลิปไม่ผ่านการตรวจสอบ");
+    if(!data?.success){
+      const msg=String(data?.message||"สลิปไม่ผ่านการตรวจสอบ");
+      if(/Transaction Reference already exist|already.*exist|สลิป.*ใช้งาน|สลิป.*ซ้ำ/i.test(msg)){
+        showTopupError(data?.slip?.transRef||data?.provider_reference||"เลขอ้างอิงธุรกรรมถูกใช้แล้ว");
+        return;
+      }
+      throw new Error(msg);
+    }
     document.getElementById("topupAmount").value="";
     const slip=document.getElementById("topupSlip");if(slip)slip.value="";
     closeModal("topupModal");
@@ -1424,7 +1448,7 @@ document.addEventListener("DOMContentLoaded",()=>{
   document.addEventListener("click",(event)=>{
     const b=event.target.closest("button[data-action]"); if(!b)return;
     const a=b.dataset.action;
-    if(a==="login") login(); else if(a==="logout") logout(); else if(a==="goProducts") goProducts(); else if(a==="openTopup") openTopup(); else if(a==="openTransactions") openTransactions(); else if(a==="openOrders") openOrders(); else if(a==="openFreeRewards") openFreeRewards(); else if(a==="openTerms") document.getElementById("termsModal")?.classList.add("show"); else if(a==="openCart") openCart(); else if(a==="openWithdraw") openWithdraw(); else if(a==="vipOnly") alert("ฟังก์ชันนี้สำหรับสมาชิก VIP เท่านั้น"); else if(a==="addToCart") addToCart(b.dataset.name,Number(b.dataset.price)); else if(a==="removeFromCart") removeFromCart(Number(b.dataset.index)); else if(a==="clearCart") clearCart(); else if(a==="showSocial") showSocial(b.dataset.name); else if(a==="closeModal") closeModal(b.dataset.modal); else if(a==="createTopup") createTopup(); else if(a==="topupSuccessHistory"){closeTopupSuccess();openTransactions();} else if(a==="topupSuccessDone"){closeTopupSuccess();window.scrollTo({top:0,behavior:"smooth"});} else if(a==="checkout") checkout(); else if(a==="placeSocialOrder") placeSocialOrder();
+    if(a==="login") login(); else if(a==="logout") logout(); else if(a==="goProducts") goProducts(); else if(a==="openTopup") openTopup(); else if(a==="openTransactions") openTransactions(); else if(a==="openOrders") openOrders(); else if(a==="openFreeRewards") openFreeRewards(); else if(a==="openTerms") document.getElementById("termsModal")?.classList.add("show"); else if(a==="openCart") openCart(); else if(a==="openWithdraw") openWithdraw(); else if(a==="vipOnly") alert("ฟังก์ชันนี้สำหรับสมาชิก VIP เท่านั้น"); else if(a==="addToCart") addToCart(b.dataset.name,Number(b.dataset.price)); else if(a==="removeFromCart") removeFromCart(Number(b.dataset.index)); else if(a==="clearCart") clearCart(); else if(a==="showSocial") showSocial(b.dataset.name); else if(a==="closeModal") closeModal(b.dataset.modal); else if(a==="createTopup") createTopup(); else if(a==="topupSuccessHistory"){closeTopupSuccess();openTransactions();} else if(a==="topupSuccessDone"){closeTopupSuccess();window.scrollTo({top:0,behavior:"smooth"});} else if(a==="topupErrorDone"){closeTopupError();} else if(a==="checkout") checkout(); else if(a==="placeSocialOrder") placeSocialOrder();
   });
 });</script>
   <div class="modal" id="topupModal">
@@ -1443,6 +1467,20 @@ document.addEventListener("DOMContentLoaded",()=>{
         <button class="close-btn" data-action="closeModal" data-modal="topupModal">ปิด</button>
         <button class="primary" data-action="createTopup">ตรวจสอบสลิปและเติมเครดิต</button>
       </div>
+    </div>
+  </div>
+
+  <div class="modal" id="topupErrorModal" role="dialog" aria-modal="true">
+    <div class="modal-card topup-error-card">
+      <div class="topup-error-icon">!</div>
+      <div class="topup-error-title">สลิปถูกใช้งานแล้ว</div>
+      <div class="topup-error-desc">สลิปใบนี้เคยเติมเครดิตเข้าบัญชีแล้ว<br>ไม่สามารถใช้สลิปเดิมเติมซ้ำได้</div>
+      <div class="topup-error-info">
+        <small>เลขอ้างอิงธุรกรรม</small>
+        <strong id="topupErrorRef">-</strong>
+        <span id="topupErrorTime">ตรวจสอบแล้ว</span>
+      </div>
+      <button class="topup-error-home" type="button" data-action="topupErrorDone">กลับไปหน้าเติมเงิน</button>
     </div>
   </div>
 
