@@ -1175,7 +1175,7 @@
       <p>แพ็กเกจรวม 3 แพลตฟอร์ม</p>
       <div class="prime-flash-platforms">▶ YouTube &nbsp;•&nbsp; 𝕏 X &nbsp;•&nbsp; Facebook</div>
       <div class="prime-flash-price"><small>ราคาเริ่มต้น</small><strong>฿3,999</strong><span>/เดือน</span></div>
-      <div class="prime-sale-timer"><div class="prime-time-box"><b id="shopHours">02</b><small>ชั่วโมง</small></div><div class="prime-time-box"><b id="shopMinutes">35</b><small>นาที</small></div><div class="prime-time-box"><b id="shopSeconds">18</b><small>วินาที</small></div></div>
+      <div class="prime-sale-timer"><div class="prime-time-box"><b id="shopHours">74</b><small>ชั่วโมง</small></div><div class="prime-time-box"><b id="shopMinutes">33</b><small>นาที</small></div><div class="prime-time-box"><b id="shopSeconds">20</b><small>วินาที</small></div></div>
       <button class="flash-sale-open-btn" type="button" data-action="openFlashSale">ดูแพ็กเกจ →</button>
     </article>
 
@@ -2012,13 +2012,13 @@ document.addEventListener("DOMContentLoaded",()=>{
   }
 });
 function initPrimeShopTimer(){
-  let end=Date.now()+((2*60*60+35*60+18)*1000);
+  let end=Date.now()+((74*60*60+33*60+20)*1000);
   const tick=()=>{
     const left=Math.max(0,end-Date.now()),sec=Math.floor(left/1000);
     const h=Math.floor(sec/3600),m=Math.floor((sec%3600)/60),s=sec%60;
     const a=document.getElementById("shopHours"),b=document.getElementById("shopMinutes"),d=document.getElementById("shopSeconds");
     if(a)a.textContent=String(h).padStart(2,"0");if(b)b.textContent=String(m).padStart(2,"0");if(d)d.textContent=String(s).padStart(2,"0");
-    if(left<=0)end=Date.now()+((2*60*60+35*60+18)*1000);
+    if(left<=0)end=0;
   };
   tick();setInterval(tick,1000);
 }
