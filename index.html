@@ -344,7 +344,7 @@
     .promo-ad img{width:100%;height:100%;display:block;object-fit:cover;background:#08060b;transition:transform .7s ease,filter .7s ease}
     .promo-panel.promo-active:hover img{transform:scale(1.015);filter:brightness(1.04)}
     .promo-number{position:absolute;z-index:3;right:18px;top:16px;padding:7px 11px;border-radius:999px;background:rgba(10,7,14,.72);border:1px solid rgba(255,255,255,.22);color:#fff;font-size:12px;font-weight:900;backdrop-filter:blur(8px)}
-    .promo-arrow{position:absolute;top:50%;transform:translateY(-50%);width:48px;height:48px;border-radius:50%;border:1px solid #a35bd0;background:rgba(12,7,16,.9);color:#f0d8ff;font-size:34px;line-height:1;cursor:pointer;z-index:8;box-shadow:0 0 22px rgba(181,108,255,.24);transition:.18s ease}
+    .promo-arrow{position:absolute;top:50%;transform:translateY(-50%);width:48px;height:48px;border-radius:50%;border:1px solid #a35bd0;background:rgba(12,7,16,.9);color:#f0d8ff;font-size:34px;line-height:1;cursor:pointer;display:none;z-index:8;box-shadow:0 0 22px rgba(181,108,255,.24);transition:.18s ease}
     .promo-arrow:hover{background:#2a1538;transform:translateY(-50%) scale(1.06)}
     .promo-prev{left:28px}.promo-next{right:28px}
     .promo-dots{position:absolute;left:50%;bottom:14px;transform:translateX(-50%);display:flex;gap:8px;z-index:9;padding:7px 10px;border-radius:999px;background:rgba(7,5,10,.62);backdrop-filter:blur(8px)}
@@ -568,8 +568,6 @@
       <article class="promo-panel promo-ad"><img src="./04_04_ขนมเส้นบุก_1320x484.jpg" alt="อาหลิว ขนมเส้นบุกหม่าล่า"><span class="promo-number">04 / 05</span></article>
       <article class="promo-panel promo-ad"><img src="./05_05_น้ำมะพร้าวมาลี_1320x484.jpg" alt="Malee Coconut Matcha"><span class="promo-number">05 / 05</span></article>
     </div>
-    <button class="promo-arrow promo-prev" type="button" aria-label="โฆษณาก่อนหน้า">‹</button>
-    <button class="promo-arrow promo-next" type="button" aria-label="โฆษณาถัดไป">›</button>
     <div class="promo-dots" id="promoDots" aria-label="เลือกโฆษณา"></div>
     <div class="promo-thumbs" id="promoThumbs" aria-label="เลือกโฆษณาจากภาพย่อ"></div>
   </section>
