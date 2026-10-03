@@ -1359,8 +1359,39 @@ ko:{
 let primeCurrentLanguage=localStorage.getItem("prime_language")||"th";
 const primeOriginalText=new WeakMap(),primeOriginalAttr=new WeakMap();
 let primeTranslating=false;
-function primeRememberText(n){if(!primeOriginalText.has(n))primeOriginalText.set(n,n.nodeValue||"");return primeOriginalText.get(n);}
-function primeRememberAttr(el,name){let m=primeOriginalAttr.get(el);if(!m){m={};primeOriginalAttr.set(el,m);}if(!(name in m))m[name]=el.getAttribute(name)||"";return m[name];}
+function primeCanonicalText(raw){
+  const s=String(raw??"");
+  const trim=s.trim();
+  if(!trim)return s;
+  for(const lang of Object.keys(PRIME_LANG)){
+    const dict=PRIME_LANG[lang]||{};
+    for(const key of Object.keys(dict)){if(dict[key]===trim)return s.replace(trim,key);}
+    const extra=PRIME_EXTRA_LANG[lang]||{};
+    for(const key of Object.keys(extra)){if(extra[key]===trim)return s.replace(trim,key);}
+  }
+  const patterns=[
+    [/^Viewing this page now (\\d+) people$/,"กำลังดูหน้านี้อยู่ $1 คน"],
+    [/^正在查看此页面 (\\d+) 人$/,"กำลังดูหน้านี้อยู่ $1 คน"],
+    [/^このページを閲覧中 (\\d+) 人$/,"กำลังดูหน้านี้อยู่ $1 คน"],
+    [/^현재 이 페이지를 보고 있는 사람 (\\d+)명$/,"กำลังดูหน้านี้อยู่ $1 คน"],
+    [/^Viewing this product now (\\d+) people$/,"กำลังดูสินค้านี้อยู่ $1 คน"],
+    [/^正在查看此产品 (\\d+) 人$/,"กำลังดูสินค้านี้อยู่ $1 คน"],
+    [/^この商品を閲覧中 (\\d+) 人$/,"กำลังดูสินค้านี้อยู่ $1 คน"],
+    [/^현재 이 상품을 보고 있는 사람 (\\d+)명$/,"กำลังดูสินค้านี้อยู่ $1 คน"]
+  ];
+  for(const [re,repl] of patterns)if(re.test(trim))return s.replace(trim,trim.replace(re,repl));
+  return s;
+}
+function primeRememberText(n){
+  if(!primeOriginalText.has(n))primeOriginalText.set(n,primeCanonicalText(n.nodeValue||""));
+  return primeOriginalText.get(n);
+}
+function primeRememberAttr(el,name){
+  let m=primeOriginalAttr.get(el);
+  if(!m){m={};primeOriginalAttr.set(el,m);}
+  if(!(name in m))m[name]=primeCanonicalText(el.getAttribute(name)||"");
+  return m[name];
+}
 function primeTranslateText(value,lang=primeCurrentLanguage){
   const dict=PRIME_LANG[lang]||PRIME_LANG.th,raw=String(value??""),trimmed=raw.trim();
   if(!trimmed)return raw;
@@ -1398,7 +1429,15 @@ function primeTranslatePage(lang){
   const toggle=document.getElementById("primeLangToggle"),flags={th:"🇹🇭",en:"🇬🇧","zh-CN":"🇨🇳",ja:"🇯🇵",ko:"🇰🇷"};if(toggle)toggle.textContent=flags[primeCurrentLanguage];
   primeTranslating=false;obs?.observe(document.body,{subtree:true,childList:true,characterData:true});
 }
-function setPrimeLanguage(lang){if(!PRIME_LANG[lang])lang="th";localStorage.setItem("prime_language",lang);primeTranslatePage(lang);document.getElementById("primeLanguage")?.classList.remove("open");}
+function setPrimeLanguage(lang){
+  if(!PRIME_LANG[lang])lang="th";
+  localStorage.setItem("prime_language",lang);
+  primeTranslatePage(lang);
+  if(typeof renderFreeRewards==="function" && document.getElementById("freeRewardsModal")?.classList.contains("show")) renderFreeRewards();
+  if(typeof openTransactions==="function" && document.getElementById("transactionsModal")?.classList.contains("show")) openTransactions();
+  if(typeof openOrders==="function" && document.getElementById("ordersModal")?.classList.contains("show")) openOrders();
+  document.getElementById("primeLanguage")?.classList.remove("open");
+}
 function initPrimeLanguage(){
   const box=document.getElementById("primeLanguage"),toggle=document.getElementById("primeLangToggle");if(!box||!toggle)return;
   toggle.addEventListener("click",e=>{e.stopPropagation();box.classList.toggle("open");});
