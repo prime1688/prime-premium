@@ -704,6 +704,11 @@
     body{top:0!important}
 
     .prime-credit{display:flex;flex-direction:column;min-width:92px}.prime-credit small{color:#ddd;font-size:10px}.prime-credit strong{color:#fff;font-size:17px}
+    .prime-menu-item.prime-credit-top{cursor:default;background:rgba(22,10,34,.8);border-color:#7133a0;min-width:105px;justify-content:center}
+    .prime-credit-top strong{color:#d09aff;font-size:14px}
+    .prime-credit-top:hover{transform:none;background:rgba(22,10,34,.8);box-shadow:0 0 18px rgba(181,108,255,.18)}
+    @media(max-width:900px){.prime-menu-item.prime-credit-top{min-width:88px;padding:9px 8px;font-size:10px}.prime-credit-top strong{font-size:11px}}
+
     .prime-avatar{width:42px;height:42px;border-radius:50%;background:#f3eaff;color:#7c4aa5;display:grid;place-items:center;font-size:25px}
     .prime-login{background:#171018!important;border-color:#4d3a52!important;padding:10px 13px!important}
     .prime-account{max-width:1480px!important;justify-content:flex-start;align-items:center;padding:12px 22px!important;margin:0 auto!important}
@@ -778,11 +783,11 @@
       <nav class="prime-menu" aria-label="เมนู PRIME">
         <a class="prime-menu-item active" href="#top"><span>⌂</span>หน้าหลัก</a>
         <button class="prime-menu-item" type="button" data-action="openTopup"><span>▣</span>เติมเงิน</button>
+        <div class="prime-menu-item prime-credit-top" aria-label="ยอดเครดิต"><span>฿</span><strong id="headerCredit">฿0.00</strong></div>
         <a class="prime-menu-item" href="https://lin.ee/sZghOhY" target="_blank" rel="noopener noreferrer"><span>☊</span>ติดต่อเรา</a>
       </nav>
       <div class="prime-user-box">
         <a class="prime-line" href="https://lin.ee/sZghOhY" target="_blank" rel="noopener noreferrer" aria-label="LINE">LINE</a>
-        <div class="prime-credit"><small>ยอดเครดิต</small><strong id="headerCredit">฿0.00</strong></div>
         <div class="prime-avatar">●</div>
         <button class="nav-btn prime-login" type="button" data-action="login">เข้าสู่ระบบ</button>
       </div>
