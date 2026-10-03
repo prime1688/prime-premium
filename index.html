@@ -808,6 +808,7 @@
   </footer>
 <!-- PRIME ↔ Supabase -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js"></script>
 <script>
 const SUPABASE_URL = "https://uxatabaoxbmgswcqrptq.supabase.co";
 const SUPABASE_KEY = "sb_publishable_WIFz-7unS6IQFspqOSoj_Q_BST2Hr4o";
@@ -1107,25 +1108,42 @@ async function placeSocialOrder(){
   closeModal("socialOrderModal");recordLiveActivity("ordered","สั่งซื้อบริการ "+r.label+" จำนวน "+formatNumber(qty)+" "+r.unit);await updateLoginButton();alert("สั่งซื้อสำเร็จ\n"+r.label+" "+formatNumber(qty)+" "+r.unit+"\nยอดที่หัก ฿"+formatNumber(data.total)+"\nเครดิตคงเหลือ ฿"+formatNumber(data.credit));
 }
 let topupSubmitting=false;
-function fileToCompressedBase64(file){
+function fileToQrData(file){
   return new Promise((resolve,reject)=>{
     if(!file)return reject(new Error("กรุณาแนบรูปสลิป"));
-    if(!/^image\/(jpeg|png|webp)$/i.test(file.type))return reject(new Error("รองรับเฉพาะ JPG, PNG หรือ WEBP"));
+    if(!/^image\\/(jpeg|png|webp|heic|heif)$/i.test(file.type) && !/\\.(jpe?g|png|webp|heic|heif)$/i.test(file.name||"")){
+      return reject(new Error("รองรับไฟล์รูปสลิป JPG, JPEG, PNG, WEBP หรือ HEIC"));
+    }
     const reader=new FileReader();
     reader.onerror=()=>reject(new Error("อ่านรูปสลิปไม่สำเร็จ"));
     reader.onload=()=>{
       const img=new Image();
       img.onload=()=>{
-        const max=1600;
+        const max=2200;
         const scale=Math.min(1,max/Math.max(img.width,img.height));
         const canvas=document.createElement("canvas");
         canvas.width=Math.max(1,Math.round(img.width*scale));
         canvas.height=Math.max(1,Math.round(img.height*scale));
-        const ctx=canvas.getContext("2d");
+        const ctx=canvas.getContext("2d",{willReadFrequently:true});
         if(!ctx)return reject(new Error("เตรียมรูปสลิปไม่สำเร็จ"));
         ctx.drawImage(img,0,0,canvas.width,canvas.height);
-        const dataUrl=canvas.toDataURL("image/jpeg",0.84);
-        resolve(dataUrl.split(",")[1]||"");
+        if(typeof jsQR!=="function")return reject(new Error("ระบบอ่าน QR ยังโหลดไม่เสร็จ กรุณาลองใหม่"));
+        const imageData=ctx.getImageData(0,0,canvas.width,canvas.height);
+        let code=jsQR(imageData.data,imageData.width,imageData.height,{inversionAttempts:"attemptBoth"});
+        if(!code){
+          const maxSide=Math.max(canvas.width,canvas.height);
+          const sx=Math.floor((canvas.width-Math.min(canvas.width,canvas.height))/2);
+          const sy=Math.floor((canvas.height-Math.min(canvas.width,canvas.height))/2);
+          const side=Math.min(canvas.width,canvas.height);
+          if(side>900){
+            const crop=document.createElement("canvas");crop.width=side;crop.height=side;
+            const cctx=crop.getContext("2d",{willReadFrequently:true});cctx.drawImage(canvas,sx,sy,side,side,0,0,side,side);
+            const d=cctx.getImageData(0,0,side,side);
+            code=jsQR(d.data,d.width,d.height,{inversionAttempts:"attemptBoth"});
+          }
+        }
+        if(!code?.data) return reject(new Error("ไม่พบ QR Code ในสลิป กรุณาแนบรูปสลิปที่เห็น QR ชัดเจน"));
+        resolve(code.data);
       };
       img.onerror=()=>reject(new Error("เปิดรูปสลิปไม่สำเร็จ"));
       img.src=String(reader.result||"");
@@ -1137,7 +1155,6 @@ async function createTopup(){
   if(topupSubmitting)return;
   const active=document.activeElement;
   if(active && typeof active.blur==="function") active.blur();
-  recordLiveActivity("payment","กำลังตรวจสอบสลิป");
   const amount=Number(document.getElementById("topupAmount").value);
   const file=document.getElementById("topupSlip")?.files?.[0];
   if(!amount||amount<=0){alert("กรุณาระบุจำนวนเงินตามสลิป");return;}
@@ -1148,13 +1165,10 @@ async function createTopup(){
   topupSubmitting=true;
   const btn=[...document.querySelectorAll('[data-action="createTopup"]')].find(x=>x.offsetParent!==null);
   const oldText=btn?.textContent;
-  if(btn){btn.disabled=true;btn.textContent="กำลังตรวจสอบสลิป...";}
+  if(btn){btn.disabled=true;btn.textContent="กำลังอ่าน QR และตรวจสอบสลิป...";}
   try{
-    const qrImageBase64=await fileToCompressedBase64(file);
-    if(!qrImageBase64)throw new Error("ไม่สามารถอ่านรูปสลิปได้");
-    const {data,error}=await supabaseClient.functions.invoke("verify-topup-slip",{
-      body:{amount,qrImageBase64}
-    });
+    const qrData=await fileToQrData(file);
+    const {data,error}=await supabaseClient.functions.invoke("verify-topup-slip",{body:{amount,qrData}});
     if(error){
       let msg=error.message||"ระบบตรวจสอบสลิปไม่สำเร็จ";
       try{if(error.context){const t=await error.context.text();const j=JSON.parse(t);msg=j.message||msg;}}catch(e){}
@@ -1166,7 +1180,7 @@ async function createTopup(){
     closeModal("topupModal");
     await updateLoginButton();
     await openTransactions();
-    alert("เติมเงินสำเร็จ ฿"+Number(data.credit?amount:amount).toFixed(2)+"\nเครดิตเข้าบัญชีเรียบร้อยแล้ว");
+    alert("เติมเงินสำเร็จ ฿"+Number(data.slip?.amount||amount).toFixed(2)+"\\nเครดิตเข้าบัญชีเรียบร้อยแล้ว");
   }catch(e){
     alert(e?.message||"ตรวจสอบสลิปไม่สำเร็จ กรุณาลองใหม่");
   }finally{
