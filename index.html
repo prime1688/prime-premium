@@ -992,6 +992,37 @@
   .prime-benefit b{font-size:10px}
 }
 
+    /* Popular platforms slider popup */
+    .popular-platform-card{width:min(860px,100%)!important;max-width:860px!important;padding:24px!important;background:linear-gradient(180deg,#180c24,#09070d)!important;border:1px solid #9b4de0!important;box-shadow:0 0 0 1px rgba(181,108,255,.12),0 0 70px rgba(181,108,255,.25),0 30px 90px rgba(0,0,0,.8)!important}
+    .popular-platform-head{display:flex;align-items:center;justify-content:space-between;gap:15px;margin-bottom:18px}
+    .popular-platform-head h2{margin:0;color:#fff;font-size:27px;font-weight:950}
+    .popular-platform-head p{margin:5px 0 0;color:#a99ab4;font-size:13px}
+    .popular-platform-close{width:40px;height:40px;flex:0 0 40px;border-radius:50%;border:1px solid #7133a0;background:#160d20;color:#e4c5ff;font-size:26px;cursor:pointer}
+    .popular-slider-wrap{position:relative}
+    .popular-slider{display:flex;gap:14px;overflow-x:auto;scroll-snap-type:x mandatory;scroll-behavior:smooth;padding:5px 2px 14px;scrollbar-width:none;cursor:grab;touch-action:pan-x}
+    .popular-slider::-webkit-scrollbar{display:none}
+    .popular-slider.dragging{cursor:grabbing;scroll-behavior:auto}
+    .popular-platform{flex:0 0 calc((100% - 28px)/3);min-width:0;scroll-snap-align:start;border:1px solid #392346;border-radius:20px;padding:20px 15px;background:linear-gradient(145deg,#17101d,#0d0a11);text-align:center;transition:.2s;cursor:pointer}
+    .popular-platform:hover{transform:translateY(-3px);border-color:#b56cff;box-shadow:0 12px 30px rgba(181,108,255,.18)}
+    .popular-platform-icon{width:70px;height:70px;margin:0 auto 12px;border-radius:22px;display:grid;place-items:center;background:radial-gradient(circle,#3b1760,#170d20 70%);border:1px solid #7133a0;color:#d58aff;font-size:34px;font-weight:950;box-shadow:0 0 25px rgba(181,108,255,.15)}
+    .popular-platform h3{margin:0 0 5px;color:#fff;font-size:17px}
+    .popular-platform p{margin:0 0 14px;color:#8e8296;font-size:11px}
+    .popular-platform-btn{width:100%;border:1px solid #a94fff;border-radius:11px;padding:10px;background:linear-gradient(135deg,#d58aff,#8f35e9);color:#09060b;font-weight:900;cursor:pointer}
+    .popular-slider-arrow{position:absolute;top:50%;transform:translateY(-58%);z-index:5;width:42px;height:42px;border-radius:50%;border:1px solid #9b4de0;background:rgba(15,8,22,.94);color:#e2b9ff;font-size:25px;cursor:pointer;box-shadow:0 0 20px rgba(181,108,255,.22)}
+    .popular-slider-arrow.left{left:-18px}.popular-slider-arrow.right{right:-18px}
+    .popular-slider-dots{display:flex;justify-content:center;gap:6px;margin-top:2px}
+    .popular-slider-dot{width:7px;height:7px;border-radius:50%;background:#392346;border:0;padding:0;cursor:pointer}
+    .popular-slider-dot.active{width:22px;border-radius:999px;background:#b56cff;box-shadow:0 0 12px rgba(181,108,255,.5)}
+    @media(max-width:700px){
+      .popular-platform-card{padding:19px!important}
+      .popular-platform-head h2{font-size:23px}
+      .popular-platform{flex:0 0 78%;padding:18px 14px}
+      .popular-platform-icon{width:64px;height:64px;font-size:31px}
+      .popular-slider-arrow{width:38px;height:38px}
+      .popular-slider-arrow.left{left:-7px}.popular-slider-arrow.right{right:-7px}
+      .popular-slider{padding-left:2px;padding-right:2px}
+    }
+
 </style>
 </head>
 
@@ -1110,7 +1141,7 @@
       <div class="feature-icon">🏆</div>
       <h3>สินค้ายอดนิยมประจำสัปดาห์</h3>
       <p>บริการที่ลูกค้าเลือกใช้มากที่สุด คัดแพ็กเกจยอดนิยมให้เลือกได้ทันที</p>
-      <button class="feature-btn" type="button" onclick="filterPrimeProducts('', 'popular')">ดูทั้งหมด →</button>
+      <button class="feature-btn" type="button" data-action="openPopularPlatforms">ดูทั้งหมด →</button>
     </article>
     <article class="prime-feature sale">
       <div class="feature-icon">⚡</div>
@@ -1884,6 +1915,38 @@ function filterPrimeProducts(query,filter,source){
     if(all)all.classList.add("active");
   }
 }
+function initPopularPlatformsSlider(){
+  const slider=document.getElementById("popularPlatformSlider");
+  const dots=document.getElementById("popularSliderDots");
+  if(!slider||!dots)return;
+  const slides=[...slider.querySelectorAll("[data-platform-slide]")];
+  dots.innerHTML=slides.map((_,i)=>'<button class="popular-slider-dot'+(i===0?' active':'')+'" type="button" data-popular-dot="'+i+'" aria-label="สไลด์ '+(i+1)+'"></button>').join("");
+  const update=()=>{
+    const center=slider.scrollLeft+slider.clientWidth/2;
+    let best=0,bestDist=Infinity;
+    slides.forEach((el,i)=>{const d=Math.abs((el.offsetLeft+el.offsetWidth/2)-center);if(d<bestDist){bestDist=d;best=i;}});
+    dots.querySelectorAll(".popular-slider-dot").forEach((d,i)=>d.classList.toggle("active",i===best));
+  };
+  window.popularSlideTo=(index)=>{
+    const i=Math.max(0,Math.min(slides.length-1,index));
+    slider.scrollTo({left:slides[i].offsetLeft-(slider.clientWidth-slides[i].offsetWidth)/2,behavior:"smooth"});
+  };
+  slider.addEventListener("scroll",update,{passive:true});
+  dots.addEventListener("click",e=>{const b=e.target.closest("[data-popular-dot]");if(b)window.popularSlideTo(Number(b.dataset.popularDot));});
+  let startX=0,startScroll=0,drag=false;
+  slider.addEventListener("pointerdown",e=>{drag=true;startX=e.clientX;startScroll=slider.scrollLeft;slider.classList.add("dragging");slider.setPointerCapture?.(e.pointerId);});
+  slider.addEventListener("pointermove",e=>{if(!drag)return;slider.scrollLeft=startScroll-(e.clientX-startX);});
+  const endDrag=()=>{drag=false;slider.classList.remove("dragging");};
+  slider.addEventListener("pointerup",endDrag);slider.addEventListener("pointercancel",endDrag);
+  update();
+}
+function popularPlatformsMove(dir){
+  const slider=document.getElementById("popularPlatformSlider");
+  if(!slider)return;
+  const card=slider.querySelector("[data-platform-slide]");
+  const step=card?card.getBoundingClientRect().width+14:300;
+  slider.scrollBy({left:dir*step,behavior:"smooth"});
+}
 window.filterPrimeProducts=filterPrimeProducts;
 document.addEventListener("DOMContentLoaded",()=>{
   const search=document.getElementById("primeProductSearch");
@@ -1906,6 +1969,7 @@ function initPrimeShopTimer(){
   };
   tick();setInterval(tick,1000);
 }
+document.addEventListener("DOMContentLoaded",initPopularPlatformsSlider);
 document.addEventListener("DOMContentLoaded",initPrimeShopTimer);
 
 document.addEventListener("DOMContentLoaded",initRealtimeViewerCounters);
@@ -1916,7 +1980,7 @@ document.addEventListener("DOMContentLoaded",()=>{
   document.addEventListener("click",(event)=>{
     const b=event.target.closest("button[data-action]"); if(!b)return;
     const a=b.dataset.action;
-    if(a==="login") login(); else if(a==="loginContinue") performLogin(); else if(a==="logout") logout(); else if(a==="goProducts") goProducts(); else if(a==="openSignupPopup") document.getElementById("signupPopup")?.classList.add("show"); else if(a==="signupContinue"){performSignup();} else if(a==="signupSuccessDone"){closeSignupSuccess();} else if(a==="loginSuccessDone"){closeLoginSuccess();} else if(a==="openTopup") openTopup(); else if(a==="openTransactions") openTransactions(); else if(a==="openOrders") openOrders(); else if(a==="openFreeRewards") openFreeRewards(); else if(a==="openTerms") document.getElementById("termsModal")?.classList.add("show"); else if(a==="openCart") openCart(); else if(a==="openWithdrawNotice") openWithdrawNotice(); else if(a==="openWithdraw") openWithdraw(); else if(a==="vipOnly") alert("ฟังก์ชันนี้สำหรับสมาชิก VIP เท่านั้น"); else if(a==="addToCart") addToCart(b.dataset.name,Number(b.dataset.price)); else if(a==="removeFromCart") removeFromCart(Number(b.dataset.index)); else if(a==="clearCart") clearCart(); else if(a==="showSocial") showSocial(b.dataset.name); else if(a==="closeModal") closeModal(b.dataset.modal); else if(a==="createTopup") createTopup(); else if(a==="topupSuccessHistory"){closeTopupSuccess();openTransactions();} else if(a==="topupSuccessDone"){closeTopupSuccess();window.scrollTo({top:0,behavior:"smooth"});} else if(a==="topupErrorDone"){closeTopupError();} else if(a==="checkout") checkout(); else if(a==="placeSocialOrder") placeSocialOrder(); else if(a==="syncSmmCatalog") syncSmmCatalog();
+    if(a==="login") login(); else if(a==="loginContinue") performLogin(); else if(a==="logout") logout(); else if(a==="goProducts") goProducts(); else if(a==="openSignupPopup") document.getElementById("signupPopup")?.classList.add("show"); else if(a==="signupContinue"){performSignup();} else if(a==="signupSuccessDone"){closeSignupSuccess();} else if(a==="loginSuccessDone"){closeLoginSuccess();} else if(a==="openTopup") openTopup(); else if(a==="openTransactions") openTransactions(); else if(a==="openOrders") openOrders(); else if(a==="openFreeRewards") openFreeRewards(); else if(a==="openTerms") document.getElementById("termsModal")?.classList.add("show"); else if(a==="openCart") openCart(); else if(a==="openWithdrawNotice") openWithdrawNotice(); else if(a==="openPopularPlatforms"){document.getElementById("popularPlatformsModal")?.classList.add("show");} else if(a==="popularPrev"){popularPlatformsMove(-1);} else if(a==="popularNext"){popularPlatformsMove(1);} else if(a==="openWithdraw") openWithdraw(); else if(a==="vipOnly") alert("ฟังก์ชันนี้สำหรับสมาชิก VIP เท่านั้น"); else if(a==="addToCart") addToCart(b.dataset.name,Number(b.dataset.price)); else if(a==="removeFromCart") removeFromCart(Number(b.dataset.index)); else if(a==="clearCart") clearCart(); else if(a==="showSocial") showSocial(b.dataset.name); else if(a==="closeModal") closeModal(b.dataset.modal); else if(a==="createTopup") createTopup(); else if(a==="topupSuccessHistory"){closeTopupSuccess();openTransactions();} else if(a==="topupSuccessDone"){closeTopupSuccess();window.scrollTo({top:0,behavior:"smooth"});} else if(a==="topupErrorDone"){closeTopupError();} else if(a==="checkout") checkout(); else if(a==="placeSocialOrder") placeSocialOrder(); else if(a==="syncSmmCatalog") syncSmmCatalog();
   });
 });</script>
   <div class="modal" id="loginPopup">
@@ -1991,6 +2055,50 @@ document.addEventListener("DOMContentLoaded",()=>{
         <button class="close-btn" data-action="closeModal" data-modal="topupModal">ปิด</button>
         <button class="primary" data-action="createTopup">ตรวจสอบสลิปและเติมเครดิต</button>
       </div>
+    </div>
+  </div>
+
+  <div class="modal" id="popularPlatformsModal" role="dialog" aria-modal="true">
+    <div class="modal-card popular-platform-card">
+      <div class="popular-platform-head">
+        <div>
+          <h2>🔥 สินค้ายอดนิยม</h2>
+          <p>เลือกแพลตฟอร์มที่ต้องการ แล้วเลือกแพ็กเกจได้ทันที</p>
+        </div>
+        <button class="popular-platform-close" type="button" data-action="closeModal" data-modal="popularPlatformsModal" aria-label="ปิด">×</button>
+      </div>
+      <div class="popular-slider-wrap">
+        <button class="popular-slider-arrow left" type="button" data-action="popularPrev" aria-label="ก่อนหน้า">‹</button>
+        <div class="popular-slider" id="popularPlatformSlider">
+          <article class="popular-platform" data-platform-slide>
+            <div class="popular-platform-icon">◎</div><h3>Instagram</h3><p>Likes · Views · Followers</p>
+            <button class="popular-platform-btn" type="button" data-action="showSocial" data-name="Instagram">เลือก Instagram</button>
+          </article>
+          <article class="popular-platform" data-platform-slide>
+            <div class="popular-platform-icon">♪</div><h3>TikTok</h3><p>Views · Likes · Followers</p>
+            <button class="popular-platform-btn" type="button" data-action="showSocial" data-name="TikTok">เลือก TikTok</button>
+          </article>
+          <article class="popular-platform" data-platform-slide>
+            <div class="popular-platform-icon">f</div><h3>Facebook</h3><p>Likes · Views · Followers</p>
+            <button class="popular-platform-btn" type="button" data-action="showSocial" data-name="Facebook">เลือก Facebook</button>
+          </article>
+          <article class="popular-platform" data-platform-slide>
+            <div class="popular-platform-icon">▶</div><h3>YouTube</h3><p>Views · Likes · Subscribers</p>
+            <button class="popular-platform-btn" type="button" data-action="showSocial" data-name="YouTube">เลือก YouTube</button>
+          </article>
+          <article class="popular-platform" data-platform-slide>
+            <div class="popular-platform-icon">𝕏</div><h3>X</h3><p>Likes · Views · Followers</p>
+            <button class="popular-platform-btn" type="button" data-action="showSocial" data-name="X">เลือก X</button>
+          </article>
+          <article class="popular-platform" data-platform-slide>
+            <div class="popular-platform-icon">●</div><h3>LINE</h3><p>บริการสำหรับ LINE</p>
+            <button class="popular-platform-btn" type="button" data-action="showSocial" data-name="LINE">เลือก LINE</button>
+          </article>
+        </div>
+        <button class="popular-slider-arrow right" type="button" data-action="popularNext" aria-label="ถัดไป">›</button>
+      </div>
+      <div class="popular-slider-dots" id="popularSliderDots"></div>
+      <div class="modal-actions"><button class="close-btn" data-action="closeModal" data-modal="popularPlatformsModal">ปิด</button></div>
     </div>
   </div>
 
