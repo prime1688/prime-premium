@@ -123,6 +123,43 @@
       font-weight: 800;
       font-size: 15px;
     }
+    .topup-highlight{
+      position:relative;
+      overflow:hidden;
+      background:linear-gradient(135deg,#d58aff,#a94fff);
+      color:#080808;
+      border:2px solid #e3b7ff;
+      padding:15px 28px;
+      border-radius:16px;
+      font-weight:900;
+      font-size:17px;
+      letter-spacing:.2px;
+      cursor:pointer;
+      box-shadow:0 0 0 3px rgba(181,108,255,.14),0 8px 28px rgba(181,108,255,.35);
+      transform:scale(1.02);
+      transition:transform .18s ease,box-shadow .2s ease;
+    }
+    .topup-highlight::after{
+      content:"";
+      position:absolute;
+      top:-80%;
+      left:-35%;
+      width:24%;
+      height:260%;
+      transform:rotate(25deg);
+      background:rgba(255,255,255,.38);
+      animation:topupShine 2.4s ease-in-out infinite;
+      pointer-events:none;
+    }
+    .topup-highlight:hover{
+      transform:translateY(-2px) scale(1.04);
+      box-shadow:0 0 0 4px rgba(181,108,255,.16),0 12px 34px rgba(181,108,255,.48);
+    }
+    @keyframes topupShine{
+      0%,45%{left:-35%;opacity:0}
+      55%{opacity:1}
+      100%{left:120%;opacity:0}
+    }
 
     .secondary {
       background: #111;
@@ -316,6 +353,8 @@
       .quick-nav{top:69px;padding:0 12px;margin-top:10px}
       .quick-nav a{padding:8px 6px;font-size:12px}
       .section{padding-left:12px;padding-right:12px}
+      .account-bar{gap:8px}
+      .topup-highlight{padding:13px 24px;font-size:16px;box-shadow:0 0 0 3px rgba(181,108,255,.14),0 8px 24px rgba(181,108,255,.35)}
       .products{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
       .card{padding:14px;border-radius:14px}
       .card h3{font-size:16px}
@@ -372,10 +411,9 @@
 
   <div class="account-bar" id="accountBar">
     <div class="account-box">สมาชิก: <strong id="accountPhone">-</strong></div>
-    <button class="primary" type="button" data-action="openTopup">เติมเงิน</button>
+    <button class="topup-highlight" type="button" data-action="openTopup">เติมเงิน</button>
     <button class="secondary" type="button" data-action="openCart">ตะกร้า (<span id="cartCount">0</span>)</button>
     <button class="secondary" type="button" data-action="openTransactions">รายการเงิน</button>
-    <button class="secondary" type="button" data-action="openOrders">ออเดอร์ของฉัน</button>
   </div>
 
 
