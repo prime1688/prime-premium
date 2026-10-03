@@ -544,6 +544,17 @@
     .prime-menu-item em{position:absolute;left:50%;top:100%;transform:translate(-50%,2px);background:#ff0a85;color:#fff;font-size:8px;font-style:normal;border-radius:999px;padding:2px 7px;z-index:5}
     .prime-user-box{display:flex;align-items:center;gap:9px;background:rgba(17,8,27,.85);border:1px solid #7133a0;border-radius:18px;padding:7px 9px}
     .prime-line{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;background:#06c755;color:#fff;text-decoration:none;font-size:9px;font-weight:1000;box-shadow:0 0 14px rgba(6,199,85,.35)}
+    .prime-language{position:relative;display:flex;align-items:center;gap:4px}
+    .prime-lang-flag{width:34px;height:34px;border:1px solid #3b2448;background:#120a1a;border-radius:50%;display:grid;place-items:center;font-size:18px;cursor:pointer;padding:0;line-height:1;transition:.2s}
+    .prime-lang-flag:hover{border-color:#b96cff;box-shadow:0 0 12px rgba(181,108,255,.3);transform:translateY(-1px)}
+    .prime-lang-menu{display:none;position:absolute;right:0;top:42px;z-index:80;background:#120b18;border:1px solid #7133a0;border-radius:14px;padding:7px;box-shadow:0 12px 30px rgba(0,0,0,.45);gap:5px}
+    .prime-language.open .prime-lang-menu{display:flex}
+    .prime-lang-menu button{width:38px;height:38px;border:1px solid #30203b;background:#0d0911;border-radius:10px;font-size:20px;cursor:pointer}
+    .prime-lang-menu button:hover{border-color:#b96cff;background:#24112f}
+    #google_translate_element{display:none!important}
+    .goog-te-banner-frame.skiptranslate{display:none!important}
+    body{top:0!important}
+
     .prime-credit{display:flex;flex-direction:column;min-width:92px}.prime-credit small{color:#ddd;font-size:10px}.prime-credit strong{color:#fff;font-size:17px}
     .prime-avatar{width:42px;height:42px;border-radius:50%;background:#f3eaff;color:#7c4aa5;display:grid;place-items:center;font-size:25px}
     .prime-login{background:#171018!important;border-color:#4d3a52!important;padding:10px 13px!important}
@@ -575,6 +586,16 @@
         <a class="prime-menu-item" href="https://lin.ee/sZghOhY" target="_blank" rel="noopener noreferrer"><span>☊</span>ติดต่อเรา</a>
       </nav>
       <div class="prime-user-box">
+        <div class="prime-language" id="primeLanguage">
+          <button class="prime-lang-flag" type="button" id="primeLangToggle" aria-label="เลือกภาษา">🇹🇭</button>
+          <div class="prime-lang-menu" aria-label="เลือกภาษา">
+            <button type="button" data-lang="th" aria-label="ภาษาไทย">🇹🇭</button>
+            <button type="button" data-lang="en" aria-label="English">🇬🇧</button>
+            <button type="button" data-lang="zh-CN" aria-label="中文">🇨🇳</button>
+            <button type="button" data-lang="ja" aria-label="日本語">🇯🇵</button>
+            <button type="button" data-lang="ko" aria-label="한국어">🇰🇷</button>
+          </div>
+        </div>
         <a class="prime-line" href="https://lin.ee/sZghOhY" target="_blank" rel="noopener noreferrer" aria-label="LINE">LINE</a>
         <div class="prime-credit"><small>ยอดเครดิต</small><strong id="headerCredit">฿0.00</strong></div>
         <div class="prime-avatar">●</div>
@@ -1028,6 +1049,26 @@ async function checkout(){
   await updateLoginButton();
   alert("สั่งซื้อสำเร็จ\nหักเครดิต ฿"+total.toFixed(2)+" แล้ว");
 }
+
+function googleTranslateElementInit(){new google.translate.TranslateElement({pageLanguage:"th",includedLanguages:"th,en,zh-CN,ja,ko",autoDisplay:false},'google_translate_element');}
+function setPrimeLanguage(lang){
+  const box=document.getElementById("primeLanguage");
+  const flagMap={th:"🇹🇭",en:"🇬🇧","zh-CN":"🇨🇳",ja:"🇯🇵",ko:"🇰🇷"};
+  const combo=document.querySelector(".goog-te-combo");
+  if(combo){combo.value=lang;combo.dispatchEvent(new Event("change"));}
+  localStorage.setItem("prime_language",lang);
+  const toggle=document.getElementById("primeLangToggle");if(toggle)toggle.textContent=flagMap[lang]||"🌐";
+  box?.classList.remove("open");
+}
+function initPrimeLanguage(){
+  const box=document.getElementById("primeLanguage"),toggle=document.getElementById("primeLangToggle");
+  if(!box||!toggle)return;
+  toggle.addEventListener("click",e=>{e.stopPropagation();box.classList.toggle("open");});
+  box.querySelectorAll("[data-lang]").forEach(b=>b.addEventListener("click",()=>setPrimeLanguage(b.dataset.lang)));
+  document.addEventListener("click",()=>box.classList.remove("open"));
+  const saved=localStorage.getItem("prime_language");
+  if(saved&&saved!=="th")setTimeout(()=>setPrimeLanguage(saved),900);
+}
 if(supabaseClient){supabaseClient.auth.onAuthStateChange(()=>{setTimeout(updateLoginButton,0);});}
 const promoState={index:0,timer:null};
 function initPromoCarousel(){
@@ -1047,6 +1088,7 @@ function initPromoCarousel(){
 }
 document.addEventListener("DOMContentLoaded",updateLoginButton);
 document.addEventListener("DOMContentLoaded",initPromoCarousel);
+document.addEventListener("DOMContentLoaded",initPrimeLanguage);
 document.addEventListener("DOMContentLoaded",()=>{
   document.addEventListener("click",(event)=>{
     const b=event.target.closest("button[data-action]"); if(!b)return;
@@ -1167,5 +1209,7 @@ document.addEventListener("DOMContentLoaded",()=>{
       </div>
     </div>
   </div>
+  <div id="google_translate_element"></div>
+  <script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 </body>
 </html>
