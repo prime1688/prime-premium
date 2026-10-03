@@ -650,7 +650,7 @@
       right:18px;
       top:50%;
       transform:translateY(-50%);
-      z-index:40;
+      z-index:1000;
       width:82px;
       padding:7px;
       border:1px solid #3b2450;
@@ -718,28 +718,29 @@
     }
     @media(max-width:600px){
       .floating-menu{
-        left:8px;
         right:8px;
-        top:auto;
-        bottom:10px;
-        transform:none;
-        width:auto;
+        left:auto;
+        top:50%;
+        bottom:auto;
+        transform:translateY(-50%);
+        width:70px;
         padding:5px;
         border-radius:19px;
-        flex-direction:row;
+        flex-direction:column;
         gap:5px;
-        z-index:40;
+        z-index:1000;
       }
       .floating-menu-item{
-        flex:1 1 0;
+        flex:0 0 auto;
         min-width:0;
-        min-height:58px;
+        min-height:68px;
+        width:100%;
         border-radius:14px;
         padding:5px 2px;
       }
-      .floating-icon{width:28px;height:28px;font-size:16px}
+      .floating-icon{width:30px;height:30px;font-size:17px}
       .floating-label{
-        font-size:8px;
+        font-size:9px;
         line-height:1.15;
         white-space:nowrap;
         overflow:hidden;
