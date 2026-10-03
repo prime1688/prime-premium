@@ -336,42 +336,28 @@
 
 .social-order-card{max-width:760px!important}.social-modal-head{display:flex;justify-content:space-between;gap:14px;align-items:flex-start}.social-modal-head h2{margin:8px 0 4px}.social-modal-head p{color:#999;margin:0;font-size:13px}.modal-x{background:#25122f;color:#d69cff;border:1px solid #5d3277;border-radius:50%;width:40px;height:40px;font-size:26px;cursor:pointer}.social-service-cards{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:18px 0}.social-service-card{position:relative;text-align:left;background:#121015;border:1px solid #302638;color:#fff;border-radius:15px;padding:14px;cursor:pointer;min-height:125px;display:flex;flex-direction:column;gap:8px}.social-service-card.selected{border:2px solid #b95cff;background:#1c1025;box-shadow:0 0 22px #7d2db355}.ssc-icon{font-size:26px;color:#c36cff}.ssc-info{display:flex;flex-direction:column;gap:3px}.ssc-info strong{font-size:16px}.ssc-info small,.ssc-price small{color:#999;font-size:11px}.ssc-price{color:#d28cff;font-weight:900;font-size:18px;margin-top:auto}.ssc-check{position:absolute;right:10px;top:9px;color:#d28cff;font-size:20px}.social-label{display:block;color:#ddd;font-weight:800;font-size:13px;margin:13px 0 7px}.quantity-control{display:flex;align-items:center;gap:10px}.qty-btn{width:54px;height:52px;border:1px solid #5d3277;background:#21112c;color:#d28cff;border-radius:13px;font-size:30px;font-weight:900;cursor:pointer}.qty-btn:disabled{opacity:.35}.qty-number{flex:1;text-align:center}.qty-number input{width:100%;box-sizing:border-box;background:#0d0b0f;border:1px solid #3b3042;border-radius:13px;color:#fff;text-align:center;font-size:22px;font-weight:900;padding:12px}.qty-number span{display:block;color:#999;font-size:11px;margin-top:4px}.social-summary{background:#100d14;border:1px solid #342542;border-radius:15px;padding:14px;margin:15px 0}.social-summary div{display:flex;justify-content:space-between;padding:5px 0;color:#aaa}.social-summary strong{color:#d28cff;font-size:18px}.social-summary div:last-child{border-top:1px solid #29202e;margin-top:6px;padding-top:10px}.social-summary div:last-child strong{font-size:24px}@media(max-width:600px){.social-service-cards{grid-template-columns:repeat(2,1fr)}.social-order-card{max-height:90vh;overflow:auto}.social-service-card{min-height:110px;padding:12px}}
 
-    /* PRIME 5-ad premium carousel */
+    /* PRIME full-width 16:9 premium carousel */
     .promo-carousel{max-width:1180px;margin:18px auto 12px;padding:0 18px;position:relative}
-    .promo-stage{position:relative;min-height:420px}
-    .promo-panel{position:absolute;inset:0;width:100%;height:420px;overflow:hidden;border:1px solid #4a2670;border-radius:24px;background:#0d0912;box-shadow:0 18px 55px rgba(0,0,0,.48),0 0 32px rgba(181,108,255,.16);opacity:0;visibility:hidden;transform:translateX(26px) scale(.985);transition:opacity .45s ease,transform .55s ease,visibility .45s ease}
-    .promo-panel.promo-active{opacity:1;visibility:visible;transform:translateX(0) scale(1);border-color:#b85cff;box-shadow:0 0 0 1px rgba(194,107,255,.22),0 20px 60px rgba(0,0,0,.5),0 0 36px rgba(181,108,255,.22)}
-    .promo-panel::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(4,3,7,.82) 0%,rgba(4,3,7,.48) 34%,rgba(4,3,7,.08) 63%,rgba(4,3,7,.18) 100%);pointer-events:none}
-    .promo-ad img{width:100%;height:100%;object-fit:contain;display:block;background:#0b090d;transition:transform .7s ease,filter .7s ease}
-    .promo-panel.promo-active:hover img{transform:scale(1.025);filter:brightness(1.06)}
-    .promo-copy{position:absolute;z-index:2;left:42px;top:50%;transform:translateY(-50%);width:min(47%,520px);text-align:left}
-    .promo-kicker{display:inline-flex;align-items:center;gap:7px;padding:7px 12px;border:1px solid rgba(216,163,255,.55);border-radius:999px;background:rgba(28,12,40,.75);color:#e5c5ff;font-size:12px;font-weight:900;letter-spacing:.4px;backdrop-filter:blur(8px)}
-    .promo-copy h2{margin:14px 0 8px;font-size:clamp(28px,4.1vw,56px);line-height:1.02;font-weight:1000;letter-spacing:-1.5px;color:#fff;text-shadow:0 4px 18px rgba(0,0,0,.55)}
-    .promo-copy p{margin:0;color:#eee;font-size:clamp(13px,1.6vw,19px);line-height:1.55;font-weight:700;text-shadow:0 2px 12px #000}
-    .promo-copy .promo-line{margin-top:17px;display:flex;gap:8px;flex-wrap:wrap}
-    .promo-copy .promo-line span{padding:7px 10px;border-radius:999px;background:rgba(9,7,12,.68);border:1px solid rgba(255,255,255,.18);color:#fff;font-size:11px;font-weight:900;backdrop-filter:blur(7px)}
-    .promo-number{position:absolute;z-index:3;right:22px;top:18px;padding:7px 11px;border-radius:999px;background:rgba(10,7,14,.7);border:1px solid rgba(255,255,255,.2);color:#fff;font-size:11px;font-weight:900;backdrop-filter:blur(8px)}
-    .promo-arrow{position:absolute;top:50%;transform:translateY(-50%);width:46px;height:46px;border-radius:50%;border:1px solid #9c55c7;background:rgba(12,7,16,.88);color:#f0d8ff;font-size:32px;line-height:1;cursor:pointer;z-index:8;box-shadow:0 0 22px rgba(181,108,255,.22);transition:.18s ease}
+    .promo-stage{position:relative;width:100%;aspect-ratio:16/9;min-height:0;border-radius:24px}
+    .promo-panel{position:absolute;inset:0;width:100%;height:100%;overflow:hidden;border:2px solid #55257b;border-radius:24px;background:#08060b;opacity:0;visibility:hidden;transform:translateX(30px);transition:opacity .45s ease,transform .55s ease,visibility .45s ease;box-shadow:0 18px 55px rgba(0,0,0,.5),0 0 35px rgba(181,108,255,.16)}
+    .promo-panel.promo-active{opacity:1;visibility:visible;transform:translateX(0);border-color:#b85cff;box-shadow:0 0 0 2px rgba(194,107,255,.12),0 18px 60px rgba(0,0,0,.5),0 0 38px rgba(181,108,255,.24)}
+    .promo-ad img{width:100%;height:100%;display:block;object-fit:cover;background:#08060b;transition:transform .7s ease,filter .7s ease}
+    .promo-panel.promo-active:hover img{transform:scale(1.015);filter:brightness(1.04)}
+    .promo-number{position:absolute;z-index:3;right:18px;top:16px;padding:7px 11px;border-radius:999px;background:rgba(10,7,14,.72);border:1px solid rgba(255,255,255,.22);color:#fff;font-size:12px;font-weight:900;backdrop-filter:blur(8px)}
+    .promo-arrow{position:absolute;top:50%;transform:translateY(-50%);width:48px;height:48px;border-radius:50%;border:1px solid #a35bd0;background:rgba(12,7,16,.9);color:#f0d8ff;font-size:34px;line-height:1;cursor:pointer;z-index:8;box-shadow:0 0 22px rgba(181,108,255,.24);transition:.18s ease}
     .promo-arrow:hover{background:#2a1538;transform:translateY(-50%) scale(1.06)}
     .promo-prev{left:28px}.promo-next{right:28px}
-    .promo-dots{position:absolute;left:50%;bottom:16px;transform:translateX(-50%);display:flex;gap:8px;z-index:9;padding:7px 10px;border-radius:999px;background:rgba(7,5,10,.62);backdrop-filter:blur(8px)}
+    .promo-dots{position:absolute;left:50%;bottom:14px;transform:translateX(-50%);display:flex;gap:8px;z-index:9;padding:7px 10px;border-radius:999px;background:rgba(7,5,10,.62);backdrop-filter:blur(8px)}
     .promo-dot{width:8px;height:8px;border-radius:50%;border:0;background:#777;cursor:pointer;padding:0;transition:.2s}
     .promo-dot.active{width:24px;border-radius:999px;background:#c56cff;box-shadow:0 0 12px #b56cff}
     @media(max-width:600px){
       .promo-carousel{padding:0 10px;margin-top:10px}
-      .promo-stage{min-height:235px}
-      .promo-panel{height:235px;border-radius:17px}
-      .promo-panel::after{background:linear-gradient(90deg,rgba(4,3,7,.84) 0%,rgba(4,3,7,.45) 48%,rgba(4,3,7,.08) 100%)}
-      .promo-copy{left:20px;width:66%}
-      .promo-kicker{font-size:8px;padding:5px 8px}
-      .promo-copy h2{font-size:26px;margin:9px 0 5px}
-      .promo-copy p{font-size:10px;line-height:1.4}
-      .promo-copy .promo-line{margin-top:9px;gap:4px}
-      .promo-copy .promo-line span{font-size:7px;padding:5px 6px}
-      .promo-number{right:10px;top:9px;font-size:8px;padding:5px 7px}
-      .promo-arrow{width:32px;height:32px;font-size:23px}
+      .promo-stage{aspect-ratio:16/9;border-radius:17px}
+      .promo-panel{border-radius:17px}
+      .promo-number{right:9px;top:8px;font-size:9px;padding:5px 8px}
+      .promo-arrow{width:34px;height:34px;font-size:24px}
       .promo-prev{left:13px}.promo-next{right:13px}
-      .promo-dots{bottom:8px;gap:6px;padding:5px 8px}
+      .promo-dots{bottom:7px;gap:6px;padding:5px 8px}
       .promo-dot{width:6px;height:6px}.promo-dot.active{width:18px}
     }
 
@@ -544,27 +530,22 @@
     <div class="promo-stage" id="promoStage">
       <article class="promo-panel promo-ad promo-active">
         <img src="https://down-th.img.susercontent.com/file/th-11134208-81ztp-mjqdbjqtv6kl90" alt="ยาดมตราไผ่คู่">
-        <div class="promo-copy"><span class="promo-kicker">🎋 PRIME PICKS</span><h2>ยาดมตราไผ่คู่</h2><p>หอมเย็น สดชื่น พกง่าย พร้อมเป็นตัวช่วยให้รู้สึกสดชื่นได้ทุกเวลา</p><div class="promo-line"><span>🌿 สมุนไพร</span><span>❄️ หอมเย็น</span><span>🎒 พกง่าย</span></div></div>
         <span class="promo-number">01 / 05</span>
       </article>
       <article class="promo-panel promo-ad">
         <img src="https://down-th.img.susercontent.com/file/sg-11134201-823ph-mp7e288n7n654d" alt="Malee COCO Coconut Matcha">
-        <div class="promo-copy"><span class="promo-kicker">🥥 PRIME PICKS</span><h2>Malee COCO</h2><p>น้ำมะพร้าวผสมชาเขียวมัทฉะ รสชาติสดชื่นสำหรับสายใส่ใจตัวเอง</p><div class="promo-line"><span>🥥 Coconut</span><span>🍵 UJI MATCHA</span><span>✨ สดชื่น</span></div></div>
         <span class="promo-number">02 / 05</span>
       </article>
       <article class="promo-panel promo-ad">
         <img src="https://media.allonline.7eleven.co.th/pdmain/684672-02-allonline-sm.jpg" alt="อาหลิว ขนมเส้นบุกปรุงรสหม่าล่า">
-        <div class="promo-copy"><span class="promo-kicker">🌶️ PRIME PICKS</span><h2>อาหลิว เส้นบุกหม่าล่า</h2><p>รสหม่าล่าเข้มข้น เผ็ดถึงใจ เคี้ยวเพลินในทุกคำ</p><div class="promo-line"><span>🔥 หม่าล่า</span><span>🥢 เส้นบุก</span><span>😋 เคี้ยวเพลิน</span></div></div>
         <span class="promo-number">03 / 05</span>
       </article>
       <article class="promo-panel promo-ad">
         <img src="https://cosmenet-private.s3-bkk.nipa.cloud/upload/Maker/product-info/dnee/dnee-peachypopsyogurtbodybath600x600.jpg" alt="D-nee Yogurt Body Bath">
-        <div class="promo-copy"><span class="promo-kicker">🍑 PRIME PICKS</span><h2>D-nee Yogurt Body Bath</h2><p>หอมละมุน ผิวดูนุ่มชุ่มชื้น กับกลิ่น Berry Crush และ Peachy Pops</p><div class="promo-line"><span>🍓 Berry Crush</span><span>🍑 Peachy Pops</span><span>💧 ชุ่มชื้น</span></div></div>
         <span class="promo-number">04 / 05</span>
       </article>
       <article class="promo-panel promo-ad">
-        <img src="https://st.bigc-cs.com/cdn-cgi/image/format%3Dwebp%2Cquality%3D90/public/media/catalog/product/85/88/8851495016685/8851495016685_1-20260604173841-.jpg" alt="เชนไดร้ท์ ยาจุดกันยุง กลิ่นลาเวนเดอร์">
-        <div class="promo-copy"><span class="promo-kicker">🦟 PRIME PICKS</span><h2>เชนไดร้ท์</h2><p>ยาจุดกันยุงสูตรประสิทธิภาพ พร้อมกลิ่นลาเวนเดอร์สำหรับบ้านของคุณ</p><div class="promo-line"><span>🌸 Lavender</span><span>🌀 Mosquito Coil</span><span>🏠 สำหรับบ้าน</span></div></div>
+        <img src="https://st.bigc-cs.com/cdn-cgi/image/format%3Dwebp%2Cquality%3D90/public/media/catalog/product/85/88/8851495016685/8851495016685_1-20260604173841-.jpg" alt="เชนไดร้ท์ ยาจุดกันยุง">
         <span class="promo-number">05 / 05</span>
       </article>
     </div>
