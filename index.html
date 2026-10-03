@@ -718,18 +718,48 @@
     }
     @media(max-width:600px){
       .floating-menu{
+        left:8px;
         right:8px;
-        width:70px;
+        top:auto;
+        bottom:10px;
+        transform:none;
+        width:auto;
         padding:5px;
         border-radius:19px;
+        flex-direction:row;
+        gap:5px;
+        z-index:40;
       }
       .floating-menu-item{
-        min-height:68px;
+        flex:1 1 0;
+        min-width:0;
+        min-height:58px;
         border-radius:14px;
+        padding:5px 2px;
       }
-      .floating-icon{width:30px;height:30px;font-size:17px}
-      .floating-label{font-size:9px}
-      .floating-menu-item[data-action="openTerms"] .floating-label{font-size:7px;line-height:1.2;white-space:normal;text-align:center;max-width:58px}}
+      .floating-icon{width:28px;height:28px;font-size:16px}
+      .floating-label{
+        font-size:8px;
+        line-height:1.15;
+        white-space:nowrap;
+        overflow:hidden;
+        text-overflow:ellipsis;
+        max-width:100%;
+      }
+      .floating-badge{
+        top:1px;
+        right:3px;
+        min-width:16px;
+        height:16px;
+        font-size:9px;
+      }
+      .floating-menu-item[data-action="openTerms"] .floating-label{
+        font-size:7px;
+        white-space:normal;
+        text-align:center;
+        max-width:58px;
+      }
+    }
     .auth-only-menu{display:none!important}.auth-only-menu.auth-visible{display:flex!important
     }
 
