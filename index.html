@@ -1134,7 +1134,7 @@ function socialTotal(qty,rule){return Math.ceil(Number(qty)/rule.min)*rule.price
 function renderSocialServices(){
   const el=document.getElementById("socialServiceCards");if(!el)return;
   el.innerHTML=socialServices.map(x=>{
-    const r=x.rule,selected=selectedSocialService?.id===x.id,isOpen=x.active!==false;
+    const r=x.rule,selected=selectedSocialService?.id===x.id,isOpen=x.active!==false && Number(x.provider_service_id||0)>0 && x.id!==5;
     return '<button type="button" class="social-service-card '+(selected?"selected ":"")+(isOpen?"":"service-closed")+'" data-service-id="'+x.id+'" '+(isOpen?"":"disabled")+'>'+
       '<span class="ssc-icon">'+({Likes:"♥",Shares:"↗",Views:"◉",Followers:"●"}[x.name]||"•")+'</span>'+
       '<span class="ssc-info"><strong>'+r.label+'</strong><small>ขั้นต่ำ '+formatNumber(r.min)+' '+r.unit+'</small></span>'+
