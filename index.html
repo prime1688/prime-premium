@@ -117,6 +117,8 @@
       line-height: 1.7;
     }
 
+    .auth-popup{width:min(430px,calc(100vw - 28px));background:linear-gradient(180deg,#17101d,#0b090e);border:1px solid #7133a0;border-radius:24px;padding:28px;box-shadow:0 0 45px rgba(181,108,255,.22);color:#fff}.auth-popup h2{margin:0 0 8px;font-size:28px}.auth-popup p{color:#aaa;margin:0 0 22px}.auth-popup label{display:block;color:#ddd;font-size:13px;font-weight:800;margin:12px 0 7px}.auth-popup input{width:100%;box-sizing:border-box;background:#09080b;border:1px solid #3c2948;color:#fff;border-radius:13px;padding:14px;font-size:17px;outline:none}.auth-popup input:focus{border-color:#b56cff;box-shadow:0 0 0 3px rgba(181,108,255,.12)}.auth-popup .auth-main{width:100%;border:0;border-radius:13px;padding:14px;margin-top:18px;background:linear-gradient(135deg,#d58aff,#a94fff);color:#080808;font-weight:900;font-size:16px}.auth-popup .auth-close{position:absolute;right:14px;top:12px;border:0;background:transparent;color:#c991ff;font-size:28px;cursor:pointer}.auth-popup-wrap{position:relative}
+
     .buttons {
       display: flex;
       gap: 12px;
@@ -739,6 +741,8 @@
         <button class="primary" data-action="goProducts">
           ดูสินค้า
         </button>
+
+        <button class="secondary" type="button" data-action="openSignupPopup">สมัครสมาชิก</button>
 
         <button class="secondary" type="button" data-action="login">
           เข้าสู่ระบบ
@@ -1444,10 +1448,27 @@ document.addEventListener("DOMContentLoaded",()=>{
   document.addEventListener("click",(event)=>{
     const b=event.target.closest("button[data-action]"); if(!b)return;
     const a=b.dataset.action;
-    if(a==="login") login(); else if(a==="logout") logout(); else if(a==="goProducts") goProducts(); else if(a==="openTopup") openTopup(); else if(a==="openTransactions") openTransactions(); else if(a==="openOrders") openOrders(); else if(a==="openFreeRewards") openFreeRewards(); else if(a==="openTerms") document.getElementById("termsModal")?.classList.add("show"); else if(a==="openCart") openCart(); else if(a==="openWithdraw") openWithdraw(); else if(a==="vipOnly") alert("ฟังก์ชันนี้สำหรับสมาชิก VIP เท่านั้น"); else if(a==="addToCart") addToCart(b.dataset.name,Number(b.dataset.price)); else if(a==="removeFromCart") removeFromCart(Number(b.dataset.index)); else if(a==="clearCart") clearCart(); else if(a==="showSocial") showSocial(b.dataset.name); else if(a==="closeModal") closeModal(b.dataset.modal); else if(a==="createTopup") createTopup(); else if(a==="topupSuccessHistory"){closeTopupSuccess();openTransactions();} else if(a==="topupSuccessDone"){closeTopupSuccess();window.scrollTo({top:0,behavior:"smooth"});} else if(a==="topupErrorDone"){closeTopupError();} else if(a==="checkout") checkout(); else if(a==="placeSocialOrder") placeSocialOrder(); else if(a==="syncSmmCatalog") syncSmmCatalog();
+    if(a==="login") login(); else if(a==="logout") logout(); else if(a==="goProducts") goProducts(); else if(a==="openSignupPopup") document.getElementById("signupPopup")?.classList.add("show"); else if(a==="signupContinue"){const p=document.getElementById("signupPhone")?.value.trim(),pin=document.getElementById("signupPin")?.value,cp=document.getElementById("signupPinConfirm")?.value;if(!/^0\\d{9}$/.test(p))return alert("กรุณากรอกเบอร์โทรศัพท์ 10 หลัก");if(!/^\\d{6}$/.test(pin))return alert("กรุณากรอกรหัส 6 หลัก");if(pin!==cp)return alert("รหัสยืนยันไม่ตรงกัน");alert("ข้อมูลถูกต้องแล้ว ขั้นตอนเชื่อมระบบสมัครสมาชิกจะดำเนินการต่อ");document.getElementById("signupPopup")?.classList.remove("show");} else if(a==="openTopup") openTopup(); else if(a==="openTransactions") openTransactions(); else if(a==="openOrders") openOrders(); else if(a==="openFreeRewards") openFreeRewards(); else if(a==="openTerms") document.getElementById("termsModal")?.classList.add("show"); else if(a==="openCart") openCart(); else if(a==="openWithdraw") openWithdraw(); else if(a==="vipOnly") alert("ฟังก์ชันนี้สำหรับสมาชิก VIP เท่านั้น"); else if(a==="addToCart") addToCart(b.dataset.name,Number(b.dataset.price)); else if(a==="removeFromCart") removeFromCart(Number(b.dataset.index)); else if(a==="clearCart") clearCart(); else if(a==="showSocial") showSocial(b.dataset.name); else if(a==="closeModal") closeModal(b.dataset.modal); else if(a==="createTopup") createTopup(); else if(a==="topupSuccessHistory"){closeTopupSuccess();openTransactions();} else if(a==="topupSuccessDone"){closeTopupSuccess();window.scrollTo({top:0,behavior:"smooth"});} else if(a==="topupErrorDone"){closeTopupError();} else if(a==="checkout") checkout(); else if(a==="placeSocialOrder") placeSocialOrder(); else if(a==="syncSmmCatalog") syncSmmCatalog();
   });
 });</script>
-  <div class="modal" id="topupModal">
+  <div class="modal" id="signupPopup">
+  <div class="auth-popup-wrap">
+    <div class="auth-popup">
+      <button class="auth-close" type="button" data-action="closeModal" data-modal="signupPopup">×</button>
+      <h2>สมัครสมาชิก PRIME</h2>
+      <p>สร้างบัญชีใหม่เพื่อใช้งาน PRIME</p>
+      <label>เบอร์โทรศัพท์</label>
+      <input id="signupPhone" type="tel" inputmode="numeric" maxlength="10" placeholder="0812345678">
+      <label>รหัส 6 หลัก</label>
+      <input id="signupPin" type="password" inputmode="numeric" maxlength="6" placeholder="••••••">
+      <label>ยืนยันรหัส 6 หลัก</label>
+      <input id="signupPinConfirm" type="password" inputmode="numeric" maxlength="6" placeholder="••••••">
+      <button class="auth-main" type="button" data-action="signupContinue">สมัครสมาชิก</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="topupModal">
     <div class="modal-card">
       <h2>เติมเงินเข้า PRIME</h2>
       <p style="color:#aaa">สแกน QR นี้เพื่อชำระเงินเข้าบัญชี PRIME</p>
