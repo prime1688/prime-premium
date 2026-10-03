@@ -337,31 +337,37 @@
 .social-order-card{max-width:760px!important}.social-modal-head{display:flex;justify-content:space-between;gap:14px;align-items:flex-start}.social-modal-head h2{margin:8px 0 4px}.social-modal-head p{color:#999;margin:0;font-size:13px}.modal-x{background:#25122f;color:#d69cff;border:1px solid #5d3277;border-radius:50%;width:40px;height:40px;font-size:26px;cursor:pointer}.social-service-cards{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:18px 0}.social-service-card{position:relative;text-align:left;background:#121015;border:1px solid #302638;color:#fff;border-radius:15px;padding:14px;cursor:pointer;min-height:125px;display:flex;flex-direction:column;gap:8px}.social-service-card.selected{border:2px solid #b95cff;background:#1c1025;box-shadow:0 0 22px #7d2db355}.ssc-icon{font-size:26px;color:#c36cff}.ssc-info{display:flex;flex-direction:column;gap:3px}.ssc-info strong{font-size:16px}.ssc-info small,.ssc-price small{color:#999;font-size:11px}.ssc-price{color:#d28cff;font-weight:900;font-size:18px;margin-top:auto}.ssc-check{position:absolute;right:10px;top:9px;color:#d28cff;font-size:20px}.social-label{display:block;color:#ddd;font-weight:800;font-size:13px;margin:13px 0 7px}.quantity-control{display:flex;align-items:center;gap:10px}.qty-btn{width:54px;height:52px;border:1px solid #5d3277;background:#21112c;color:#d28cff;border-radius:13px;font-size:30px;font-weight:900;cursor:pointer}.qty-btn:disabled{opacity:.35}.qty-number{flex:1;text-align:center}.qty-number input{width:100%;box-sizing:border-box;background:#0d0b0f;border:1px solid #3b3042;border-radius:13px;color:#fff;text-align:center;font-size:22px;font-weight:900;padding:12px}.qty-number span{display:block;color:#999;font-size:11px;margin-top:4px}.social-summary{background:#100d14;border:1px solid #342542;border-radius:15px;padding:14px;margin:15px 0}.social-summary div{display:flex;justify-content:space-between;padding:5px 0;color:#aaa}.social-summary strong{color:#d28cff;font-size:18px}.social-summary div:last-child{border-top:1px solid #29202e;margin-top:6px;padding-top:10px}.social-summary div:last-child strong{font-size:24px}@media(max-width:600px){.social-service-cards{grid-template-columns:repeat(2,1fr)}.social-order-card{max-height:90vh;overflow:auto}.social-service-card{min-height:110px;padding:12px}}
 
     /* PRIME promo carousel */
-    .promo-carousel{max-width:1100px;margin:18px auto 8px;padding:0 20px;position:relative;overflow:hidden}
-    .promo-track{display:flex;will-change:transform;transition:transform .55s cubic-bezier(.22,.8,.2,1)}
-    .promo-slide{position:relative;flex:0 0 100%;height:260px;overflow:hidden;border:1px solid #4a2670;border-radius:22px;background:#0d0912;box-shadow:0 12px 40px rgba(0,0,0,.38),0 0 35px rgba(181,108,255,.12)}
+    .promo-carousel{max-width:1180px;margin:18px auto 8px;padding:0 18px;position:relative;overflow:hidden}
+    .promo-stage{display:grid;grid-template-columns:.92fr 1.45fr .92fr .92fr;gap:8px;min-height:250px;transition:transform .55s ease}
+    .promo-panel{position:relative;min-width:0;height:250px;overflow:hidden;border:1px solid #4a2670;border-radius:20px;background:#0d0912;box-shadow:0 12px 40px rgba(0,0,0,.38),0 0 28px rgba(181,108,255,.12)}
+    .promo-panel.promo-ad{background:#111;display:flex;align-items:stretch;justify-content:center}
+    .promo-ad img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .55s ease,filter .55s ease}
+    .promo-ad:hover img{transform:scale(1.04);filter:brightness(1.08)}
+    .promo-ad-caption{position:absolute;left:8px;right:8px;bottom:8px;padding:8px 10px;border-radius:12px;background:rgba(0,0,0,.68);backdrop-filter:blur(8px);color:#fff;display:flex;flex-direction:column;gap:2px}.promo-ad-caption strong{font-size:14px}.promo-ad-caption span{font-size:10px;color:#ddd}
     .promo-prime{display:flex;flex-direction:column;align-items:center;justify-content:center;background:radial-gradient(circle at 50% 50%,#35124d 0,#10081a 44%,#050505 100%);text-align:center}
     .promo-prime::before{content:"";position:absolute;inset:0;background:linear-gradient(115deg,transparent 20%,rgba(214,156,255,.16) 48%,transparent 55%);animation:promoFlash 2.2s linear infinite}
     @keyframes promoFlash{0%,55%{transform:translateX(-110%);opacity:0}65%{opacity:1}100%{transform:translateX(110%);opacity:0}}
-    .promo-prime-title{position:relative;font-size:clamp(42px,7vw,74px);font-weight:1000;letter-spacing:5px;color:#fff;text-shadow:0 0 12px #b56cff,0 0 34px #8a35d6}
-    .promo-prime-sub{position:relative;color:#e2b8ff;font-weight:900;font-size:17px}
-    .promo-crown{position:absolute;top:22px;font-size:48px;color:#d69cff;text-shadow:0 0 18px #a34bff}
-    .promo-social{position:absolute;width:46px;height:46px;border:1px solid #a85aff;border-radius:14px;display:grid;place-items:center;color:#e2b8ff;background:#21102d;font-size:25px;box-shadow:0 0 20px rgba(181,108,255,.2)}
-    .promo-social.s1{left:13%;top:28%}.promo-social.s2{left:21%;bottom:23%}.promo-social.s3{right:15%;top:27%}
-    .promo-orbit{position:absolute;border:1px solid rgba(181,108,255,.28);border-radius:50%;width:520px;height:180px;left:50%;bottom:-85px;transform:translateX(-50%);box-shadow:0 0 30px rgba(181,108,255,.12)}
-    .promo-orbit.orbit-b{width:360px;height:120px;bottom:-55px}
-    .promo-pills{position:relative;display:flex;gap:8px;margin-top:16px;flex-wrap:wrap;justify-content:center}.promo-pills span{padding:7px 12px;border:1px solid #7e43a8;background:#170d20;border-radius:999px;color:#ddd;font-size:12px;font-weight:800}
-    .promo-inhaler{background:linear-gradient(110deg,#f4f4ef 0%,#eef2e9 45%,#b8d59f 100%);color:#234c22;display:flex;align-items:center;justify-content:space-between;padding:26px 9%;animation:promoBreath 3s ease-in-out infinite}
-    .promo-coconut{background:linear-gradient(110deg,#eff7cf 0%,#d9ed9d 48%,#8dbd61 100%);color:#1c5125;display:flex;align-items:center;justify-content:space-between;padding:26px 9%;animation:promoBreath 3s ease-in-out infinite}
-    @keyframes promoBreath{0%,100%{filter:brightness(1)}50%{filter:brightness(1.06)}}
-    .promo-copy{position:relative;z-index:2;max-width:55%}.promo-copy span{font-size:12px;font-weight:900;letter-spacing:1px}.promo-copy h2{font-size:clamp(30px,5vw,52px);margin:8px 0 2px;font-weight:1000}.promo-copy p{font-size:clamp(20px,3.5vw,34px);font-weight:900;margin-bottom:10px}.promo-copy small{font-size:13px;font-weight:700}
-    .promo-product{position:relative;width:40%;height:100%;min-width:230px}.promo-product i{position:absolute;display:block}
-    .inhaler-art i{width:60px;height:155px;background:linear-gradient(90deg,#fff,#dce7d2 55%,#6d9e57);border-radius:18px 18px 12px 12px;bottom:6px;box-shadow:0 8px 16px rgba(0,0,0,.18);border:1px solid #b7c9aa}.inhaler-art i:after{content:"ยาดม";position:absolute;left:7px;right:7px;top:55px;text-align:center;color:#26723a;font-weight:900;font-size:12px}.inhaler-art i:nth-child(1){left:8%;transform:rotate(-8deg)}.inhaler-art i:nth-child(2){left:34%;height:170px;transform:rotate(2deg)}.inhaler-art i:nth-child(3){left:60%;transform:rotate(11deg)}
-    .coconut-art:before{content:"MALEE";position:absolute;right:12%;top:20px;color:#df3d32;font-size:28px;font-weight:1000}.coconut-art:after{content:"🥥";position:absolute;right:10%;bottom:4px;font-size:120px;filter:drop-shadow(0 12px 8px rgba(0,0,0,.15))}
-    .coconut-art i{width:86px;height:170px;right:24%;bottom:6px;border-radius:30px 30px 22px 22px;background:linear-gradient(90deg,#dff2e1,#fff,#bfe4c4);border:2px solid rgba(43,116,54,.25);box-shadow:0 12px 20px rgba(0,0,0,.16)}.coconut-art i:after{content:"COCO";position:absolute;top:62px;left:8px;right:8px;text-align:center;color:#111;font-weight:900;font-size:18px}.coconut-art i:nth-child(2){right:42%;transform:rotate(-8deg);height:155px}.coconut-art i:nth-child(3){right:8%;transform:rotate(8deg);height:150px}
-    .promo-arrow{position:absolute;top:50%;transform:translateY(-50%);width:42px;height:42px;border-radius:50%;border:1px solid #7d3faa;background:rgba(12,7,16,.82);color:#e0b2ff;font-size:30px;line-height:1;cursor:pointer;z-index:3;box-shadow:0 0 18px rgba(181,108,255,.18)}.promo-prev{left:28px}.promo-next{right:28px}.promo-arrow:hover{background:#261234}
-    .promo-dots{position:absolute;left:50%;bottom:12px;transform:translateX(-50%);display:flex;gap:7px;z-index:3}.promo-dot{width:8px;height:8px;border-radius:50%;border:0;background:#777;cursor:pointer;padding:0}.promo-dot.active{background:#c46cff;box-shadow:0 0 10px #b56cff}
-    @media(max-width:600px){.promo-carousel{padding:0 12px;margin-top:12px}.promo-slide{height:190px;border-radius:17px}.promo-arrow{width:34px;height:34px;font-size:25px}.promo-prev{left:18px}.promo-next{right:18px}.promo-prime-title{font-size:40px}.promo-prime-sub{font-size:12px}.promo-crown{font-size:34px;top:13px}.promo-social{width:34px;height:34px;font-size:18px;border-radius:10px}.promo-pills span{font-size:9px;padding:5px 8px}.promo-inhaler,.promo-coconut{padding:18px 7%}.promo-copy{max-width:56%}.promo-copy h2{font-size:27px}.promo-copy p{font-size:18px}.promo-copy small{font-size:9px}.promo-product{min-width:145px;width:43%;transform:scale(.82);transform-origin:center right}}
+    .promo-prime-title{position:relative;font-size:clamp(38px,5vw,70px);font-weight:1000;letter-spacing:5px;color:#fff;text-shadow:0 0 12px #b56cff,0 0 34px #8a35d6}
+    .promo-prime-sub{position:relative;color:#e2b8ff;font-weight:900;font-size:16px}.promo-crown{position:absolute;top:16px;font-size:42px;color:#d69cff;text-shadow:0 0 18px #a34bff}
+    .promo-social{position:absolute;width:40px;height:40px;border:1px solid #a85aff;border-radius:12px;display:grid;place-items:center;color:#e2b8ff;background:#21102d;font-size:22px;box-shadow:0 0 20px rgba(181,108,255,.2)}
+    .promo-social.s1{left:9%;top:24%}.promo-social.s2{left:17%;bottom:20%}.promo-social.s3{right:9%;top:23%}
+    .promo-orbit{position:absolute;border:1px solid rgba(181,108,255,.28);border-radius:50%;width:95%;height:90px;left:50%;bottom:-45px;transform:translateX(-50%);box-shadow:0 0 30px rgba(181,108,255,.12)}.promo-orbit.orbit-b{width:65%;height:60px;bottom:-28px}
+    .promo-pills{position:relative;display:flex;gap:6px;margin-top:12px;flex-wrap:wrap;justify-content:center}.promo-pills span{padding:6px 9px;border:1px solid #7e43a8;background:#170d20;border-radius:999px;color:#ddd;font-size:10px;font-weight:800}
+    .promo-prime-service{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;background:radial-gradient(circle,#35124d,#0a070e 72%);color:#fff}.service-glow{font-size:38px;font-weight:1000;color:#e1b2ff;text-shadow:0 0 18px #a84cff;letter-spacing:3px}.promo-prime-service strong{font-size:17px;color:#fff}.promo-prime-service span{font-size:12px;color:#d9b8ee;margin-top:4px}.service-icons{margin-top:18px;color:#d28cff;font-size:20px}
+    .promo-arrow{position:absolute;top:50%;transform:translateY(-50%);width:42px;height:42px;border-radius:50%;border:1px solid #7d3faa;background:rgba(12,7,16,.86);color:#e0b2ff;font-size:30px;line-height:1;cursor:pointer;z-index:5;box-shadow:0 0 18px rgba(181,108,255,.18)}.promo-prev{left:22px}.promo-next{right:22px}.promo-arrow:hover{background:#261234}
+    .promo-dots{position:absolute;left:50%;bottom:8px;transform:translateX(-50%);display:flex;gap:7px;z-index:5}.promo-dot{width:8px;height:8px;border-radius:50%;border:0;background:#777;cursor:pointer;padding:0}.promo-dot.active{background:#c46cff;box-shadow:0 0 10px #b56cff}
+    @media(max-width:600px){
+      .promo-carousel{padding:0 10px;margin-top:12px}
+      .promo-stage{grid-template-columns:.72fr 1.35fr .72fr .72fr;gap:5px;min-height:165px}
+      .promo-panel{height:165px;border-radius:14px}
+      .promo-ad-caption{left:4px;right:4px;bottom:4px;padding:5px 6px}.promo-ad-caption strong{font-size:9px}.promo-ad-caption span{font-size:7px}
+      .promo-prime-title{font-size:32px;letter-spacing:3px}.promo-prime-sub{font-size:8px}.promo-crown{font-size:27px;top:10px}
+      .promo-social{width:25px;height:25px;border-radius:8px;font-size:14px}.promo-social.s1{left:6%;top:20%}.promo-social.s2{left:13%;bottom:18%}.promo-social.s3{right:6%;top:20%}
+      .promo-pills{gap:3px;margin-top:7px}.promo-pills span{font-size:6px;padding:4px 5px}
+      .service-glow{font-size:22px}.promo-prime-service strong{font-size:9px}.promo-prime-service span{font-size:7px}.service-icons{font-size:11px;margin-top:8px}
+      .promo-arrow{width:30px;height:30px;font-size:23px}.promo-prev{left:12px}.promo-next{right:12px}
+    }
+    .promo-stage.promo-shift-left{animation:promoShiftLeft .55s ease}.promo-stage.promo-shift-right{animation:promoShiftRight .55s ease}@keyframes promoShiftLeft{0%{transform:translateX(0)}50%{transform:translateX(-10px)}100%{transform:translateX(0)}}@keyframes promoShiftRight{0%{transform:translateX(0)}50%{transform:translateX(10px)}100%{transform:translateX(0)}}.promo-panel.promo-active{border-color:#c26bff;box-shadow:0 0 0 2px rgba(194,107,255,.16),0 0 32px rgba(181,108,255,.3)}
     /* Floating quick menu */
     .floating-menu{
       position:fixed;
@@ -527,9 +533,13 @@
     <button class="topup-highlight" type="button" data-action="openTopup">เติมเงิน</button>
   </div>
 
-  <section class="promo-carousel" id="promoCarousel" aria-label="โฆษณา PRIME">
-    <div class="promo-track" id="promoTrack">
-      <article class="promo-slide promo-prime">
+  <section class="promo-carousel" id="promoCarousel" aria-label="PRIME โฆษณา">
+    <div class="promo-stage" id="promoStage">
+      <article class="promo-panel promo-ad promo-inhaler-real">
+        <img src="https://th-test-11.slatic.net/p/46903249fe64bf8b29e9e21636cfbba7.jpg" alt="ยาดมไผ่คู่">
+        <div class="promo-ad-caption"><strong>ยาดมไผ่คู่</strong><span>หอมสดชื่น พกพาสะดวก</span></div>
+      </article>
+      <article class="promo-panel promo-prime">
         <div class="promo-orbit orbit-a"></div><div class="promo-orbit orbit-b"></div>
         <div class="promo-social s1">◎</div><div class="promo-social s2">♪</div><div class="promo-social s3">▶</div>
         <div class="promo-crown">♛</div>
@@ -537,17 +547,19 @@
         <div class="promo-prime-sub">บริการโซเชียล ครบ จบ ในที่เดียว</div>
         <div class="promo-pills"><span>⚡ รวดเร็ว</span><span>🛡 ปลอดภัย</span><span>◉ 24 ชม.</span></div>
       </article>
-      <article class="promo-slide promo-inhaler">
-        <div class="promo-copy"><span>BOONSONGHERB OFFICIAL STORE</span><h2>ยาดมไผ่คู่</h2><p>ยิ่งดม ยิ่งหอม</p><small>หอมสดชื่น • จากธรรมชาติ • พกพาสะดวก</small></div>
-        <div class="promo-product inhaler-art"><i></i><i></i><i></i></div>
+      <article class="promo-panel promo-ad promo-coconut-real">
+        <img src="https://st.bigc-cs.com/cdn-cgi/image/format%3Dwebp%2Cquality%3D90/public/media/catalog/product/47/88/8853333027747/8853333027747_4-20260424093318-.jpg" alt="Malee COCO Coconut Matcha">
+        <div class="promo-ad-caption"><strong>Malee COCO</strong><span>น้ำมะพร้าวผสมชาเขียวมัทฉะ</span></div>
       </article>
-      <article class="promo-slide promo-coconut">
-        <div class="promo-copy"><span>MALEE</span><h2>น้ำมะพร้าว</h2><p>ผสมชาเขียวมัทฉะ</p><small>COCONUT MATCHA • สดชื่น ดื่มง่าย</small></div>
-        <div class="promo-product coconut-art"><i></i><i></i><i></i></div>
+      <article class="promo-panel promo-ad promo-prime-service">
+        <div class="service-glow">PRIME</div>
+        <strong>บริการโซเชียล</strong>
+        <span>ครบ จบ ในที่เดียว</span>
+        <div class="service-icons">◎　♪　▶　f</div>
       </article>
     </div>
-    <button class="promo-arrow promo-prev" type="button" aria-label="ภาพก่อนหน้า">‹</button>
-    <button class="promo-arrow promo-next" type="button" aria-label="ภาพถัดไป">›</button>
+    <button class="promo-arrow promo-prev" type="button" aria-label="เลื่อนไปซ้าย">‹</button>
+    <button class="promo-arrow promo-next" type="button" aria-label="เลื่อนไปขวา">›</button>
     <div class="promo-dots" id="promoDots" aria-label="เลือกภาพ"></div>
   </section>
 
@@ -923,24 +935,27 @@ async function checkout(){
 if(supabaseClient){supabaseClient.auth.onAuthStateChange(()=>{setTimeout(updateLoginButton,0);});}
 const promoState={index:0,timer:null};
 function initPromoCarousel(){
-  const root=document.getElementById("promoCarousel"),track=document.getElementById("promoTrack"),dots=document.getElementById("promoDots");
-  if(!root||!track||!dots)return;
-  const slides=[...track.children]; if(!slides.length)return;
-  dots.innerHTML=slides.map((_,i)=>'<button class="promo-dot '+(i===0?'active':'')+'" type="button" aria-label="ภาพที่ '+(i+1)+'"></button>').join("");
-  const go=(i,manual=false)=>{
-    promoState.index=(i+slides.length)%slides.length;
-    track.style.transform='translateX(-'+(promoState.index*100)+'%)';
+  const root=document.getElementById("promoCarousel"),stage=document.getElementById("promoStage"),dots=document.getElementById("promoDots");
+  if(!root||!stage||!dots)return;
+  const panels=[...stage.children]; if(!panels.length)return;
+  dots.innerHTML=panels.map((_,i)=>'<button class="promo-dot '+(i===1?'active':'')+'" type="button" aria-label="โฆษณาที่ '+(i+1)+'"></button>').join("");
+  const go=(dir=1,manual=false)=>{
+    promoState.index=(promoState.index+dir+panels.length)%panels.length;
+    panels.forEach((p,n)=>p.classList.toggle("promo-active",n===promoState.index));
     dots.querySelectorAll(".promo-dot").forEach((d,n)=>d.classList.toggle("active",n===promoState.index));
+    stage.classList.remove("promo-shift-left","promo-shift-right");
+    void stage.offsetWidth;
+    stage.classList.add(dir>0?"promo-shift-left":"promo-shift-right");
     if(manual)restartPromo();
   };
-  root.querySelector(".promo-prev")?.addEventListener("click",()=>go(promoState.index-1,true));
-  root.querySelector(".promo-next")?.addEventListener("click",()=>go(promoState.index+1,true));
-  dots.querySelectorAll(".promo-dot").forEach((d,n)=>d.addEventListener("click",()=>go(n,true)));
+  root.querySelector(".promo-prev")?.addEventListener("click",()=>go(-1,true));
+  root.querySelector(".promo-next")?.addEventListener("click",()=>go(1,true));
+  dots.querySelectorAll(".promo-dot").forEach((d,n)=>d.addEventListener("click",()=>{promoState.index=n-1;go(1,true);}));
   let startX=0,dx=0;
   root.addEventListener("touchstart",e=>{startX=e.touches[0].clientX;dx=0;},{passive:true});
   root.addEventListener("touchmove",e=>{dx=e.touches[0].clientX-startX;},{passive:true});
-  root.addEventListener("touchend",()=>{if(Math.abs(dx)>45)go(promoState.index+(dx<0?1:-1),true);});
-  function restartPromo(){clearInterval(promoState.timer);promoState.timer=setInterval(()=>go(promoState.index+1),3000);}
+  root.addEventListener("touchend",()=>{if(Math.abs(dx)>35)go(dx<0?1:-1,true);});
+  function restartPromo(){clearInterval(promoState.timer);promoState.timer=setInterval(()=>go(1),3000);}
   restartPromo();
 }
 document.addEventListener("DOMContentLoaded",updateLoginButton);
