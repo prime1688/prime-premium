@@ -309,6 +309,39 @@
       background: #080808;
       color: #fff;
     }
+    .modal-card input[type="file"]{
+      padding:10px;
+      color:#ddd;
+      cursor:pointer;
+    }
+    .modal-card input[type="file"]::file-selector-button{
+      margin-right:10px;
+      padding:9px 12px;
+      border:1px solid #6d3d91;
+      border-radius:9px;
+      background:#21112c;
+      color:#d09aff;
+      font-weight:800;
+      cursor:pointer;
+    }
+    @media(max-width:600px){
+      .modal{
+        align-items:center;
+        padding:12px;
+        overflow-y:auto;
+        -webkit-overflow-scrolling:touch;
+      }
+      .modal-card{
+        width:min(440px,100%);
+        max-height:calc(100dvh - 24px);
+        overflow-y:auto;
+        -webkit-overflow-scrolling:touch;
+        padding:20px;
+      }
+      .modal-card input{
+        font-size:16px;
+      }
+    }
     .modal-actions { display:flex; gap:10px; margin-top:12px; }
     .modal-actions button { flex:1; padding:12px; border-radius:10px; border:0; font-weight:800; }
     .close-btn { background:#222; color:#fff; }
@@ -1102,6 +1135,8 @@ function fileToCompressedBase64(file){
 }
 async function createTopup(){
   if(topupSubmitting)return;
+  const active=document.activeElement;
+  if(active && typeof active.blur==="function") active.blur();
   recordLiveActivity("payment","กำลังตรวจสอบสลิป");
   const amount=Number(document.getElementById("topupAmount").value);
   const file=document.getElementById("topupSlip")?.files?.[0];
@@ -1373,8 +1408,10 @@ document.addEventListener("DOMContentLoaded",()=>{
         <img id="paymentQr" src="" alt="QR ชำระเงิน PRIME" style="width:min(100%,360px);display:block;margin:auto">
       </div>
       <div style="text-align:center;font-size:18px;font-weight:800;color:#d09aff">QR หมดอายุใน <span id="qrTimer">5:00</span></div>
-      <input id="topupAmount" type="number" min="1" step="1" placeholder="จำนวนเงินที่โอน (บาท)">
-      <p style="color:#888;font-size:12px;line-height:1.5">หลังโอนเงินแล้ว กรอกยอดที่โอนและกด “แจ้งชำระเงิน” รายการจะเข้าสู่สถานะรอตรวจสอบก่อนเพิ่มเครดิต</p>
+      <input id="topupAmount" type="number" min="1" step="0.01" inputmode="decimal" placeholder="จำนวนเงินที่โอน (บาท)">
+      <label for="topupSlip" style="display:block;margin-top:8px;color:#ddd;font-size:13px;font-weight:800">แนบสลิปการโอนเงิน</label>
+      <input id="topupSlip" type="file" accept="image/jpeg,image/png,image/webp" capture="environment">
+      <p style="color:#888;font-size:12px;line-height:1.5">กรอกยอดให้ตรงกับสลิป แล้วกดตรวจสอบ ระบบจะตรวจสอบสลิปอัตโนมัติและเพิ่มเครดิตเมื่อผ่าน</p>
       <div class="modal-actions">
         <button class="close-btn" data-action="closeModal" data-modal="topupModal">ปิด</button>
         <button class="primary" data-action="createTopup">ตรวจสอบสลิปและเติมเครดิต</button>
