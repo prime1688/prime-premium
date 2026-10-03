@@ -520,8 +520,8 @@
     #top{scroll-margin-top:90px}
     .prime-header{background:rgba(8,4,15,.94)!important;border-bottom:1px solid #3a1760!important;box-shadow:0 8px 35px rgba(119,34,194,.12)}
     .prime-nav{max-width:1480px;margin:auto;display:flex;align-items:center;gap:16px;padding:12px 22px}
-    .prime-brand{min-width:210px;text-decoration:none;color:#fff;font-size:58px;line-height:.85;font-weight:1000;font-style:italic;letter-spacing:-4px;text-shadow:0 0 12px #9c4dff,0 5px 0 #2d1250}
-    .prime-brand b{font-size:28px;color:#d46cff;vertical-align:top;margin-left:3px}
+    .prime-brand{min-width:210px;height:58px;display:flex;align-items:center;justify-content:flex-start;text-decoration:none;overflow:hidden}
+    .prime-brand-logo{display:block;height:58px;width:auto;max-width:210px;object-fit:contain;object-position:left center}
     .prime-menu{display:flex;align-items:center;gap:7px;flex:1;justify-content:center}
     .prime-menu-item{position:relative;border:1px solid transparent;background:rgba(22,10,34,.8);color:#fff;text-decoration:none;border-radius:13px;padding:11px 13px;display:flex;align-items:center;gap:7px;font-weight:900;font-size:14px;white-space:nowrap;cursor:pointer}
     .prime-menu-item span{font-size:19px}.prime-menu-item:hover,.prime-menu-item.active{background:linear-gradient(180deg,#8e35d0,#4c1775);border-color:#b96cff;box-shadow:0 0 18px rgba(181,108,255,.3)}
@@ -543,8 +543,8 @@
     .promo-thumb{height:105px;border:2px solid #32134b;border-radius:14px;padding:0;overflow:hidden;background:#0b0710;cursor:pointer;opacity:.78;transition:.2s;box-shadow:0 0 0 transparent}
     .promo-thumb img{width:100%;height:100%;object-fit:cover;display:block}.promo-thumb.active{opacity:1;border-color:#bd54ff;box-shadow:0 0 20px rgba(189,84,255,.45)}
     .quick-nav{display:none!important}
-    @media(max-width:900px){.prime-nav{padding:10px 12px;gap:8px}.prime-brand{min-width:125px;font-size:42px}.prime-menu{overflow-x:auto;justify-content:flex-start;scrollbar-width:none}.prime-menu::-webkit-scrollbar{display:none}.prime-menu-item{font-size:11px;padding:9px 10px}.prime-menu-item span{font-size:15px}.prime-user-box{padding:5px}.prime-credit,.prime-avatar{display:none}.prime-line{width:34px;height:34px}.prime-login{padding:8px 9px!important;font-size:11px!important}.prime-account{padding:10px 12px!important}.prime-carousel{padding:0 10px!important}.promo-thumbs{gap:6px}.promo-thumb{height:64px;border-radius:9px}}
-    @media(max-width:600px){.prime-nav{display:block;padding:10px}.prime-brand{display:block;font-size:38px;margin-bottom:9px}.prime-menu{width:100%;gap:5px}.prime-menu-item{font-size:10px;padding:8px 9px}.prime-menu-item em{font-size:6px}.prime-user-box{position:absolute;right:9px;top:9px;background:transparent;border:0}.prime-login{font-size:10px!important}.prime-account{padding-top:9px!important}.prime-carousel .promo-stage{aspect-ratio:1320/484!important}.prime-carousel .promo-panel{border-radius:16px!important}.promo-thumbs{grid-template-columns:repeat(5,1fr);gap:4px}.promo-thumb{height:48px;border-radius:7px}}
+    @media(max-width:900px){.prime-nav{padding:10px 12px;gap:8px}.prime-brand{min-width:125px;height:42px}.prime-brand-logo{height:42px;max-width:125px}.prime-menu{overflow-x:auto;justify-content:flex-start;scrollbar-width:none}.prime-menu::-webkit-scrollbar{display:none}.prime-menu-item{font-size:11px;padding:9px 10px}.prime-menu-item span{font-size:15px}.prime-user-box{padding:5px}.prime-credit,.prime-avatar{display:none}.prime-line{width:34px;height:34px}.prime-login{padding:8px 9px!important;font-size:11px!important}.prime-account{padding:10px 12px!important}.prime-carousel{padding:0 10px!important}.promo-thumbs{gap:6px}.promo-thumb{height:64px;border-radius:9px}}
+    @media(max-width:600px){.prime-nav{display:block;padding:10px}.prime-brand{display:block;height:38px;margin-bottom:9px}.prime-brand-logo{height:38px;max-width:125px}.prime-menu{width:100%;gap:5px}.prime-menu-item{font-size:10px;padding:8px 9px}.prime-menu-item em{font-size:6px}.prime-user-box{position:absolute;right:9px;top:9px;background:transparent;border:0}.prime-login{font-size:10px!important}.prime-account{padding-top:9px!important}.prime-carousel .promo-stage{aspect-ratio:1320/484!important}.prime-carousel .promo-panel{border-radius:16px!important}.promo-thumbs{grid-template-columns:repeat(5,1fr);gap:4px}.promo-thumb{height:48px;border-radius:7px}}
   </style>
 </head>
 
@@ -552,7 +552,7 @@
 
   <header class="header prime-header">
     <div class="prime-nav">
-      <a class="prime-brand" href="#top" aria-label="PRIME หน้าหลัก"><span>PRIME</span><b>✦</b></a>
+      <a class="prime-brand" href="#top" aria-label="PRIME หน้าหลัก"><img class="prime-brand-logo" src="./B0F7735A-8D3D-4F25-8590-A6B80EE4E429.png" alt="PRIME"></a>
       <nav class="prime-menu" aria-label="เมนู PRIME">
         <a class="prime-menu-item active" href="#top"><span>⌂</span>หน้าหลัก</a>
         <button class="prime-menu-item" type="button" data-action="openTopup"><span>▣</span>เติมเงิน</button>
