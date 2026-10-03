@@ -557,7 +557,8 @@
       }
       .floating-icon{width:30px;height:30px;font-size:17px}
       .floating-label{font-size:9px}
-      .floating-menu-item[data-action="openTerms"] .floating-label{font-size:7px;line-height:1.2;white-space:normal;text-align:center;max-width:58px}
+      .floating-menu-item[data-action="openTerms"] .floating-label{font-size:7px;line-height:1.2;white-space:normal;text-align:center;max-width:58px}}
+    .auth-only-menu{display:none!important}.auth-only-menu.auth-visible{display:flex!important
     }
 
     /* PRIME one-page layout */
@@ -690,24 +691,24 @@
   </section>
 
   <div class="floating-menu" aria-label="เมนูลัด">
-    <button type="button" class="floating-menu-item" data-action="openCart" aria-label="ตะกร้า">
+    <button type="button" class="floating-menu-item auth-only-menu" data-action="openCart" aria-label="ตะกร้า">
       <span class="floating-icon">🛒</span>
       <span class="floating-label">ตะกร้า</span>
       <span class="floating-badge" id="floatingCartCount">0</span>
     </button>
-    <button type="button" class="floating-menu-item" data-action="openTransactions" aria-label="รายการเงิน">
+    <button type="button" class="floating-menu-item auth-only-menu" data-action="openTransactions" aria-label="รายการเงิน">
       <span class="floating-icon">▣</span>
       <span class="floating-label">รายการเงิน</span>
     </button>
-    <button type="button" class="floating-menu-item" data-action="openOrders" aria-label="ออเดอร์ของฉัน">
+    <button type="button" class="floating-menu-item auth-only-menu" data-action="openOrders" aria-label="ออเดอร์ของฉัน">
       <span class="floating-icon">▤</span>
       <span class="floating-label">ออเดอร์ของฉัน</span>
     </button>
-    <button type="button" class="floating-menu-item" data-action="openFreeRewards" aria-label="รางวัลฟรี">
+    <button type="button" class="floating-menu-item auth-only-menu" data-action="openFreeRewards" aria-label="รางวัลฟรี">
       <span class="floating-icon">🎁</span>
       <span class="floating-label">รางวัลฟรี</span>
     </button>
-    <button type="button" class="floating-menu-item" data-action="openTerms" aria-label="เงื่อนไขและข้อกำหนด">
+    <button type="button" class="floating-menu-item auth-only-menu" data-action="openTerms" aria-label="เงื่อนไขและข้อกำหนด">
       <span class="floating-icon">⚖</span>
       <span class="floating-label">เงื่อนไขและข้อกำหนด</span>
     </button>
@@ -1067,6 +1068,7 @@ async function updateLoginButton(){
   if(hc){hc.style.display=logged?"inline":"none";}
   if(ha){ha.style.display=logged?"inline":"none";}
   const bar=document.getElementById("accountBar");if(bar)bar.style.display=logged?"flex":"none";
+  document.querySelectorAll(".auth-only-menu").forEach(el=>el.classList.toggle("auth-visible",logged));
   const hero=document.getElementById("heroSection");if(hero)hero.style.display=logged?"none":"";
   const dash=document.getElementById("dashboardSection"); if(dash)dash.style.display=logged?"block":"none";
   if(logged){const adminBtn=document.getElementById("adminSyncSmmBtn");if(adminBtn)adminBtn.style.display="none";const m=await loadMember();const credit=Number(m?.credit||0);document.getElementById("accountPhone").textContent=phone||m?.phone||"-";const hc=document.getElementById("headerCredit");if(hc)hc.textContent="฿"+credit.toFixed(2);const dc=document.getElementById("dashCredit");if(dc)dc.textContent="฿"+credit.toFixed(2);const orders=await loadOrders();const oc=document.getElementById("dashOrderCount"),op=document.getElementById("dashProcessing"),od=document.getElementById("dashCompleted");if(oc)oc.textContent=orders.length;if(op)op.textContent=orders.filter(x=>x.status==="processing"||x.status==="pending").length;if(od)od.textContent=orders.filter(x=>x.status==="completed").length;}
