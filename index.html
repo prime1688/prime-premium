@@ -342,6 +342,20 @@
         font-size:16px;
       }
     }
+    .topup-success-card{width:min(470px,100%)!important;text-align:center;background:linear-gradient(180deg,#160d20,#09070d)!important;border:1px solid #8b42c9!important;box-shadow:0 0 0 1px rgba(181,108,255,.12),0 0 60px rgba(181,108,255,.24),0 25px 80px rgba(0,0,0,.65)!important;overflow:hidden}
+    .topup-success-check{width:92px;height:92px;margin:4px auto 12px;border-radius:50%;display:grid;place-items:center;background:radial-gradient(circle,#4b176d 0%,#160d20 68%);border:3px solid #c56cff;color:#fff;font-size:52px;font-weight:900;box-shadow:0 0 28px rgba(197,108,255,.7),inset 0 0 25px rgba(197,108,255,.22);animation:topupSuccessPop .55s cubic-bezier(.2,.9,.3,1.3)}
+    .topup-success-title{font-size:30px;font-weight:900;margin:4px 0 16px;color:#fff}
+    .topup-success-amount{padding:14px 18px;border:1px solid #7133a0;border-radius:18px;background:linear-gradient(135deg,rgba(181,108,255,.18),rgba(92,35,125,.12));color:#fff;font-size:36px;font-weight:950;letter-spacing:.5px;box-shadow:0 0 25px rgba(181,108,255,.12)}
+    .topup-success-amount span{color:#d79aff}
+    .topup-success-status{display:flex;align-items:center;justify-content:center;gap:8px;margin:15px 0 4px;color:#eee;font-size:15px;font-weight:800}
+    .topup-success-status i{width:22px;height:22px;border-radius:50%;display:grid;place-items:center;background:#63e36e;color:#061007;font-style:normal;font-size:14px}
+    .topup-success-time{color:#777;font-size:11px;margin-bottom:15px}
+    .topup-success-balance{padding:14px;border:1px solid #422653;border-radius:17px;background:#0e0a13}
+    .topup-success-balance small{display:block;color:#999;margin-bottom:4px}.topup-success-balance strong{display:block;color:#d09aff;font-size:31px}
+    .topup-success-actions{display:flex;gap:10px;margin-top:16px}.topup-success-actions button{flex:1;padding:13px;border-radius:13px;font-weight:900;cursor:pointer}
+    .topup-success-history{background:#17101d;color:#d59aff;border:1px solid #783db0}.topup-success-done{border:0;background:linear-gradient(135deg,#d58aff,#8f35e9);color:#09060b}
+    @keyframes topupSuccessPop{from{opacity:0;transform:scale(.55)}to{opacity:1;transform:scale(1)}}
+    @media(max-width:600px){.topup-success-card{padding:20px!important}.topup-success-title{font-size:25px}.topup-success-amount{font-size:32px}.topup-success-balance strong{font-size:28px}.topup-success-actions button{font-size:13px}}
     .modal-actions { display:flex; gap:10px; margin-top:12px; }
     .modal-actions button { flex:1; padding:12px; border-radius:10px; border:0; font-weight:800; }
     .close-btn { background:#222; color:#fff; }
@@ -874,6 +888,15 @@ function startQrTimer(){
 }
 function updateQrTimer(){const el=document.getElementById("qrTimer");if(el){const m=Math.floor(qrSeconds/60),s=String(qrSeconds%60).padStart(2,"0");el.textContent=m+":"+s;}}
 
+function showTopupSuccess(amount,credit){
+  const modal=document.getElementById("topupSuccessModal");if(!modal)return;
+  const a=document.getElementById("topupSuccessAmount"),b=document.getElementById("topupSuccessBalance"),t=document.getElementById("topupSuccessTime");
+  if(a)a.textContent="฿"+Number(amount||0).toFixed(2);
+  if(b)b.textContent="฿"+Number(credit||0).toFixed(2);
+  if(t){const now=new Date();t.textContent="ทำรายการสำเร็จ • "+now.toLocaleString("th-TH",{dateStyle:"medium",timeStyle:"short"});}
+  modal.classList.add("show");
+}
+function closeTopupSuccess(){document.getElementById("topupSuccessModal")?.classList.remove("show");}
 function closeModal(id){document.getElementById(id).classList.remove("show");if(id==="topupModal")clearInterval(qrTimer);}
 function addToCart(name,price){
   if(localStorage.getItem("prime_logged_in")!=="1"){alert("กรุณาเข้าสู่ระบบก่อนสั่งซื้อ");return;}
@@ -1170,7 +1193,7 @@ async function createTopup(){
     closeModal("topupModal");
     await updateLoginButton();
     await openTransactions();
-    alert("เติมเงินสำเร็จ ฿"+Number(data.slip?.amount||amount).toFixed(2)+"\\nเครดิตเข้าบัญชีเรียบร้อยแล้ว");
+    showTopupSuccess(Number(data.slip?.amount||amount),Number(data.credit||0));
   }catch(e){
     alert(e?.message||"ตรวจสอบสลิปไม่สำเร็จ กรุณาลองใหม่");
   }finally{
@@ -1401,7 +1424,7 @@ document.addEventListener("DOMContentLoaded",()=>{
   document.addEventListener("click",(event)=>{
     const b=event.target.closest("button[data-action]"); if(!b)return;
     const a=b.dataset.action;
-    if(a==="login") login(); else if(a==="logout") logout(); else if(a==="goProducts") goProducts(); else if(a==="openTopup") openTopup(); else if(a==="openTransactions") openTransactions(); else if(a==="openOrders") openOrders(); else if(a==="openFreeRewards") openFreeRewards(); else if(a==="openTerms") document.getElementById("termsModal")?.classList.add("show"); else if(a==="openCart") openCart(); else if(a==="openWithdraw") openWithdraw(); else if(a==="vipOnly") alert("ฟังก์ชันนี้สำหรับสมาชิก VIP เท่านั้น"); else if(a==="addToCart") addToCart(b.dataset.name,Number(b.dataset.price)); else if(a==="removeFromCart") removeFromCart(Number(b.dataset.index)); else if(a==="clearCart") clearCart(); else if(a==="showSocial") showSocial(b.dataset.name); else if(a==="closeModal") closeModal(b.dataset.modal); else if(a==="createTopup") createTopup(); else if(a==="checkout") checkout(); else if(a==="placeSocialOrder") placeSocialOrder();
+    if(a==="login") login(); else if(a==="logout") logout(); else if(a==="goProducts") goProducts(); else if(a==="openTopup") openTopup(); else if(a==="openTransactions") openTransactions(); else if(a==="openOrders") openOrders(); else if(a==="openFreeRewards") openFreeRewards(); else if(a==="openTerms") document.getElementById("termsModal")?.classList.add("show"); else if(a==="openCart") openCart(); else if(a==="openWithdraw") openWithdraw(); else if(a==="vipOnly") alert("ฟังก์ชันนี้สำหรับสมาชิก VIP เท่านั้น"); else if(a==="addToCart") addToCart(b.dataset.name,Number(b.dataset.price)); else if(a==="removeFromCart") removeFromCart(Number(b.dataset.index)); else if(a==="clearCart") clearCart(); else if(a==="showSocial") showSocial(b.dataset.name); else if(a==="closeModal") closeModal(b.dataset.modal); else if(a==="createTopup") createTopup(); else if(a==="topupSuccessHistory"){closeTopupSuccess();openTransactions();} else if(a==="topupSuccessDone"){closeTopupSuccess();window.scrollTo({top:0,behavior:"smooth"});} else if(a==="checkout") checkout(); else if(a==="placeSocialOrder") placeSocialOrder();
   });
 });</script>
   <div class="modal" id="topupModal">
@@ -1419,6 +1442,21 @@ document.addEventListener("DOMContentLoaded",()=>{
       <div class="modal-actions">
         <button class="close-btn" data-action="closeModal" data-modal="topupModal">ปิด</button>
         <button class="primary" data-action="createTopup">ตรวจสอบสลิปและเติมเครดิต</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal" id="topupSuccessModal" role="dialog" aria-modal="true">
+    <div class="modal-card topup-success-card">
+      <div class="topup-success-check">✓</div>
+      <div class="topup-success-title">เติมเงินสำเร็จ</div>
+      <div class="topup-success-amount">+<span id="topupSuccessAmount">฿0.00</span></div>
+      <div class="topup-success-status"><i>✓</i><span>เครดิตเข้าบัญชีเรียบร้อยแล้ว</span></div>
+      <div class="topup-success-time" id="topupSuccessTime">ทำรายการสำเร็จ</div>
+      <div class="topup-success-balance"><small>ยอดเครดิตปัจจุบัน</small><strong id="topupSuccessBalance">฿0.00</strong></div>
+      <div class="topup-success-actions">
+        <button class="topup-success-history" type="button" data-action="topupSuccessHistory">ดูรายการเงิน</button>
+        <button class="topup-success-done" type="button" data-action="topupSuccessDone">เสร็จสิ้น</button>
       </div>
     </div>
   </div>
