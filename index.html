@@ -597,6 +597,10 @@
       <span class="floating-icon">▤</span>
       <span class="floating-label">ออเดอร์ของฉัน</span>
     </button>
+    <button type="button" class="floating-menu-item" data-action="openTerms" aria-label="เงื่อนไขและข้อกำหนด">
+      <span class="floating-icon">⚖</span>
+      <span class="floating-label">เงื่อนไขและข้อกำหนด</span>
+    </button>
   </div>
 
 
@@ -975,7 +979,7 @@ document.addEventListener("DOMContentLoaded",()=>{
   document.addEventListener("click",(event)=>{
     const b=event.target.closest("button[data-action]"); if(!b)return;
     const a=b.dataset.action;
-    if(a==="login") login(); else if(a==="logout") logout(); else if(a==="goProducts") goProducts(); else if(a==="openTopup") openTopup(); else if(a==="openTransactions") openTransactions(); else if(a==="openOrders") openOrders(); else if(a==="openCart") openCart(); else if(a==="openWithdraw") alert("การถอนเงินจะเปิดใช้งานเมื่อมีเครดิตและระบบบัญชีพร้อม"); else if(a==="vipOnly") alert("ฟังก์ชันนี้สำหรับสมาชิก VIP เท่านั้น"); else if(a==="addToCart") addToCart(b.dataset.name,Number(b.dataset.price)); else if(a==="removeFromCart") removeFromCart(Number(b.dataset.index)); else if(a==="clearCart") clearCart(); else if(a==="showSocial") showSocial(b.dataset.name); else if(a==="closeModal") closeModal(b.dataset.modal); else if(a==="createTopup") createTopup(); else if(a==="checkout") checkout(); else if(a==="placeSocialOrder") placeSocialOrder();
+    if(a==="login") login(); else if(a==="logout") logout(); else if(a==="goProducts") goProducts(); else if(a==="openTopup") openTopup(); else if(a==="openTransactions") openTransactions(); else if(a==="openOrders") openOrders(); else if(a==="openTerms") document.getElementById("termsModal")?.classList.add("show"); else if(a==="openCart") openCart(); else if(a==="openWithdraw") alert("การถอนเงินจะเปิดใช้งานเมื่อมีเครดิตและระบบบัญชีพร้อม"); else if(a==="vipOnly") alert("ฟังก์ชันนี้สำหรับสมาชิก VIP เท่านั้น"); else if(a==="addToCart") addToCart(b.dataset.name,Number(b.dataset.price)); else if(a==="removeFromCart") removeFromCart(Number(b.dataset.index)); else if(a==="clearCart") clearCart(); else if(a==="showSocial") showSocial(b.dataset.name); else if(a==="closeModal") closeModal(b.dataset.modal); else if(a==="createTopup") createTopup(); else if(a==="checkout") checkout(); else if(a==="placeSocialOrder") placeSocialOrder();
   });
 });</script>
   <div class="modal" id="topupModal">
@@ -1003,6 +1007,42 @@ document.addEventListener("DOMContentLoaded",()=>{
       <div id="transactionItems"></div>
       <div class="modal-actions">
         <button class="close-btn" data-action="closeModal" data-modal="transactionModal">ปิด</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal" id="termsModal">
+    <div class="modal-card" style="max-width:820px;max-height:88vh;overflow:auto">
+      <h2>เงื่อนไขและข้อกำหนด</h2>
+      <div style="color:#ddd;line-height:1.8;font-size:14px">
+        <h3 style="color:#d09aff;margin:14px 0 8px">กำหนดและเงื่อนไขการให้บริการของ PRIME</h3>
+        <p>ยินดีต้อนรับสู่ PRIME ก่อนที่สมาชิกจะเริ่มสนุกกับการโปรโมทของเรา กรุณาทำความเข้าใจและยอมรับข้อกำหนดและเงื่อนไขเหล่านี้ เพื่อให้การโปรโมทของสมาชิกเป็นไปอย่างราบรื่นและปลอดภัย</p>
+
+        <h3 style="color:#d09aff;margin:18px 0 8px">ข้อตกลงการทำธุรกรรม</h3>
+        <p>เพื่อป้องกันข้อผิดพลาด สมาชิกต้องทบทวนกฎของแพลตฟอร์มอย่างละเอียดก่อนการวางโปรโมท เมื่อสมาชิกเข้าสู่แพลตฟอร์มและโปรโมทแล้ว ถือว่าสมาชิกได้ยอมรับข้อตกลงและกฎระเบียบทั้งหมดที่เกี่ยวข้องแล้ว เราขอแนะนำให้สมาชิกทำการอัปเดตรหัสผ่านเข้าสู่ระบบและรหัสผ่านการทำธุรกรรมเป็นประจำ สมาชิกมีหน้าที่รับผิดชอบในการรักษาข้อมูลบัญชีของตนเอง การโปรโมทใดๆ ที่ใช้บัญชีและรหัสผ่านของสมาชิกจะถือว่ามีผลบังคับใช้ หากรหัสผ่านของท่านถูกเปิดเผย แพลตฟอร์มจะไม่รับผิดชอบต่อความเสียหายใดๆ ที่เกิดขึ้น</p>
+
+        <h3 style="color:#d09aff;margin:18px 0 8px">เงื่อนไขการเติมเงิน</h3>
+        <p>ขั้นต่ำการฝาก 1 บาท และไม่สามารถทำการถอนเงินคืน</p>
+        <p>สมาชิกสามารถล็อกอินรับเครดิตฟรีได้ทุกวัน เพียงเข้าสู่ระบบก็รับสิทธิ์ได้ทันที โดยต้องฝากเงินก่อน</p>
+        <p>หากการโปรโมทออนไลน์ไม่สำเร็จ จะถือว่าเป็นโมฆะ</p>
+        <p>หากสมาชิกถูกตัดการเชื่อมต่อระหว่างการจับรางวัลและไม่มีการสร้างผลลัพธ์ จะไม่ส่งผลต่อการตัดสินการจับรางวัล</p>
+        <p>หากเกิดข้อผิดพลาดในการจับรางวัลหรือผลลัพธ์ที่เป็นทางการไม่ถูกต้อง แพลตฟอร์มจะทำการคืนเงินหรือปรับผลลัพธ์ตามสถานการณ์จริง</p>
+        <p>ในกรณีที่เกิดเหตุสุดวิสัย การแฮ็ก หรือปัญหาเครือข่ายที่ทำให้ข้อมูลสูญหาย การประกาศของแพลตฟอร์มจะถือเป็นที่สิ้นสุด</p>
+        <p>แพลตฟอร์มบันทึกธุรกรรมอิเล็กทรอนิกส์ทั้งหมด และบันทึกเหล่านี้จะถูกใช้เป็นหลักฐานในการแก้ไขข้อผิดพลาดอื่นๆ</p>
+        <p>หากพบว่าสมาชิกใช้วิธีที่ไม่ถูกต้อง (เช่น ปลั๊กอิน) หรือมีพฤติกรรมการโปรโมทที่ผิดปกติซึ่งเป็นอันตรายต่อแพลตฟอร์ม แพลตฟอร์มขอสงวนสิทธิ์ในการยกเลิกการโปรโมทดังกล่าว ทำให้โบนัสเป็นโมฆะ และปิดใช้งานบัญชีของสมาชิก กิจกรรมที่เป็นอันตราย เช่น การใช้ประโยชน์จากช่องโหว่ของระบบหรือการเผยแพร่ข้อมูลเท็จจะส่งผลให้บัญชีของสมาชิกถูกระงับโดยไม่มีการคืนเงิน</p>
+        <p>การบริการสมาชิกของแพลตฟอร์มสามารถเข้าถึงได้ผ่านเมนูบริการออนไลน์อย่างเป็นทางการเท่านั้น ข้อมูลติดต่ออื่นใดเป็นของปลอม และแพลตฟอร์มไม่รับผิดชอบต่อความเสียหายที่เกิดจากการหลอกลวงดังกล่าว</p>
+        <p>บัญชีสำหรับเติมเงินจะได้รับการอัปเดตเป็นระยะ ดังนั้นโปรดตรวจสอบรายละเอียดบัญชีล่าสุดก่อนทำการฝากเงิน แพลตฟอร์มไม่รับผิดชอบต่อความเสียหายที่เกิดจากการฝากเงินที่ไม่ถูกต้อง</p>
+        <p>PRIME อาจขอเอกสารยืนยันตัวตนเพื่อวัตถุประสงค์ในการตรวจสอบ สมาชิกจะต้องดำเนินการยืนยันนี้ให้เสร็จก่อนที่จะได้รับโบนัส หากไม่สามารถจัดเตรียมเอกสารที่จำเป็นได้ ยอดเงินในบัญชีจะถูกระงับ</p>
+
+        <h3 style="color:#d09aff;margin:18px 0 8px">คำชี้แจงความรับผิดชอบ</h3>
+        <p>การดำเนินการใดๆ หลังจากเข้าสู่ระบบแพลตฟอร์มถือว่ามีผลบังคับใช้ สมาชิกมีหน้าที่รับผิดชอบในการปกป้องบัญชีและข้อมูลส่วนตัวของตนเอง หากบัญชีของสมาชิกถูกละเมิด (เช่น จากไวรัส) ควรแจ้งแพลตฟอร์มทันทีเพื่อระงับบัญชีและลดความเสียหาย แพลตฟอร์มจะไม่รับผิดชอบต่อความเสียหายทางการเงินที่เกิดจากเหตุการณ์ดังกล่าว</p>
+        <p>แพลตฟอร์มให้บริการสมาชิกผ่านบริการบนเว็บไซต์อย่างเป็นทางการเท่านั้น เราไม่รับประกันความถูกต้องของบริการที่ได้รับผ่านช่องทางอื่นๆ</p>
+        <p>แพลตฟอร์มแนะนำให้สมาชิกดำเนินการที่สำคัญ เช่น การเปลี่ยนรหัสผ่าน การวางเงินโปรโมท รายการฝากโดยตรงบนแพลตฟอร์ม แพลตฟอร์มจะไม่รับผิดชอบต่อความเสียหายที่เกิดจากการดำเนินการผ่านบุคคลที่สาม</p>
+        <p>แพลตฟอร์มขอสงวนสิทธิ์ในการแก้ไขและอัปเดตข้อกำหนดเหล่านี้และกฎของการโปรโมทได้ทุกเมื่อ การอัปเดตจะมีผลบังคับใช้เมื่อมีการเผยแพร่ การใช้แพลตฟอร์มต่อไปหลังจากการอัปเดตแสดงว่าคุณยอมรับข้อกำหนดที่แก้ไขแล้ว</p>
+        <p>แพลตฟอร์มขอสงวนสิทธิ์ในการตีความและแก้ไขปัญหาหรือข้อผิดพลาดใดๆ ที่ไม่ได้กล่าวถึงโดยชัดแจ้งในข้อกำหนดเหล่านี้แล้ว</p>
+      </div>
+      <div class="modal-actions">
+        <button class="close-btn" data-action="closeModal" data-modal="termsModal">ปิด</button>
       </div>
     </div>
   </div>
