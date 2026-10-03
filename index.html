@@ -403,10 +403,15 @@
 
     /* Realtime viewer counters */
     .viewer-count{display:flex;align-items:center;gap:6px;margin:10px 0 14px;color:#aaa;font-size:12px;font-weight:700;min-height:18px}
-    .viewer-dot{width:7px;height:7px;flex:0 0 7px;border-radius:50%;background:#63e36e;box-shadow:0 0 9px rgba(99,227,110,.85);animation:viewerPulse 1.5s ease-in-out infinite}
+    .viewer-dot{width:7px;height:7px;flex:0 0 7px;border-radius:50%;background:#63e36e;box-shadow:0 0 9px rgba(99,227,110,.85);animation:viewerPulse 2.8s ease-in-out infinite}
     .viewer-number{display:inline-block;color:#bfffc5;font-variant-numeric:tabular-nums;min-width:2ch;transition:opacity .16s ease,transform .16s ease}
     .viewer-number.viewer-changing{opacity:.58;transform:translateY(-1px)}
-    @keyframes viewerPulse{50%{opacity:.42;transform:scale(.78)}}
+    @keyframes viewerPulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.48;transform:scale(.78)}}
+    [data-viewer-key="social-instagram"] .viewer-dot,[data-viewer-key="product-topup"] .viewer-dot{animation-delay:.0s}
+    [data-viewer-key="social-tiktok"] .viewer-dot,[data-viewer-key="product-like"] .viewer-dot{animation-delay:.7s}
+    [data-viewer-key="social-facebook"] .viewer-dot,[data-viewer-key="product-share"] .viewer-dot{animation-delay:1.4s}
+    [data-viewer-key="social-youtube"] .viewer-dot,[data-viewer-key="product-follow"] .viewer-dot{animation-delay:2.1s}
+    [data-viewer-key="social-x"] .viewer-dot{animation-delay:1.9s}
     @keyframes livePulse{50%{opacity:.35;transform:scale(.72)}}
     @keyframes liveIn{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
     @media(max-width:600px){.live-activity-wrap{padding:0 12px;margin:6px auto 14px}.live-head{padding:9px 11px}.live-row{padding:9px 11px}.live-copy strong{font-size:11px}.live-copy span{font-size:10px}.live-time{font-size:8px}}
@@ -1249,24 +1254,34 @@ function stopViewerChannel(card){
   supabaseClient.removeChannel(item.channel);
   primeViewerChannels.delete(card);
 }
-function tickGeneratedViewerCounts(){
-  primeViewerState.forEach((s,key)=>{
+function scheduleGeneratedViewerCount(key){
+  const s=primeViewerState.get(key); if(!s)return;
+  clearTimeout(s.timer);
+  const delay=4200+Math.floor(Math.random()*3600);
+  s.timer=setTimeout(()=>{
     const delta=Math.random()<.5?-1:1;
     s.base=Math.max(2,Math.min(99,s.base+delta));
     updateViewerCount(key,Math.max(s.base,s.real||1));
-  });
+    scheduleGeneratedViewerCount(key);
+  },delay);
 }
 function initRealtimeViewerCounters(){
   const cards=[...document.querySelectorAll("[data-viewer-key]")];
   if(!cards.length || !supabaseClient)return;
   const io=new IntersectionObserver(entries=>{
     entries.forEach(entry=>{
-      if(entry.isIntersecting) startViewerChannel(entry.target);
-      else stopViewerChannel(entry.target);
+      if(entry.isIntersecting){
+        startViewerChannel(entry.target);
+        const key=entry.target.dataset.viewerKey;
+        if(primeViewerState.has(key)) scheduleGeneratedViewerCount(key);
+      }else{
+        stopViewerChannel(entry.target);
+        const key=entry.target.dataset.viewerKey;
+        const s=primeViewerState.get(key); if(s) clearTimeout(s.timer);
+      }
     });
   },{threshold:.15});
   cards.forEach(card=>io.observe(card));
-  setInterval(tickGeneratedViewerCounts,3500);
 }
 document.addEventListener("DOMContentLoaded",initRealtimeViewerCounters);
 document.addEventListener("DOMContentLoaded",updateLoginButton);
