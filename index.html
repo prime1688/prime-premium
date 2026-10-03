@@ -1100,9 +1100,15 @@ const SOCIAL_RULES={
 let socialServices=[],selectedSocialService=null,socialPlatformCurrent="";
 async function loadSocialServices(platform){
   if(!requireSupabase())return [];
-  const {data,error}=await supabaseClient.from("services").select("id,name,platform,price,min_quantity").eq("platform",platform).eq("active",true).order("id");
+  const {data,error}=await supabaseClient.from("services").select("id,name,platform,price,min_quantity,provider_service_id,provider_min_quantity,provider_max_quantity,provider_name").eq("platform",platform).eq("active",true).order("id");
   if(error){alert("โหลดบริการไม่สำเร็จ: "+error.message);return [];}
-  return (data||[]).filter(x=>SOCIAL_RULES[platform]?.[x.name]).map(x=>({...x,rule:{...SOCIAL_RULES[platform][x.name],min:x.min_quantity||SOCIAL_RULES[platform][x.name].min,price:Number(x.price)}}));
+  return (data||[]).filter(x=>SOCIAL_RULES[platform]?.[x.name]).map(x=>{
+    const base=SOCIAL_RULES[platform][x.name];
+    const primeMin=Number(x.min_quantity||base.min||1);
+    const providerMin=Number(x.provider_min_quantity||0);
+    const providerMax=Number(x.provider_max_quantity||0);
+    return {...x,rule:{...base,min:Math.max(primeMin,providerMin||0),price:Number(x.price),providerMin,providerMax}};
+  });
 }
 function formatNumber(n){return Number(n).toLocaleString("th-TH");}
 function socialTotal(qty,rule){return Math.ceil(Number(qty)/rule.min)*rule.price;}
@@ -1127,10 +1133,21 @@ async function placeSocialOrder(){
   recordLiveActivity("ordering","กำลังสั่งซื้อบริการ "+(selectedSocialService?.rule?.label||"โซเชียล"));
   if(!selectedSocialService)return alert("กรุณาเลือกบริการ");
   const url=document.getElementById("socialTargetUrl").value.trim(),r=selectedSocialService.rule,qty=Math.ceil((Number(document.getElementById("socialQuantity").value)||r.min)/r.min)*r.min;
-  if(!url)return alert("กรุณาใส่ลิงก์เป้าหมาย");if(!/^https?:\/\//i.test(url))return alert("กรุณาใส่ลิงก์ที่ขึ้นต้นด้วย https:// หรือ http://");
-  const {data,error}=await supabaseClient.rpc("place_social_order",{p_service_id:selectedSocialService.id,p_target_url:url,p_quantity:qty});
-  if(error)return alert("สั่งซื้อไม่สำเร็จ: "+error.message);if(!data?.success)return alert(data?.message||"เครดิตไม่เพียงพอ");
-  closeModal("socialOrderModal");recordLiveActivity("ordered","สั่งซื้อบริการ "+r.label+" จำนวน "+formatNumber(qty)+" "+r.unit);await updateLoginButton();alert("สั่งซื้อสำเร็จ\n"+r.label+" "+formatNumber(qty)+" "+r.unit+"\nยอดที่หัก ฿"+formatNumber(data.total)+"\nเครดิตคงเหลือ ฿"+formatNumber(data.credit));
+  const providerServiceId=Number(selectedSocialService.provider_service_id||0);
+  if(!providerServiceId)return alert("บริการนี้ยังไม่ได้เชื่อมต่อกับ SMMGo กรุณารอการตั้งค่าบริการ");
+  if(r.providerMin&&qty<r.providerMin)return alert("SMMGo กำหนดขั้นต่ำ "+formatNumber(r.providerMin)+" "+r.unit);
+  if(r.providerMax&&qty>r.providerMax)return alert("SMMGo กำหนดสูงสุด "+formatNumber(r.providerMax)+" "+r.unit);
+  if(!url)return alert("กรุณาใส่ลิงก์เป้าหมาย");
+  if(!/^https?:\/\//i.test(url))return alert("กรุณาใส่ลิงก์ที่ขึ้นต้นด้วย https:// หรือ http://");
+  const {data,error}=await supabaseClient.functions.invoke("submit-social-order",{
+    body:{serviceId:selectedSocialService.id,providerServiceId,targetUrl:url,quantity:qty}
+  });
+  if(error)return alert("สั่งซื้อไม่สำเร็จ: "+(error.message||"เกิดข้อผิดพลาด"));
+  if(!data?.success)return alert(data?.message||"สั่งซื้อไม่สำเร็จ");
+  closeModal("socialOrderModal");
+  recordLiveActivity("ordered","สั่งซื้อบริการ "+r.label+" จำนวน "+formatNumber(qty)+" "+r.unit);
+  await updateLoginButton();
+  alert("สั่งซื้อสำเร็จ\n"+r.label+" "+formatNumber(qty)+" "+r.unit+"\nยอดที่หัก ฿"+formatNumber(data.total)+"\nเครดิตคงเหลือ ฿"+formatNumber(data.credit));
 }
 let topupSubmitting=false;
 function fileToSlipBase64(file){
