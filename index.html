@@ -1201,7 +1201,18 @@ async function createTopup(){
     const {data,error}=await supabaseClient.functions.invoke("verify-topup-slip",{body:{amount,qrImageBase64}});
     if(error){
       let msg=error.message||"ระบบตรวจสอบสลิปไม่สำเร็จ";
-      try{if(error.context){const t=await error.context.text();const j=JSON.parse(t);msg=j.message||msg;}}catch(e){}
+      let detail=null;
+      try{
+        if(error.context){
+          const t=await error.context.text();
+          detail=JSON.parse(t);
+          msg=detail?.message||msg;
+        }
+      }catch(e){}
+      if(/Transaction Reference already exist|already.*exist|transaction reference|สลิป.*ใช้งาน|สลิป.*ซ้ำ/i.test(msg)){
+        showTopupError(detail?.slip?.transRef||detail?.provider_reference||"เลขอ้างอิงธุรกรรมถูกใช้แล้ว");
+        return;
+      }
       throw new Error(msg);
     }
     if(!data?.success){
