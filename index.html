@@ -1087,24 +1087,50 @@ async function performLogin(){
   p=normalizePhone(p);
   const pin=document.getElementById("loginPin")?.value||"";
   if(!validThaiPhone(p)){alert("กรุณากรอกเบอร์โทรไทยให้ถูกต้อง เช่น 0812345678");return;}
-  if(!/^\\d{6}$/.test(pin)){alert("กรุณากรอกรหัส 6 หลัก");return;}
-  const current=await supabaseClient.auth.getSession();
-  if(current.data?.session){
-    localStorage.setItem("prime_phone",p);
-    localStorage.setItem("prime_logged_in","1");
-    document.getElementById("loginPopup")?.classList.remove("show");
-    await updateLoginButton();
-    alert("เข้าสู่ PRIME สำเร็จ");
+  if(!/^\d{6}$/.test(pin)){alert("กรุณากรอกรหัส 6 หลัก");return;}
+  const {data,error}=await supabaseClient.auth.signInWithPassword({phone:p,password:pin});
+  if(error){
+    const msg=String(error.message||"");
+    if(/email not confirmed|phone not confirmed/i.test(msg)){
+      alert("เบอร์นี้ยังไม่ได้ยืนยัน กรุณายืนยันเบอร์โทรก่อนเข้าสู่ระบบ");
+    }else{
+      alert("เบอร์โทรหรือรหัส 6 หลักไม่ถูกต้อง");
+    }
     return;
   }
-  const {error}=await supabaseClient.auth.signInAnonymously({options:{data:{phone:p}}});
-  if(error){alert("เข้าสู่ระบบไม่สำเร็จ: "+error.message);return;}
+  if(!data?.session){alert("เข้าสู่ระบบไม่สำเร็จ กรุณาลองใหม่");return;}
   localStorage.setItem("prime_phone",p);
   localStorage.setItem("prime_logged_in","1");
   document.getElementById("loginPopup")?.classList.remove("show");
   await updateLoginButton();
   alert("เข้าสู่ PRIME สำเร็จ");
 }
+async function performSignup(){
+  if(!requireSupabase())return;
+  const p=document.getElementById("signupPhone")?.value.trim()||"";
+  const pin=document.getElementById("signupPin")?.value||"";
+  const cp=document.getElementById("signupPinConfirm")?.value||"";
+  if(!/^0\d{9}$/.test(p)){alert("กรุณากรอกเบอร์โทรศัพท์ 10 หลัก เช่น 0812345678");return;}
+  if(!/^\d{6}$/.test(pin)){alert("กรุณากรอกรหัส 6 หลัก");return;}
+  if(pin!==cp){alert("รหัสยืนยันไม่ตรงกัน");return;}
+  const {data,error}=await supabaseClient.auth.signUp({phone:normalizePhone(p),password:pin,options:{data:{phone:normalizePhone(p)}}});
+  if(error){
+    const msg=String(error.message||"");
+    if(/already registered|already exists|user already/i.test(msg)){alert("เบอร์นี้สมัครสมาชิกแล้ว กรุณาเข้าสู่ระบบ");return;}
+    alert("สมัครสมาชิกไม่สำเร็จ: "+msg);return;
+  }
+  localStorage.setItem("prime_phone",normalizePhone(p));
+  if(data?.session){
+    localStorage.setItem("prime_logged_in","1");
+    document.getElementById("signupPopup")?.classList.remove("show");
+    await updateLoginButton();
+    alert("สมัครสมาชิกสำเร็จและเข้าสู่ระบบแล้ว");
+  }else{
+    document.getElementById("signupPopup")?.classList.remove("show");
+    alert("สมัครสมาชิกสำเร็จ กรุณายืนยันเบอร์โทรศัพท์ก่อนเข้าสู่ระบบ");
+  }
+}
+
 async function logout(){await supabaseClient.auth.signOut().catch(()=>{});localStorage.removeItem("prime_phone");localStorage.removeItem("prime_logged_in");location.reload();}
 const SOCIAL_RULES={
   Instagram:{
@@ -1459,7 +1485,7 @@ document.addEventListener("DOMContentLoaded",()=>{
   document.addEventListener("click",(event)=>{
     const b=event.target.closest("button[data-action]"); if(!b)return;
     const a=b.dataset.action;
-    if(a==="login") login(); else if(a==="loginContinue") performLogin(); else if(a==="logout") logout(); else if(a==="goProducts") goProducts(); else if(a==="openSignupPopup") document.getElementById("signupPopup")?.classList.add("show"); else if(a==="signupContinue"){const p=document.getElementById("signupPhone")?.value.trim(),pin=document.getElementById("signupPin")?.value,cp=document.getElementById("signupPinConfirm")?.value;if(!/^0\\d{9}$/.test(p))return alert("กรุณากรอกเบอร์โทรศัพท์ 10 หลัก");if(!/^\\d{6}$/.test(pin))return alert("กรุณากรอกรหัส 6 หลัก");if(pin!==cp)return alert("รหัสยืนยันไม่ตรงกัน");alert("ข้อมูลถูกต้องแล้ว ขั้นตอนเชื่อมระบบสมัครสมาชิกจะดำเนินการต่อ");document.getElementById("signupPopup")?.classList.remove("show");} else if(a==="openTopup") openTopup(); else if(a==="openTransactions") openTransactions(); else if(a==="openOrders") openOrders(); else if(a==="openFreeRewards") openFreeRewards(); else if(a==="openTerms") document.getElementById("termsModal")?.classList.add("show"); else if(a==="openCart") openCart(); else if(a==="openWithdraw") openWithdraw(); else if(a==="vipOnly") alert("ฟังก์ชันนี้สำหรับสมาชิก VIP เท่านั้น"); else if(a==="addToCart") addToCart(b.dataset.name,Number(b.dataset.price)); else if(a==="removeFromCart") removeFromCart(Number(b.dataset.index)); else if(a==="clearCart") clearCart(); else if(a==="showSocial") showSocial(b.dataset.name); else if(a==="closeModal") closeModal(b.dataset.modal); else if(a==="createTopup") createTopup(); else if(a==="topupSuccessHistory"){closeTopupSuccess();openTransactions();} else if(a==="topupSuccessDone"){closeTopupSuccess();window.scrollTo({top:0,behavior:"smooth"});} else if(a==="topupErrorDone"){closeTopupError();} else if(a==="checkout") checkout(); else if(a==="placeSocialOrder") placeSocialOrder(); else if(a==="syncSmmCatalog") syncSmmCatalog();
+    if(a==="login") login(); else if(a==="loginContinue") performLogin(); else if(a==="logout") logout(); else if(a==="goProducts") goProducts(); else if(a==="openSignupPopup") document.getElementById("signupPopup")?.classList.add("show"); else if(a==="signupContinue"){performSignup();} else if(a==="openTopup") openTopup(); else if(a==="openTransactions") openTransactions(); else if(a==="openOrders") openOrders(); else if(a==="openFreeRewards") openFreeRewards(); else if(a==="openTerms") document.getElementById("termsModal")?.classList.add("show"); else if(a==="openCart") openCart(); else if(a==="openWithdraw") openWithdraw(); else if(a==="vipOnly") alert("ฟังก์ชันนี้สำหรับสมาชิก VIP เท่านั้น"); else if(a==="addToCart") addToCart(b.dataset.name,Number(b.dataset.price)); else if(a==="removeFromCart") removeFromCart(Number(b.dataset.index)); else if(a==="clearCart") clearCart(); else if(a==="showSocial") showSocial(b.dataset.name); else if(a==="closeModal") closeModal(b.dataset.modal); else if(a==="createTopup") createTopup(); else if(a==="topupSuccessHistory"){closeTopupSuccess();openTransactions();} else if(a==="topupSuccessDone"){closeTopupSuccess();window.scrollTo({top:0,behavior:"smooth"});} else if(a==="topupErrorDone"){closeTopupError();} else if(a==="checkout") checkout(); else if(a==="placeSocialOrder") placeSocialOrder(); else if(a==="syncSmmCatalog") syncSmmCatalog();
   });
 });</script>
   <div class="modal" id="loginPopup">
