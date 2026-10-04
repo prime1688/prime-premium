@@ -1054,6 +1054,8 @@
 
 
     /* PRIME ADMIN PANEL */
+    .prime-store-logged-only{display:none!important}
+    .prime-store-logged-only.show{display:block!important}
     .prime-admin-btn{display:none;border:1px solid #a94fff;background:linear-gradient(135deg,#251036,#120916);color:#e3bdff;padding:10px 14px;border-radius:12px;font-weight:900;cursor:pointer;box-shadow:0 0 18px rgba(181,108,255,.18)}
     .prime-admin-btn.show{display:inline-flex;align-items:center;gap:7px}
     .admin-card{width:min(980px,100%)!important;max-height:calc(100dvh - 24px);overflow:auto;background:linear-gradient(180deg,#160d20,#09070d)!important;border:1px solid #7133a0!important;box-shadow:0 0 70px rgba(181,108,255,.22)!important}
@@ -1170,7 +1172,7 @@
 
     <section class="section" id="dashboardSection" style="display:none"></section>
 
-    <section class="section prime-store" id="products">
+    <section class="section prime-store prime-store-logged-only" id="products">
   <div class="prime-store-head">
     <div>
       <h2 class="prime-store-title">✨ สินค้าแนะนำ</h2>
@@ -1548,6 +1550,7 @@ async function updateLoginButton(){
   if(hc){hc.style.display=logged?"inline":"none";}
   if(ha){ha.style.display=logged?"inline":"none";}
   const bar=document.getElementById("accountBar");if(bar)bar.style.display=logged?"flex":"none";
+  const products=document.getElementById("products");if(products)products.classList.toggle("show",logged);
   document.querySelectorAll(".auth-only-menu").forEach(el=>el.classList.toggle("auth-visible",logged));
   const hero=document.getElementById("heroSection");if(hero)hero.style.display=logged?"none":"";
   const dash=document.getElementById("dashboardSection"); if(dash)dash.style.display=logged?"block":"none";
