@@ -2618,7 +2618,7 @@ html,body{
       <div class="prime-mini-card" data-platform="TikTok"><span class="mini-status">● พร้อมให้บริการ</span><h5><img class="mini-logo" src="https://cdn.simpleicons.org/tiktok" alt="TikTok">TikTok Shares</h5><p>เพิ่มยอดแชร์ TikTok</p><strong>เริ่มต้น ฿20</strong><button type="button" data-action="showSocial" data-name="TikTok">เลือกแพ็กเกจ →</button></div>      <div class="prime-mini-card" data-platform="X"><span class="mini-status">● พร้อมให้บริการ</span><h5><img class="mini-logo" src="https://cdn.simpleicons.org/x" alt="X">X Likes</h5><p>เพิ่มยอดไลค์ X</p><strong>เริ่มต้น ฿60</strong><button type="button" data-action="showSocial" data-name="X">เลือกแพ็กเกจ →</button></div>
       <div class="prime-mini-card" data-platform="X"><span class="mini-status">● พร้อมให้บริการ</span><h5><img class="mini-logo" src="https://cdn.simpleicons.org/x" alt="X">X Views</h5><p>เพิ่มยอดวิว X</p><strong>เริ่มต้น ฿150</strong><button type="button" data-action="showSocial" data-name="X">เลือกแพ็กเกจ →</button></div>
       <div class="prime-mini-card" data-platform="X"><span class="mini-status">● พร้อมให้บริการ</span><h5><img class="mini-logo" src="https://cdn.simpleicons.org/x" alt="X">X Followers</h5><p>เพิ่มผู้ติดตาม X</p><strong>เริ่มต้น ฿250</strong><button type="button" data-action="showSocial" data-name="X">เลือกแพ็กเกจ →</button></div>
-      <div class="prime-mini-card" data-platform="X"><span class="mini-status">● พร้อมให้บริการ</span><h5><img class="mini-logo" src="https://cdn.simpleicons.org/x" alt="X">X Shares</h5><p>เพิ่มยอดแชร์ X</p><strong>เริ่มต้น ฿30</strong><button type="button" data-action="showSocial" data-name="X">เลือกแพ็กเกจ →</button></div>
+      <div class="prime-mini-card" data-platform="X"><span class="mini-status">● ปิดปรับปรุง</span><h5><img class="mini-logo" src="https://cdn.simpleicons.org/x" alt="X">X Shares</h5><p>เพิ่มยอดแชร์ X</p><strong>ปิดปรับปรุง</strong><button type="button" disabled>ปิดปรับปรุง</button></div>
 
     </div>
 
@@ -3094,16 +3094,7 @@ function openNewService(key){
   if(!modal||!box)return;
   title.textContent=cfg.title;
   desc.textContent=cfg.desc;
-  box.innerHTML=cfg.platforms.map((platform,i)=>{
-    const serviceName=cfg.serviceNames[i]||cfg.serviceNames[0];
-    return '<button type="button" class="prime-new-option" data-new-platform="'+platform+'" data-new-service="'+serviceName+'"><strong>'+platform+'</strong><span>'+serviceName+' • เลือกเพื่อสั่งซื้อ</span></button>';
-  }).join("");
-  box.querySelectorAll("[data-new-platform]").forEach(btn=>btn.addEventListener("click",async()=>{
-    const platform=btn.dataset.newPlatform,serviceName=btn.dataset.newService;
-    closeModal("newServicesModal");
-    await openSocialOrder(platform,serviceName);
-  }));
-  modal.classList.add("show");
+  const checks=await Promise.all(cfg.platforms.map(async(platform,i)=>{\n    const serviceName=cfg.serviceNames[i]||cfg.serviceNames[0];\n    try{\n      const {data}=await supabaseClient.from("services").select("price,active,provider_service_id").eq("platform",platform).eq("name",serviceName).maybeSingle();\n      const ready=!!data && data.active===true && Number(data.price)>0 && Number(data.provider_service_id)>0;\n      return {platform,serviceName,ready};\n    }catch(e){return {platform,serviceName,ready:false};}\n  }));\n  box.innerHTML=checks.map(x=>'<button type="button" class="prime-new-option '+(x.ready?"":"service-closed")+'" '+(x.ready?"":"disabled")+' data-new-platform="'+x.platform+'" data-new-service="'+x.serviceName+'"><strong>'+x.platform+'</strong><span>'+x.serviceName+' • '+(x.ready?"พร้อมสั่งซื้อ":"ปิดปรับปรุง")+'</span></button>').join("");\n  box.querySelectorAll("[data-new-platform]:not(:disabled)").forEach(btn=>btn.addEventListener("click",async()=>{\n    const platform=btn.dataset.newPlatform,serviceName=btn.dataset.newService;\n    closeModal("newServicesModal");\n    await openSocialOrder(platform,serviceName);\n  }));\n  modal.classList.add("show");
 }
 
 const SOCIAL_RULES={
