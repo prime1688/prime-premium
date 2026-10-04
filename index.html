@@ -2157,6 +2157,64 @@ html,body{
   }
 }
 
+
+/* Success popup: replace dark/purple accents with clear green success theme */
+#loginSuccessModal .signup-success-card,
+#signupSuccessModal .signup-success-card{
+  background:
+    radial-gradient(circle at 50% 0%,rgba(34,197,94,.12),transparent 42%),
+    linear-gradient(180deg,#ffffff,#fbfaff)!important;
+  border:1px solid #b9eac8!important;
+  box-shadow:0 0 0 1px rgba(34,197,94,.10),0 0 55px rgba(34,197,94,.18),0 25px 70px rgba(43,25,65,.22)!important;
+}
+#loginSuccessModal .signup-success-card::before,
+#signupSuccessModal .signup-success-card::before{
+  background:linear-gradient(90deg,transparent,#22c55e,transparent);
+  box-shadow:0 0 18px rgba(34,197,94,.55);
+}
+#loginSuccessModal .signup-success-close,
+#signupSuccessModal .signup-success-close{
+  background:#166534;
+  border-color:#22c55e;
+  color:#fff;
+  box-shadow:0 0 15px rgba(34,197,94,.25);
+}
+#loginSuccessModal .signup-success-icon,
+#signupSuccessModal .signup-success-icon{
+  background:radial-gradient(circle,#4ade80 0%,#16a34a 52%,#166534 78%);
+  border-color:#86efac;
+  color:#fff;
+  box-shadow:0 0 18px rgba(34,197,94,.70),0 0 48px rgba(34,197,94,.32),inset 0 0 28px rgba(255,255,255,.18);
+}
+#loginSuccessModal .signup-success-icon::after,
+#signupSuccessModal .signup-success-icon::after{
+  border-color:rgba(34,197,94,.45);
+}
+#loginSuccessModal .signup-success-title,
+#signupSuccessModal .signup-success-title{
+  color:#14532d;
+  text-shadow:none;
+}
+#loginSuccessModal .signup-success-subtitle,
+#signupSuccessModal .signup-success-subtitle{
+  color:#374151;
+}
+#loginSuccessModal .signup-success-brand,
+#signupSuccessModal .signup-success-brand{
+  color:#16a34a;
+}
+#loginSuccessModal .signup-success-note,
+#signupSuccessModal .signup-success-note{
+  color:#4b5563;
+}
+#loginSuccessModal .signup-success-start,
+#signupSuccessModal .signup-success-start{
+  background:linear-gradient(135deg,#4ade80,#16a34a)!important;
+  border-color:#86efac;
+  color:#fff;
+  box-shadow:0 8px 30px rgba(34,197,94,.28);
+}
+
 </style>
 </head>
 
