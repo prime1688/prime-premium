@@ -1323,6 +1323,125 @@ h1{
 .status-approved,.st-completed{color:#27853d !important;}
 .status-rejected,.st-failed,.st-cancelled{color:#c6283d !important;}
 
+
+/* PRIME REFERENCE COLOR SYSTEM — MATCH THE USER'S PURPLE/WHITE DESIGN */
+:root{
+  --p-deep:#321078;
+  --p-dark:#4b1594;
+  --p:#7024dc;
+  --p2:#8f35f0;
+  --p3:#b968ff;
+  --p4:#d9a7ff;
+  --p5:#f0dcff;
+  --white:#ffffff;
+  --ink:#24104f;
+  --muted:#684f8b;
+}
+/* Background: bright white with concentrated purple glow, like the reference */
+html,body{
+  background:
+    radial-gradient(ellipse at 50% 0%,rgba(177,103,255,.34) 0%,rgba(236,216,255,.38) 28%,transparent 58%),
+    radial-gradient(ellipse at 0% 48%,rgba(124,42,226,.17),transparent 38%),
+    radial-gradient(ellipse at 100% 42%,rgba(160,74,245,.16),transparent 38%),
+    linear-gradient(180deg,#fff 0%,#fbf8ff 42%,#f5ebff 100%) !important;
+  color:var(--ink) !important;
+}
+/* Glass white surfaces */
+.header,.card,.modal-card,.account-box{
+  background:linear-gradient(135deg,rgba(255,255,255,.97),rgba(255,255,255,.84)) !important;
+  border-color:rgba(177,103,255,.40) !important;
+  box-shadow:
+    0 8px 30px rgba(92,28,170,.10),
+    inset 0 1px 0 rgba(255,255,255,1) !important;
+}
+.header{
+  background:rgba(255,255,255,.92) !important;
+  border-bottom-color:rgba(126,54,213,.28) !important;
+  box-shadow:0 5px 25px rgba(82,28,157,.12) !important;
+}
+/* Strong PRIME purple accents */
+.logo span,h1 span,.section-title,.card h3,.modal-card h2,
+.social-modal-head h2,.reward-head h2{
+  color:var(--p-dark) !important;
+}
+h1{
+  color:#2d115c !important;
+  text-shadow:0 3px 18px rgba(142,53,240,.16) !important;
+}
+.badge,.service-tag{
+  background:linear-gradient(135deg,#fff,#f0dcff) !important;
+  border-color:#c58aff !important;
+  color:var(--p-dark) !important;
+}
+/* Purple gradient buttons exactly as the reference */
+.primary,.buy,.topup-highlight,.line-link-highlight,
+.auth-popup .auth-main,.withdraw-notice-done,.topup-error-home,
+.topup-success-done,.reward-claim,.popular-platform-btn,
+.social-order-btn,.service-btn{
+  background:linear-gradient(135deg,#b75cff 0%,#8628e8 52%,#5e16c6 100%) !important;
+  color:#fff !important;
+  border-color:#d8a6ff !important;
+  box-shadow:
+    0 7px 24px rgba(111,28,214,.28),
+    inset 0 1px 0 rgba(255,255,255,.30) !important;
+}
+/* White navigation controls with purple icons/text */
+.nav-btn,.secondary,.close-btn{
+  background:linear-gradient(180deg,#fff,#f7efff) !important;
+  color:var(--p-deep) !important;
+  border-color:#d9bcff !important;
+}
+.subtitle,.card p,.muted,.social-modal-head p,
+.reward-head p,.reward-progress span,.withdraw-notice-sub,
+.topup-success-time,.topup-error-desc{
+  color:var(--muted) !important;
+}
+.price,.amount,.account-box strong,.topup-success-balance strong,
+.reward-progress strong,.reward-day .amount,.topup-success-amount span{
+  color:#7020d4 !important;
+}
+/* Service/icon blocks */
+.icon{
+  background:linear-gradient(145deg,#fff,#ead4ff) !important;
+  color:#7020d4 !important;
+  border:1px solid #c997ff !important;
+  box-shadow:0 5px 18px rgba(125,40,220,.12),inset 0 0 16px rgba(185,104,255,.13) !important;
+}
+.card:hover{border-color:#a957f5 !important;box-shadow:0 12px 32px rgba(112,32,212,.14) !important;}
+/* Inputs stay white and readable */
+.modal-card input,.modal-card select,.modal-card textarea,.auth-popup input{
+  background:#fff !important;
+  color:#24104f !important;
+  border-color:#d8bcff !important;
+}
+.modal-card input::placeholder,.modal-card textarea::placeholder{color:#9b89ae !important;}
+.modal-card input:focus,.auth-popup input:focus{
+  border-color:#9a4df2 !important;
+  box-shadow:0 0 0 3px rgba(154,77,242,.13) !important;
+}
+/* White cards inside dialogs */
+.quantity-control,.social-summary,.reward-calendar,.reward-progress{
+  background:rgba(255,255,255,.90) !important;
+  border-color:#dec4ff !important;
+}
+.qty-btn{
+  background:linear-gradient(135deg,#a84cff,#7019d4) !important;
+  color:#fff !important;
+}
+/* Purple status accents */
+.status-pending,.st-pending{color:#9a6500 !important;}
+.status-approved,.st-completed{color:#24833b !important;}
+.status-rejected,.st-failed,.st-cancelled{color:#c6283d !important;}
+/* Purple glass modal overlay */
+.modal{background:rgba(47,17,79,.42) !important;backdrop-filter:blur(8px) !important;}
+/* Keep white text ONLY on purple controls */
+.primary *, .buy *, .topup-highlight *, .line-link-highlight *,
+.auth-popup .auth-main *, .withdraw-notice-done *, .topup-error-home *,
+.topup-success-done *, .reward-claim *, .popular-platform-btn *,
+.social-order-btn *, .service-btn *, .qty-btn *{
+  color:#fff !important;
+}
+
 </style>
 </head>
 
