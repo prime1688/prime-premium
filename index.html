@@ -1575,6 +1575,56 @@ html,body{
 .reward-claim *, .auth-popup .auth-main *, .withdraw-notice-done *,
 .topup-error-home *, .topup-success-done *, .qty-btn *{color:#fff !important;}
 
+
+/* USE USER-PROVIDED PURPLE/WHITE IMAGE ON ALL CARD ACTION BUTTONS */
+.card button,
+.service-card button,
+.social-service-card button,
+.category-card button,
+.popular-platform button,
+.prime-product-card button{
+  background-image:
+    linear-gradient(rgba(112,24,210,.18),rgba(112,24,210,.18)),
+    url("3C9043A1-2080-49FC-902A-98A4313C32F8.png") !important;
+  background-size:cover !important;
+  background-position:center !important;
+  background-repeat:no-repeat !important;
+  color:#3b126f !important;
+  border:1px solid rgba(255,255,255,.92) !important;
+  border-radius:14px !important;
+  box-shadow:
+    0 5px 16px rgba(104,22,204,.25),
+    0 0 12px rgba(190,100,255,.28),
+    inset 0 1px 0 rgba(255,255,255,.9) !important;
+  text-shadow:0 1px 0 rgba(255,255,255,.75) !important;
+  overflow:hidden !important;
+}
+.card button:hover,
+.service-card button:hover,
+.social-service-card button:hover,
+.category-card button:hover,
+.popular-platform button:hover,
+.prime-product-card button:hover{
+  background-image:
+    linear-gradient(rgba(137,45,230,.10),rgba(137,45,230,.10)),
+    url("3C9043A1-2080-49FC-902A-98A4313C32F8.png") !important;
+  background-size:cover !important;
+  background-position:center !important;
+  box-shadow:
+    0 7px 20px rgba(104,22,204,.38),
+    0 0 18px rgba(190,100,255,.48),
+    inset 0 1px 1px rgba(255,255,255,.95) !important;
+  transform:translateY(-1px);
+}
+.card button *,
+.service-card button *,
+.social-service-card button *,
+.category-card button *,
+.popular-platform button *,
+.prime-product-card button *{
+  color:#3b126f !important;
+}
+
 </style>
 </head>
 
