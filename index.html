@@ -256,6 +256,9 @@
       font-weight: 800;
     }
 
+    .line-link-highlight{position:relative;overflow:hidden;background:linear-gradient(135deg,#5f2aa0,#2b1247);color:#fff;border:1px solid #c184ff;padding:13px 18px;border-radius:14px;font-weight:900;font-size:14px;cursor:pointer;box-shadow:0 7px 24px rgba(181,108,255,.22)}
+    .line-link-highlight:hover{transform:translateY(-1px);box-shadow:0 10px 28px rgba(181,108,255,.32)}
+    @media(max-width:600px){.line-link-highlight{padding:11px 13px;font-size:12px}}
     .withdraw-highlight{
       position:relative;
       overflow:hidden;
@@ -1090,6 +1093,7 @@
     <div class="account-box">สมาชิก: <strong id="accountPhone">-</strong></div>
     <button class="topup-highlight" type="button" data-action="openTopup">เติมเงิน</button>
     <button class="withdraw-highlight" type="button" data-action="openWithdrawNotice">ถอนเงิน</button>
+    <button class="line-link-highlight" type="button" onclick="generateLineLinkCode()">🤖 เชื่อม LINE AI</button>
     <button class="prime-admin-btn" id="primeAdminBtn" type="button" data-action="openAdminPanel">🛡️ หลังบ้าน</button>
   </div>
 
@@ -1621,6 +1625,14 @@ async function performSignup(){
 }
 
 async function logout(){await supabaseClient.auth.signOut().catch(()=>{});localStorage.removeItem("prime_phone");localStorage.removeItem("prime_logged_in");location.reload();}
+async function generateLineLinkCode(){
+  const s=await getSession();
+  if(!s){alert("กรุณาเข้าสู่ระบบก่อนเชื่อม LINE AI");return;}
+  const {data,error}=await supabaseClient.rpc("create_line_link_code");
+  if(error){alert("สร้างรหัสเชื่อม LINE ไม่สำเร็จ: "+(error.message||"เกิดข้อผิดพลาด"));return;}
+  alert("รหัสเชื่อม LINE AI ของคุณ\\n\\n"+data+"\\n\\nนำรหัสนี้ส่งในแชต PRIME Premium ว่า\\nเชื่อม "+data+"\\n\\nรหัสใช้ได้ 10 นาที และใช้ได้ครั้งเดียว");
+}
+
 const SOCIAL_RULES={
   Instagram:{
     Likes:{min:100,price:150,unit:"ไลค์",label:"ไลค์"},
