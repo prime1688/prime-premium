@@ -1706,6 +1706,84 @@ html,body{
   color:#43106f !important;
 }
 
+
+/* CARD BUTTONS — match the uploaded reference card: soft crystal lavender */
+.prime-select-btn,
+.prime-mini-card button,
+.prime-product-card .prime-select-btn,
+.card .service-btn,
+.card .social-order-btn,
+.card .buy,
+.card .view-service,
+.card .btn-primary,
+.card button.primary{
+  width:100% !important;
+  min-height:42px !important;
+  padding:9px 14px !important;
+  margin-top:8px !important;
+  border-radius:13px !important;
+  border:1.5px solid rgba(255,255,255,.96) !important;
+  background:
+    radial-gradient(circle at 22% 18%,rgba(255,255,255,.98) 0 9%,transparent 30%),
+    radial-gradient(circle at 82% 82%,rgba(199,137,255,.42),transparent 42%),
+    linear-gradient(135deg,#fbf4ff 0%,#ead5ff 42%,#d7b0ff 72%,#f7eaff 100%) !important;
+  color:#4b1682 !important;
+  font-weight:900 !important;
+  text-shadow:0 1px 0 #fff !important;
+  box-shadow:
+    0 4px 12px rgba(104,31,175,.18),
+    0 0 10px rgba(188,113,255,.28),
+    inset 0 1px 2px rgba(255,255,255,1),
+    inset 0 -1px 5px rgba(122,42,190,.10) !important;
+  overflow:hidden !important;
+  cursor:pointer !important;
+  transition:transform .18s ease,box-shadow .18s ease,filter .18s ease !important;
+}
+.prime-select-btn::before,
+.prime-mini-card button::before,
+.prime-product-card .prime-select-btn::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  background:
+    linear-gradient(135deg,transparent 0 22%,rgba(255,255,255,.58) 23% 25%,transparent 26% 55%,rgba(255,255,255,.38) 56% 58%,transparent 59%);
+  opacity:.7;
+}
+.prime-select-btn:hover,
+.prime-mini-card button:hover,
+.prime-product-card .prime-select-btn:hover,
+.card .service-btn:hover,
+.card .social-order-btn:hover,
+.card .buy:hover,
+.card .view-service:hover,
+.card .btn-primary:hover,
+.card button.primary:hover{
+  background:
+    radial-gradient(circle at 20% 15%,#fff 0 10%,transparent 32%),
+    radial-gradient(circle at 80% 80%,rgba(183,103,255,.52),transparent 42%),
+    linear-gradient(135deg,#fff8ff 0%,#e8ceff 42%,#cf9eff 72%,#f9edff 100%) !important;
+  color:#3d0f70 !important;
+  box-shadow:
+    0 6px 16px rgba(104,31,175,.24),
+    0 0 16px rgba(188,113,255,.45),
+    inset 0 1px 2px #fff,
+    inset 0 -1px 6px rgba(122,42,190,.12) !important;
+  transform:translateY(-1px) !important;
+  filter:saturate(1.04) !important;
+}
+.prime-select-btn *,
+.prime-mini-card button *,
+.prime-product-card .prime-select-btn *,
+.card .service-btn *,
+.card .social-order-btn *,
+.card .buy *,
+.card .view-service *,
+.card .btn-primary *,
+.card button.primary *{
+  color:#4b1682 !important;
+}
+
 </style>
 </head>
 
