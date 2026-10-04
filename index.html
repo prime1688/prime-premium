@@ -1182,6 +1182,53 @@ body{background-attachment:fixed !important;}
   color:var(--prime-muted) !important;
 }
 
+
+/* FINAL TEXT CONTRAST FIX — keep light theme readable */
+body{color:#211044 !important;}
+.hero,.section,.account-bar,.products,.card,.card p,.card h3,.section-title,
+.modal-card,.modal-card h2,.modal-card h3,.modal-card p,.modal-card label,
+.modal-card span,.modal-card small,.modal-card strong,.modal-card div,
+.social-modal-head,.social-modal-head p,.social-label,.tx-row,.orders-list,
+.empty-state,.reward-head h2,.reward-head p,.reward-progress,.reward-progress span,
+.withdraw-notice-title,.withdraw-notice-text,.withdraw-notice-sub,
+.topup-success-title,.topup-success-status,.topup-success-time,
+.topup-error-title,.topup-error-desc,.topup-error-info,
+.auth-popup h2,.auth-popup p,.auth-popup label,
+.popular-platform h3,.popular-platform p{
+  color:#211044 !important;
+}
+.subtitle,.muted,.card p,.social-modal-head p,.reward-head p,.reward-progress span,
+.withdraw-notice-sub,.topup-success-time,.topup-error-desc{
+  color:#725f8e !important;
+}
+.price,.amount,.account-box strong,.topup-success-balance strong,
+.reward-progress strong,.reward-day .amount,.topup-success-amount span{
+  color:#6f22d9 !important;
+}
+/* White text is intentional only on purple/action controls */
+.primary,.primary *, .buy,.buy *, .topup-highlight,.topup-highlight *,
+.line-link-highlight,.line-link-highlight *, .withdraw-notice-done,
+.withdraw-notice-done *, .topup-error-home,.topup-error-home *,
+.topup-success-done,.topup-success-done *, .reward-claim,.reward-claim *,
+.popular-platform-btn,.popular-platform-btn *, .social-order-btn,
+.social-order-btn *, .service-btn,.service-btn *, .qty-btn,.qty-btn *,
+button.ok,button.ok *{
+  color:#fff !important;
+}
+.close-btn,.close-btn *,.nav-btn,.nav-btn *,.secondary,.secondary *{
+  color:#211044 !important;
+}
+.modal-card input,.modal-card select,.modal-card textarea{
+  color:#211044 !important;
+}
+.modal-card input::placeholder,.modal-card textarea::placeholder{
+  color:#9a89ad !important;
+}
+/* Status colors remain readable */
+.status-pending,.st-pending{color:#9a6500 !important;}
+.status-approved,.st-completed{color:#26823b !important;}
+.status-rejected,.st-failed,.st-cancelled{color:#c6283d !important;}
+
 </style>
 </head>
 
