@@ -3117,6 +3117,9 @@ async function isPrimeAdmin(){
   return data===true;
 }
 function adminStatusText(status){const m={pending:"รอดำเนินการ",processing:"กำลังดำเนินการ",completed:"สำเร็จ",failed:"ล้มเหลว",cancelled:"ยกเลิก"};return m[status]||status||"-";}
+function escapeHtml(value){
+  return String(value??"").replace(/[&<>"']/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[ch]));
+}
 async function loadAdminDashboard(){
   const box=document.getElementById("adminDashboardContent"); if(!box)return;
   box.innerHTML='<div class="admin-grid"><div class="admin-stat"><span>สมาชิก</span><strong id="admMembers">-</strong></div><div class="admin-stat"><span>ออเดอร์ทั้งหมด</span><strong id="admOrders">-</strong></div><div class="admin-stat"><span>กำลังดำเนินการ</span><strong id="admProcessing">-</strong></div><div class="admin-stat"><span>สำเร็จแล้ว</span><strong id="admCompleted">-</strong></div></div><div class="admin-members-box"><div class="admin-section-title">👥 สมาชิกและยอดเงิน</div><div id="admMembersList" class="empty-state">กำลังโหลดสมาชิก...</div></div>';
