@@ -3147,10 +3147,16 @@ async function loadAdminDashboard(){
     '<div class="admin-orders">'+(rows.length?rows.map(x=>'<div class="admin-order"><div class="admin-order-top"><strong>#'+escapeHtml(String(x.id||"").slice(0,8).toUpperCase())+'</strong><strong>฿'+Number(x.total_price||0).toFixed(2)+'</strong></div><div class="admin-order-meta">'+escapeHtml(x.phone||"-")+' · '+escapeHtml(x.platform||"")+' '+escapeHtml(x.service_name||"")+' · '+adminStatusText(x.status)+'<br>จำนวน '+Number(x.quantity||0).toLocaleString("th-TH")+' · '+(x.created_at?new Date(x.created_at).toLocaleString("th-TH"):"-")+'</div></div>').join(""):'<div class="empty-state">ยังไม่มีออเดอร์</div>')+'</div>';
 }
 async function openAdminPanel(){
-  const ok=await isPrimeAdmin();
-  if(!ok){alert("เฉพาะผู้ดูแลระบบเท่านั้น");return;}
-  document.getElementById("adminPanelModal")?.classList.add("show");
-  await loadAdminDashboard();
+  const modal=document.getElementById("adminPanelModal");
+  if(modal)modal.classList.add("show");
+  const box=document.getElementById("adminDashboardContent");
+  if(box)box.innerHTML='<div class="empty-state">กำลังตรวจสอบสิทธิ์...</div>';
+  const ok=await Promise.race([isPrimeAdmin(),new Promise(resolve=>setTimeout(()=>resolve(false),5000))]);
+  if(!ok){
+    if(box)box.innerHTML='<div class="empty-state">ตรวจสอบสิทธิ์ไม่สำเร็จหรือหมดเวลา กรุณากด ↻ รีเฟรช</div>';
+    return;
+  }
+  await Promise.race([loadAdminDashboard(),new Promise(resolve=>setTimeout(resolve,8000))]);
 }
 async function refreshAdminPanel(){await loadAdminDashboard();}
 
