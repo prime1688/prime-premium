@@ -1549,6 +1549,12 @@ async function updateLoginButton(){
   const hc=document.getElementById("headerCredit"),ha=document.getElementById("headerContact");
   if(hc){hc.style.display=logged?"inline":"none";}
   if(ha){ha.style.display=logged?"inline":"none";}
+  const hpm=document.getElementById("headerProcessingMenu");
+  const hcm=document.getElementById("headerCompletedMenu");
+  const hcr=document.getElementById("headerCreditMenu");
+  if(hpm)hpm.style.display=logged?"flex":"none";
+  if(hcm)hcm.style.display=logged?"flex":"none";
+  if(hcr)hcr.style.display=logged?"flex":"none";
   const bar=document.getElementById("accountBar");if(bar)bar.style.display=logged?"flex":"none";
   const products=document.getElementById("products");if(products)products.classList.toggle("show",logged);
   document.querySelectorAll(".auth-only-menu").forEach(el=>el.classList.toggle("auth-visible",logged));
