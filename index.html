@@ -1067,6 +1067,121 @@
     .admin-orders{border:1px solid #2d1b37;border-radius:15px;overflow:auto;background:#0b080d}.admin-order{padding:13px;border-bottom:1px solid #211526}.admin-order:last-child{border-bottom:0}.admin-order-top{display:flex;justify-content:space-between;gap:10px}.admin-order-meta{color:#888;font-size:11px;margin-top:5px;line-height:1.6}.admin-refresh{border:1px solid #7133a0;background:#1a0e24;color:#d8b2ff;padding:10px 13px;border-radius:10px;font-weight:800;cursor:pointer}
     @media(max-width:600px){.prime-admin-btn{padding:8px 10px;font-size:11px}.admin-grid{grid-template-columns:repeat(2,1fr)}.admin-stat strong{font-size:20px}.admin-head{align-items:flex-start}.admin-card{padding:17px!important}}
 
+
+/* PRIME PURPLE-WHITE VISUAL THEME — COLOR ONLY
+   Do not change layout, dimensions, behavior, links, or JavaScript. */
+:root{
+  --prime-bg:#f7f2ff;
+  --prime-bg2:#eee4ff;
+  --prime-panel:rgba(255,255,255,.92);
+  --prime-panel-soft:rgba(255,255,255,.78);
+  --prime-purple:#6f22d9;
+  --prime-purple-2:#9b4dff;
+  --prime-purple-3:#c58aff;
+  --prime-line:#e1caff;
+  --prime-text:#211044;
+  --prime-muted:#725f8e;
+  --prime-shadow:rgba(111,34,217,.18);
+}
+html,body{background:
+  radial-gradient(circle at 15% 0%,rgba(197,138,255,.22),transparent 30%),
+  radial-gradient(circle at 85% 10%,rgba(155,77,255,.16),transparent 28%),
+  linear-gradient(180deg,#faf7ff 0%,#f1e8ff 52%,#fbf9ff 100%) !important;
+  color:var(--prime-text) !important;
+}
+body{background-attachment:fixed !important;}
+.header{
+  background:rgba(255,255,255,.86) !important;
+  border-bottom:1px solid var(--prime-line) !important;
+  box-shadow:0 8px 28px rgba(111,34,217,.08) !important;
+}
+.logo,.logo span,h1,h1 span,.section-title,.card h3{color:var(--prime-purple) !important;}
+.nav-btn,.secondary,.close-btn{
+  background:linear-gradient(180deg,#fff,#f1e6ff) !important;
+  color:var(--prime-text) !important;
+  border-color:var(--prime-line) !important;
+  box-shadow:0 5px 18px rgba(111,34,217,.08) !important;
+}
+.badge,.service-tag,.icon,.account-box{
+  background:linear-gradient(135deg,#fff,#f0e3ff) !important;
+  border-color:var(--prime-line) !important;
+  color:var(--prime-purple) !important;
+}
+.subtitle,.card p,.muted{color:var(--prime-muted) !important;}
+.primary,.buy,.topup-highlight,.withdraw-notice-done,.topup-error-home,.reward-claim{
+  background:linear-gradient(135deg,#a957ff 0%,#6f22d9 100%) !important;
+  color:#fff !important;
+  border-color:#c994ff !important;
+  box-shadow:0 8px 26px var(--prime-shadow) !important;
+}
+.card,.modal-card,.reward-calendar,.reward-progress,.topup-error-info,.topup-success-balance{
+  background:linear-gradient(145deg,rgba(255,255,255,.96),rgba(247,239,255,.9)) !important;
+  border-color:var(--prime-line) !important;
+  color:var(--prime-text) !important;
+  box-shadow:0 12px 34px rgba(111,34,217,.08) !important;
+}
+.card:hover{border-color:#b878ff !important;}
+.price,.account-box strong,.topup-success-balance strong,.reward-progress strong,.amount{
+  color:var(--prime-purple) !important;
+}
+.modal{
+  background:rgba(57,25,91,.42) !important;
+  backdrop-filter:blur(8px) !important;
+}
+.modal-card input,.modal-card select,.auth-popup input{
+  background:#fff !important;
+  color:var(--prime-text) !important;
+  border-color:var(--prime-line) !important;
+}
+.modal-card input:focus,.auth-popup input:focus{
+  border-color:var(--prime-purple-2) !important;
+  box-shadow:0 0 0 3px rgba(155,77,255,.13) !important;
+}
+.auth-popup,.reward-modal-card,.withdraw-notice-card,.topup-error-card,.topup-success-card{
+  background:linear-gradient(145deg,#fff,#f0e3ff) !important;
+  border-color:#c994ff !important;
+  color:var(--prime-text) !important;
+  box-shadow:0 18px 55px rgba(82,27,137,.2) !important;
+}
+.auth-popup p,.withdraw-notice-sub,.topup-error-desc,.topup-success-time{color:var(--prime-muted) !important;}
+.auth-popup .auth-main{
+  background:linear-gradient(135deg,#b766ff,#6f22d9) !important;
+  color:#fff !important;
+}
+.line-link-highlight{
+  background:linear-gradient(135deg,#9b4dff,#6f22d9) !important;
+  border-color:#c994ff !important;
+}
+.reward-day{background:#fff !important;border-color:#eadcff !important;}
+.reward-day.claimed{background:#eee0ff !important;border-color:#a75cff !important;}
+.reward-day .amount{color:var(--prime-purple) !important;}
+.popular-platform,.social-service-card,.category-card,.service-card{
+  background:linear-gradient(145deg,rgba(255,255,255,.96),rgba(244,235,255,.9)) !important;
+  border-color:var(--prime-line) !important;
+  color:var(--prime-text) !important;
+}
+.popular-platform-btn,.social-order-btn,.service-btn{
+  background:linear-gradient(135deg,#a957ff,#6f22d9) !important;
+  color:#fff !important;
+}
+.orders-list,.tx-row{color:var(--prime-text) !important;}
+.tx-row{border-bottom-color:#eadcff !important;}
+.modal-card h2,.social-modal-head h2,.withdraw-notice-title,.topup-success-title{color:var(--prime-purple) !important;}
+.social-order-card{background:linear-gradient(145deg,#fff,#f1e7ff) !important;border-color:var(--prime-line) !important;}
+.social-summary,.quantity-control{
+  background:rgba(255,255,255,.8) !important;
+  border-color:var(--prime-line) !important;
+}
+.qty-btn{
+  background:linear-gradient(135deg,#a957ff,#6f22d9) !important;
+  color:#fff !important;
+}
+.footer,.site-footer{
+  background:linear-gradient(180deg,#f3eaff,#e8d7ff) !important;
+  border-color:var(--prime-line) !important;
+  color:var(--prime-muted) !important;
+}
+
 </style>
 </head>
 
