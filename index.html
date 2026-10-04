@@ -1625,6 +1625,87 @@ html,body{
   color:#3b126f !important;
 }
 
+
+/* MOBILE SOCIAL SERVICE — make disabled/maintenance text clearly readable */
+.social-service-card.service-closed{
+  opacity:1 !important;
+  background:linear-gradient(145deg,rgba(255,255,255,.98),rgba(246,237,255,.96)) !important;
+  border-color:#d9b4f7 !important;
+  color:#321354 !important;
+}
+.social-service-card.service-closed .ssc-icon{
+  color:#806a91 !important;
+}
+.social-service-card.service-closed .ssc-info strong{
+  color:#3b1a58 !important;
+}
+.social-service-card.service-closed .ssc-info small{
+  color:#766581 !important;
+}
+.social-service-card.service-closed .ssc-closed-label{
+  display:block !important;
+  color:#5b168f !important;
+  background:linear-gradient(135deg,#ead6ff,#f8efff) !important;
+  border:1px solid #d3a5f4 !important;
+  border-radius:10px !important;
+  padding:6px 8px !important;
+  font-size:13px !important;
+  font-weight:900 !important;
+  text-align:center !important;
+  text-shadow:none !important;
+}
+.social-service-card.service-closed .ssc-status{
+  background:linear-gradient(135deg,#7d35b5,#542080) !important;
+  color:#fff !important;
+  border:1px solid rgba(255,255,255,.7) !important;
+  box-shadow:0 3px 10px rgba(84,32,128,.25) !important;
+}
+
+/* ALL "เลือกแพ็กเกจ" buttons — one consistent glossy purple-white style */
+.prime-select-btn,
+.prime-mini-card button,
+.prime-product-card .prime-select-btn{
+  width:100% !important;
+  min-height:42px !important;
+  margin-top:8px !important;
+  padding:9px 12px !important;
+  border:1px solid rgba(255,255,255,.95) !important;
+  border-radius:13px !important;
+  background-image:
+    linear-gradient(rgba(126,37,220,.10),rgba(126,37,220,.10)),
+    url("3C9043A1-2080-49FC-902A-98A4313C32F8.png") !important;
+  background-size:cover !important;
+  background-position:center !important;
+  background-repeat:no-repeat !important;
+  color:#43106f !important;
+  font-weight:950 !important;
+  text-shadow:0 1px 0 rgba(255,255,255,.85) !important;
+  box-shadow:
+    0 5px 14px rgba(104,22,204,.28),
+    0 0 11px rgba(190,100,255,.30),
+    inset 0 1px 1px rgba(255,255,255,.95) !important;
+  cursor:pointer !important;
+}
+.prime-select-btn:hover,
+.prime-mini-card button:hover,
+.prime-product-card .prime-select-btn:hover{
+  background-image:
+    linear-gradient(rgba(126,37,220,.04),rgba(126,37,220,.04)),
+    url("3C9043A1-2080-49FC-902A-98A4313C32F8.png") !important;
+  background-size:cover !important;
+  background-position:center !important;
+  box-shadow:
+    0 7px 19px rgba(104,22,204,.40),
+    0 0 17px rgba(190,100,255,.50),
+    inset 0 1px 2px rgba(255,255,255,1) !important;
+  transform:translateY(-1px);
+}
+.prime-select-btn *,
+.prime-mini-card button *,
+.prime-product-card .prime-select-btn *{
+  color:#43106f !important;
+}
+
 </style>
 </head>
 
