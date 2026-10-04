@@ -2544,6 +2544,8 @@ html,body{
 .prime-extra-option:disabled{cursor:not-allowed;opacity:.88;background:#fff7f7;border-color:#efb0b0}.prime-extra-option:disabled strong,.prime-extra-option:disabled span{color:#c6283d}
 @media(max-width:900px){.prime-extra-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:600px){.prime-extra-grid{grid-template-columns:1fr 1fr;gap:10px}.prime-extra-card{min-height:176px;padding:14px}.prime-extra-icon{width:46px;height:46px;font-size:24px}.prime-extra-card h4{font-size:15px}.prime-extra-count{font-size:12px}.prime-extra-desc{font-size:10px}.prime-extra-options{grid-template-columns:1fr}}
+
+.prime-new-card-status,.prime-extra-status{display:block;margin:7px 0 9px;font-size:10px;font-weight:950;color:#7b62a0}.prime-new-card-status.ready,.prime-extra-status.ready{color:#24833b}.prime-new-card-status.closed,.prime-extra-status.closed{color:#e53935}.prime-new-btn.is-closed,.prime-extra-card .prime-new-btn.is-closed{color:#e53935!important;border-color:#ef9a9a!important;background:#fff5f5!important;cursor:not-allowed!important}.prime-extra-card .prime-new-btn{margin-top:auto}.prime-extra-card{min-height:205px}
 </style>
 </head>
 
@@ -2720,33 +2722,37 @@ html,body{
       </div>
     </div>
     <div class="prime-new-grid">
-      <article class="prime-new-card">
+      <article class="prime-new-card" data-new-card="LiveViewers">
         <div class="prime-new-icon">🔴</div>
         <h4>Live Viewers</h4>
         <p>เพิ่มจำนวนผู้ชมระหว่างการไลฟ์ เพื่อช่วยสร้างบรรยากาศและการมองเห็น</p>
         <span class="prime-new-platforms">TikTok • YouTube • Facebook</span>
-        <button class="prime-new-btn" type="button" data-action="openNewService" data-service="LiveViewers">เลือกบริการ →</button>
+        <span class="prime-new-card-status">กำลังตรวจสอบ...</span>
+        <button class="prime-new-btn" type="button" data-action="openNewService" data-service="LiveViewers">กำลังตรวจสอบ...</button>
       </article>
-      <article class="prime-new-card">
+      <article class="prime-new-card" data-new-card="ReachImpressions">
         <div class="prime-new-icon">📣</div>
         <h4>Reach / Impressions</h4>
         <p>เพิ่มการเข้าถึงและจำนวนการแสดงผลของคอนเทนต์</p>
         <span class="prime-new-platforms">Instagram • Facebook</span>
-        <button class="prime-new-btn" type="button" data-action="openNewService" data-service="ReachImpressions">เลือกบริการ →</button>
+        <span class="prime-new-card-status">กำลังตรวจสอบ...</span>
+        <button class="prime-new-btn" type="button" data-action="openNewService" data-service="ReachImpressions">กำลังตรวจสอบ...</button>
       </article>
-      <article class="prime-new-card">
+      <article class="prime-new-card" data-new-card="ProfileVisits">
         <div class="prime-new-icon">👤</div>
         <h4>Profile Visits</h4>
         <p>เพิ่มการเข้าชมหน้าโปรไฟล์ เพื่อช่วยให้โปรไฟล์มีการเข้าถึงมากขึ้น</p>
         <span class="prime-new-platforms">Instagram • TikTok</span>
-        <button class="prime-new-btn" type="button" data-action="openNewService" data-service="ProfileVisits">เลือกบริการ →</button>
+        <span class="prime-new-card-status">กำลังตรวจสอบ...</span>
+        <button class="prime-new-btn" type="button" data-action="openNewService" data-service="ProfileVisits">กำลังตรวจสอบ...</button>
       </article>
-      <article class="prime-new-card">
+      <article class="prime-new-card" data-new-card="GroupChannelMembers">
         <div class="prime-new-icon">👥</div>
         <h4>Group / Channel Members</h4>
         <p>เพิ่มจำนวนสมาชิกกลุ่มหรือช่องในแพลตฟอร์มที่รองรับ</p>
         <span class="prime-new-platforms">Facebook • Telegram</span>
-        <button class="prime-new-btn" type="button" data-action="openNewService" data-service="GroupChannelMembers">เลือกบริการ →</button>
+        <span class="prime-new-card-status">กำลังตรวจสอบ...</span>
+        <button class="prime-new-btn" type="button" data-action="openNewService" data-service="GroupChannelMembers">กำลังตรวจสอบ...</button>
       </article>
     </div>
   </section>
@@ -2760,13 +2766,13 @@ html,body{
       </div>
     </div>
     <div class="prime-extra-grid">
-      <article class="prime-extra-card"><div class="prime-extra-icon">✈️</div><h4>Telegram</h4><div class="prime-extra-count">330 บริการ</div><p class="prime-extra-desc">Members, Channel, Group</p><button class="prime-new-btn" type="button" data-action="openNewService" data-service="TelegramPlatform">เลือกบริการ →</button></article>
-      <article class="prime-extra-card"><div class="prime-extra-icon">💬</div><h4>WhatsApp</h4><div class="prime-extra-count">65 บริการ</div><p class="prime-extra-desc">Members / บริการด้านบัญชี</p><button class="prime-new-btn" type="button" data-action="openNewService" data-service="WhatsAppPlatform">เลือกบริการ →</button></article>
-      <article class="prime-extra-card"><div class="prime-extra-icon">🛍️</div><h4>Shopee</h4><div class="prime-extra-count">36 บริการ</div><p class="prime-extra-desc">บริการเกี่ยวกับร้าน / สินค้า</p><button class="prime-new-btn" type="button" data-action="openNewService" data-service="ShopeePlatform">เลือกบริการ →</button></article>
-      <article class="prime-extra-card"><div class="prime-extra-icon">🎧</div><h4>Spotify</h4><div class="prime-extra-count">—</div><p class="prime-extra-desc">Followers / Plays</p><button class="prime-new-btn" type="button" data-action="openNewService" data-service="SpotifyPlatform">เลือกบริการ →</button></article>
-      <article class="prime-extra-card"><div class="prime-extra-icon">🟣</div><h4>Twitch</h4><div class="prime-extra-count">—</div><p class="prime-extra-desc">Viewers / Followers</p><button class="prime-new-btn" type="button" data-action="openNewService" data-service="TwitchPlatform">เลือกบริการ →</button></article>
-      <article class="prime-extra-card"><div class="prime-extra-icon">🧵</div><h4>Threads</h4><div class="prime-extra-count">—</div><p class="prime-extra-desc">Followers / Engagement</p><button class="prime-new-btn" type="button" data-action="openNewService" data-service="ThreadsPlatform">เลือกบริการ →</button></article>
-      <article class="prime-extra-card"><div class="prime-extra-icon">📍</div><h4>Google Maps</h4><div class="prime-extra-count">—</div><p class="prime-extra-desc">รีวิว / การมองเห็น</p><button class="prime-new-btn" type="button" data-action="openNewService" data-service="GoogleMapsPlatform">เลือกบริการ →</button></article>
+      <article class="prime-extra-card" data-extra-platform="Telegram"><div class="prime-extra-icon">✈️</div><h4>Telegram</h4><div class="prime-extra-count">330 บริการ</div><p class="prime-extra-desc">Members, Channel, Group</p><span class="prime-extra-status">กำลังตรวจสอบ...</span><button class="prime-new-btn" type="button" data-action="openNewService" data-service="TelegramPlatform">กำลังตรวจสอบ...</button></article>
+      <article class="prime-extra-card" data-extra-platform="WhatsApp"><div class="prime-extra-icon">💬</div><h4>WhatsApp</h4><div class="prime-extra-count">65 บริการ</div><p class="prime-extra-desc">Members / บริการด้านบัญชี</p><span class="prime-extra-status">กำลังตรวจสอบ...</span><button class="prime-new-btn" type="button" data-action="openNewService" data-service="WhatsAppPlatform">กำลังตรวจสอบ...</button></article>
+      <article class="prime-extra-card" data-extra-platform="Shopee"><div class="prime-extra-icon">🛍️</div><h4>Shopee</h4><div class="prime-extra-count">36 บริการ</div><p class="prime-extra-desc">บริการเกี่ยวกับร้าน / สินค้า</p><span class="prime-extra-status">กำลังตรวจสอบ...</span><button class="prime-new-btn" type="button" data-action="openNewService" data-service="ShopeePlatform">กำลังตรวจสอบ...</button></article>
+      <article class="prime-extra-card" data-extra-platform="Spotify"><div class="prime-extra-icon">🎧</div><h4>Spotify</h4><div class="prime-extra-count">—</div><p class="prime-extra-desc">Followers / Plays</p><span class="prime-extra-status">กำลังตรวจสอบ...</span><button class="prime-new-btn" type="button" data-action="openNewService" data-service="SpotifyPlatform">กำลังตรวจสอบ...</button></article>
+      <article class="prime-extra-card" data-extra-platform="Twitch"><div class="prime-extra-icon">🟣</div><h4>Twitch</h4><div class="prime-extra-count">—</div><p class="prime-extra-desc">Viewers / Followers</p><span class="prime-extra-status">กำลังตรวจสอบ...</span><button class="prime-new-btn" type="button" data-action="openNewService" data-service="TwitchPlatform">กำลังตรวจสอบ...</button></article>
+      <article class="prime-extra-card" data-extra-platform="Threads"><div class="prime-extra-icon">🧵</div><h4>Threads</h4><div class="prime-extra-count">—</div><p class="prime-extra-desc">Followers / Engagement</p><span class="prime-extra-status">กำลังตรวจสอบ...</span><button class="prime-new-btn" type="button" data-action="openNewService" data-service="ThreadsPlatform">กำลังตรวจสอบ...</button></article>
+      <article class="prime-extra-card" data-extra-platform="Google Maps"><div class="prime-extra-icon">📍</div><h4>Google Maps</h4><div class="prime-extra-count">—</div><p class="prime-extra-desc">รีวิว / การมองเห็น</p><span class="prime-extra-status">กำลังตรวจสอบ...</span><button class="prime-new-btn" type="button" data-action="openNewService" data-service="GoogleMapsPlatform">กำลังตรวจสอบ...</button></article>
     </div>
     <div class="prime-extra-note">จำนวนบริการอ้างอิงจากแคตตาล็อก SMMGo ที่เผยแพร่ล่าสุด ส่วนรายการที่ยังไม่เปิดขายใน PRIME จะแสดงเป็น “ปิดปรับปรุง”</div>
   </section>
@@ -3196,7 +3202,7 @@ const NEW_SERVICE_RULES={
     platforms:["Facebook","Telegram"],
     serviceNames:["Group / Channel Members","Group / Channel Members"]
   }
-  TelegramPlatform:{title:"✈️ Telegram",desc:"เลือกบริการ Telegram ที่ต้องการ",platforms:["Telegram","Telegram","Telegram"],serviceNames:["Members","Channel","Group"]},
+  TelegramPlatform:{title:"✈️ Telegram",desc:"เลือกบริการ Telegram ที่มีการเชื่อมต่อจริง",platforms:["Telegram"],serviceNames:["Group / Channel Members"]},
   WhatsAppPlatform:{title:"💬 WhatsApp",desc:"เลือกบริการ Members หรือบริการด้านบัญชี",platforms:["WhatsApp","WhatsApp"],serviceNames:["Members","Account Services"]},
   ShopeePlatform:{title:"🛍️ Shopee",desc:"เลือกบริการเกี่ยวกับร้านหรือสินค้า",platforms:["Shopee","Shopee"],serviceNames:["Store Services","Product Services"]},
   SpotifyPlatform:{title:"🎧 Spotify",desc:"เลือก Followers หรือ Plays",platforms:["Spotify","Spotify"],serviceNames:["Followers","Plays"]},
@@ -3204,6 +3210,36 @@ const NEW_SERVICE_RULES={
   ThreadsPlatform:{title:"🧵 Threads",desc:"เลือก Followers หรือ Engagement",platforms:["Threads","Threads"],serviceNames:["Followers","Engagement"]},
   GoogleMapsPlatform:{title:"📍 Google Maps",desc:"เลือกบริการรีวิวหรือการมองเห็น",platforms:["Google Maps","Google Maps"],serviceNames:["Reviews","Visibility"]},
 };
+
+async function refreshNewServiceStatuses(){
+  if(!supabaseClient)return;
+  const checks=[];
+  const cfgs=Object.entries(NEW_SERVICE_RULES);
+  for(const [key,cfg] of cfgs){
+    if(!document.querySelector('[data-new-card="'+key+'"]'))continue;
+    for(let i=0;i<cfg.platforms.length;i++) checks.push({key,platform:cfg.platforms[i],name:cfg.serviceNames[i]||cfg.serviceNames[0]});
+  }
+  for(const card of document.querySelectorAll('[data-extra-platform]')){
+    const platform=card.dataset.extraPlatform;
+    const cfg=NEW_SERVICE_RULES[platform+'Platform'];
+    if(cfg) for(let i=0;i<cfg.platforms.length;i++) checks.push({key:platform+'Platform',platform:cfg.platforms[i],name:cfg.serviceNames[i]||cfg.serviceNames[0]});
+  }
+  const results=await Promise.all(checks.map(async x=>{
+    const {data}=await supabaseClient.from('services').select('active,price,provider_service_id').eq('platform',x.platform).eq('name',x.name).maybeSingle();
+    return {...x,ready:!!data&&data.active===true&&Number(data.price)>0&&Number(data.provider_service_id)>0};
+  }));
+  for(const [key] of cfgs){
+    const card=document.querySelector('[data-new-card="'+key+'"]');if(!card)continue;
+    const ready=results.some(x=>x.key===key&&x.ready),status=card.querySelector('.prime-new-card-status'),btn=card.querySelector('.prime-new-btn');
+    status.textContent=ready?'● พร้อมให้บริการ':'● ปิดปรับปรุง';status.className='prime-new-card-status '+(ready?'ready':'closed');
+    btn.textContent=ready?'เลือกบริการ →':'ปิดปรับปรุง';btn.classList.toggle('is-closed',!ready);btn.disabled=!ready;
+  }
+  for(const card of document.querySelectorAll('[data-extra-platform]')){
+    const key=card.dataset.extraPlatform+'Platform',ready=results.some(x=>x.key===key&&x.ready),status=card.querySelector('.prime-extra-status'),btn=card.querySelector('.prime-new-btn');
+    status.textContent=ready?'● พร้อมให้บริการ':'● ปิดปรับปรุง';status.className='prime-extra-status '+(ready?'ready':'closed');
+    btn.textContent=ready?'เลือกบริการ →':'ปิดปรับปรุง';btn.classList.toggle('is-closed',!ready);btn.disabled=!ready;
+  }
+}
 async function openNewService(key){
   const cfg=NEW_SERVICE_RULES[key]; if(!cfg)return;
   const modal=document.getElementById("newServicesModal"),title=document.getElementById("newServiceModalTitle"),desc=document.getElementById("newServiceModalDesc"),box=document.getElementById("newServiceOptions");
@@ -3748,6 +3784,7 @@ function initPrimeShopTimer(){
 }
 document.addEventListener("DOMContentLoaded",initPopularPlatformsSlider);
 document.addEventListener("DOMContentLoaded",initPrimeShopTimer);
+document.addEventListener("DOMContentLoaded",refreshNewServiceStatuses);
 
 document.addEventListener("DOMContentLoaded",initRealtimeViewerCounters);
 document.addEventListener("DOMContentLoaded",updateLoginButton);
