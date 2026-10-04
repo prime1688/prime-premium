@@ -1488,6 +1488,93 @@ h1{
 .service-card button *,
 .category-card button *{color:#fff !important;}
 
+
+/* PRIME NEW PURPLE THEME — visual styling only */
+:root{
+  --prime-violet-900:#2b0758;
+  --prime-violet-800:#430b86;
+  --prime-violet-700:#5b12ad;
+  --prime-violet-600:#7420d1;
+  --prime-violet-500:#9139ef;
+  --prime-violet-400:#ae5cff;
+  --prime-violet-300:#c985ff;
+  --prime-violet-200:#dfbaff;
+  --prime-violet-100:#f0ddff;
+  --prime-white:#fff;
+  --prime-text:#281044;
+  --prime-muted:#765b92;
+}
+html,body{
+  background:
+    radial-gradient(circle at 50% -5%,rgba(174,92,255,.34),transparent 30%),
+    radial-gradient(circle at 0% 45%,rgba(116,32,209,.18),transparent 34%),
+    radial-gradient(circle at 100% 55%,rgba(145,57,239,.16),transparent 34%),
+    linear-gradient(180deg,#ffffff 0%,#faf5ff 45%,#f1e3ff 100%) !important;
+  color:var(--prime-text) !important;
+}
+.header{
+  background:rgba(255,255,255,.94) !important;
+  border-color:rgba(145,57,239,.28) !important;
+  box-shadow:0 7px 28px rgba(67,11,134,.12) !important;
+}
+.logo,h1,.section-title,.card h3,.modal-card h2,.social-modal-head h2{
+  color:var(--prime-violet-800) !important;
+}
+.card,.modal-card,.account-box,.social-service-card,.service-card,.category-card{
+  background:linear-gradient(145deg,rgba(255,255,255,.98),rgba(250,244,255,.94)) !important;
+  border-color:rgba(174,92,255,.38) !important;
+  box-shadow:0 9px 28px rgba(67,11,134,.10),inset 0 1px 0 #fff !important;
+}
+.card:hover,.social-service-card:hover,.service-card:hover{
+  border-color:rgba(145,57,239,.72) !important;
+  box-shadow:0 12px 32px rgba(116,32,209,.18),0 0 18px rgba(174,92,255,.16) !important;
+}
+.primary,.buy,.topup-highlight,.line-link-highlight,.service-btn,
+.social-order-btn,.popular-platform-btn,.reward-claim,
+.auth-popup .auth-main,.withdraw-notice-done,.topup-error-home,
+.topup-success-done{
+  background:linear-gradient(135deg,#c06cff 0%,#9139ef 45%,#6512c5 100%) !important;
+  color:#fff !important;
+  border-color:rgba(255,255,255,.65) !important;
+  box-shadow:0 7px 24px rgba(101,18,197,.30),0 0 13px rgba(174,92,255,.30),inset 0 1px 1px rgba(255,255,255,.45) !important;
+}
+.nav-btn,.secondary,.close-btn{
+  background:linear-gradient(180deg,#fff,#f5eaff) !important;
+  color:var(--prime-violet-800) !important;
+  border-color:var(--prime-violet-200) !important;
+}
+.icon{
+  background:linear-gradient(145deg,#fff,#ead2ff) !important;
+  color:var(--prime-violet-700) !important;
+  border-color:var(--prime-violet-300) !important;
+  box-shadow:0 5px 17px rgba(116,32,209,.13) !important;
+}
+.subtitle,.muted,.card p,.social-modal-head p,.reward-head p{
+  color:var(--prime-muted) !important;
+}
+.price,.amount,.account-box strong,.topup-success-balance strong,.reward-progress strong{
+  color:var(--prime-violet-700) !important;
+}
+.modal{background:rgba(43,7,88,.45) !important;backdrop-filter:blur(9px) !important;}
+.modal-card input,.modal-card select,.modal-card textarea,.auth-popup input{
+  background:#fff !important;color:var(--prime-text) !important;border-color:var(--prime-violet-200) !important;
+}
+.modal-card input:focus,.auth-popup input:focus{
+  border-color:var(--prime-violet-400) !important;
+  box-shadow:0 0 0 3px rgba(174,92,255,.15) !important;
+}
+.quantity-control,.social-summary,.reward-calendar,.reward-progress{
+  background:rgba(255,255,255,.9) !important;
+  border-color:var(--prime-violet-200) !important;
+}
+.qty-btn{
+  background:linear-gradient(135deg,#ad57ff,#7018d0) !important;color:#fff !important;
+}
+.primary *, .buy *, .topup-highlight *, .line-link-highlight *,
+.service-btn *, .social-order-btn *, .popular-platform-btn *,
+.reward-claim *, .auth-popup .auth-main *, .withdraw-notice-done *,
+.topup-error-home *, .topup-success-done *, .qty-btn *{color:#fff !important;}
+
 </style>
 </head>
 
