@@ -3221,12 +3221,20 @@ async function loadSocialServices(platform){
   if(!requireSupabase())return [];
   const {data,error}=await supabaseClient.from("services").select("id,name,platform,price,min_quantity,active,provider_service_id,provider_min_quantity,provider_max_quantity,provider_name").eq("platform",platform).order("id");
   if(error){alert("โหลดบริการไม่สำเร็จ: "+error.message);return [];}
-  return (data||[]).filter(x=>SOCIAL_RULES[platform]?.[x.name]).map(x=>{
-    const base=SOCIAL_RULES[platform][x.name];
+  const rules=SOCIAL_RULES[platform]||{};
+  const rows=(data||[]).filter(x=>rules[x.name]);
+  const byName=new Map(rows.map(x=>[x.name,x]));
+  return Object.keys(rules).map((name,index)=>{
+    const x=byName.get(name)||{
+      id:-((Object.keys(rules).indexOf(name)+1)*1000+String(platform).length),
+      name,platform,price:0,min_quantity:rules[name].min||1,active:false,provider_service_id:null,
+      provider_min_quantity:null,provider_max_quantity:null,provider_name:null
+    };
+    const base=rules[name];
     const primeMin=Number(x.min_quantity||base.min||1);
     const providerMin=Number(x.provider_min_quantity||0);
     const providerMax=Number(x.provider_max_quantity||0);
-    return {...x,rule:{...base,min:Math.max(primeMin,providerMin||0),price:Number(x.price),providerMin,providerMax}};
+    return {...x,rule:{...base,min:Math.max(primeMin,providerMin||0),price:Number(x.price||0),providerMin,providerMax}};
   });
 }
 function formatNumber(n){return Number(n).toLocaleString("th-TH");}
