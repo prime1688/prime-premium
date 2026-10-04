@@ -2964,7 +2964,7 @@ async function syncSmmCatalog(){
       throw new Error(msg);
     }
     if(!data?.success)throw new Error(data?.message||"ซิงก์บริการไม่สำเร็จ");
-    alert("ซิงก์บริการสำเร็จ\\nจับคู่แล้ว "+Number(data.matched||0)+" รายการ\\nยังจับคู่ไม่ได้ "+Number(data.skipped||0)+" รายการ");
+    alert("ซิงก์บริการสำเร็จ\\nจับคู่แล้ว "+Number(data.matched||0)+" รายการ\\nสร้างบริการใหม่ "+Number(data.created||0)+" รายการ\\nยังจับคู่ไม่ได้ "+Number(data.skipped||0)+" รายการ");
     await loadSocialServices(socialPlatformCurrent||"Instagram");
   }catch(e){alert(e?.message||"ซิงก์บริการไม่สำเร็จ");}
   finally{if(btn){btn.disabled=false;btn.textContent="🔄 ซิงก์บริการ SMMGo";}}
@@ -2986,7 +2986,7 @@ async function updateLoginButton(){
   document.querySelectorAll(".auth-only-menu").forEach(el=>el.classList.toggle("auth-visible",logged));
   const hero=document.getElementById("heroSection");if(hero)hero.style.display=logged?"none":"";
   const dash=document.getElementById("dashboardSection"); if(dash)dash.style.display=logged?"block":"none";
-  if(logged){const adminBtn=document.getElementById("adminSyncSmmBtn");if(adminBtn)adminBtn.style.display="none";const primeAdminBtn=document.getElementById("primeAdminBtn");if(primeAdminBtn){const admin=await isPrimeAdmin();primeAdminBtn.classList.toggle("show",admin);}const m=await loadMember();const credit=Number(m?.credit||0);document.getElementById("accountPhone").textContent=phone||m?.phone||"-";const hc=document.getElementById("headerCredit");if(hc)hc.textContent="฿"+credit.toFixed(2);const dc=document.getElementById("dashCredit");if(dc)dc.textContent="฿"+credit.toFixed(2);const orders=await loadOrders();const total=orders.length,processing=orders.filter(x=>x.status==="processing"||x.status==="pending").length,completed=orders.filter(x=>x.status==="completed").length;const oc=document.getElementById("dashOrderCount"),op=document.getElementById("dashProcessing"),od=document.getElementById("dashCompleted"),hcO=document.getElementById("headerOrderCount"),hcP=document.getElementById("headerProcessingCount"),hcC=document.getElementById("headerCompletedCount");if(oc)oc.textContent=total;if(op)op.textContent=processing;if(od)od.textContent=completed;if(hcO)hcO.textContent=total;if(hcP)hcP.textContent=processing;if(hcC)hcC.textContent=completed;}
+  if(logged){const primeAdminBtn=document.getElementById("primeAdminBtn");if(primeAdminBtn){const admin=await isPrimeAdmin();primeAdminBtn.classList.toggle("show",admin);}const m=await loadMember();const credit=Number(m?.credit||0);document.getElementById("accountPhone").textContent=phone||m?.phone||"-";const hc=document.getElementById("headerCredit");if(hc)hc.textContent="฿"+credit.toFixed(2);const dc=document.getElementById("dashCredit");if(dc)dc.textContent="฿"+credit.toFixed(2);const orders=await loadOrders();const total=orders.length,processing=orders.filter(x=>x.status==="processing"||x.status==="pending").length,completed=orders.filter(x=>x.status==="completed").length;const oc=document.getElementById("dashOrderCount"),op=document.getElementById("dashProcessing"),od=document.getElementById("dashCompleted"),hcO=document.getElementById("headerOrderCount"),hcP=document.getElementById("headerProcessingCount"),hcC=document.getElementById("headerCompletedCount");if(oc)oc.textContent=total;if(op)op.textContent=processing;if(od)od.textContent=completed;if(hcO)hcO.textContent=total;if(hcP)hcP.textContent=processing;if(hcC)hcC.textContent=completed;}
   updateCartCount();
 }
 function login(){
@@ -3073,7 +3073,7 @@ const NEW_SERVICE_RULES={
     title:"📣 Reach / Impressions",
     desc:"เลือกแพลตฟอร์มสำหรับเพิ่มการเข้าถึงและการแสดงผล",
     platforms:["Instagram","Facebook"],
-    serviceNames:["Reach","Reach"]
+    serviceNames:["Reach / Impressions","Reach / Impressions"]
   },
   ProfileVisits:{
     title:"👤 Profile Visits",
@@ -3084,8 +3084,8 @@ const NEW_SERVICE_RULES={
   GroupChannelMembers:{
     title:"👥 Group / Channel Members",
     desc:"เลือกแพลตฟอร์มสำหรับเพิ่มสมาชิกกลุ่มหรือช่อง",
-    platforms:["Facebook"],
-    serviceNames:["Group Members"]
+    platforms:["Facebook","Telegram"],
+    serviceNames:["Group / Channel Members","Group / Channel Members"]
   }
 };
 function openNewService(key){
@@ -3111,31 +3111,42 @@ const SOCIAL_RULES={
     Likes:{min:100,price:150,unit:"ไลค์",label:"ไลค์"},
     Shares:{min:100,price:20,unit:"แชร์",label:"แชร์"},
     Views:{min:10000,price:30,unit:"วิว",label:"วิว"},
-    Followers:{min:100,price:180,unit:"คน",label:"ติดตาม"}
+    Followers:{min:100,price:180,unit:"คน",label:"ติดตาม"},
+    "Reach / Impressions":{min:100,price:0,unit:"ครั้ง",label:"Reach / Impressions"},
+    "Profile Visits":{min:100,price:0,unit:"ครั้ง",label:"Profile Visits"}
   },
   Facebook:{
     Likes:{min:100,price:40,unit:"ไลค์",label:"ไลค์"},
     Shares:{min:100,price:30,unit:"แชร์",label:"แชร์"},
     Views:{min:10000,price:250,unit:"วิว",label:"วิว"},
-    Followers:{min:10000,price:790,unit:"คน",label:"ติดตาม"}
+    Followers:{min:10000,price:790,unit:"คน",label:"ติดตาม"},
+    "Live Viewers":{min:100,price:0,unit:"ผู้ชม",label:"Live Viewers"},
+    "Reach / Impressions":{min:100,price:0,unit:"ครั้ง",label:"Reach / Impressions"},
+    "Group / Channel Members":{min:100,price:0,unit:"สมาชิก",label:"Group / Channel Members"}
   },
   TikTok:{
     Likes:{min:100,price:40,unit:"ไลค์",label:"ไลค์"},
     Shares:{min:1000,price:70,unit:"แชร์",label:"แชร์"},
     Views:{min:1000,price:350,unit:"วิว",label:"วิว"},
-    Followers:{min:1000,price:190,unit:"คน",label:"ติดตาม"}
+    Followers:{min:1000,price:190,unit:"คน",label:"ติดตาม"},
+    "Live Viewers":{min:100,price:0,unit:"ผู้ชม",label:"Live Viewers"},
+    "Profile Visits":{min:100,price:0,unit:"ครั้ง",label:"Profile Visits"}
   },
   YouTube:{
     Likes:{min:1000,price:350,unit:"ไลค์",label:"ไลค์"},
     Shares:{min:100,price:60,unit:"แชร์",label:"แชร์"},
     Views:{min:20000,price:3550,unit:"วิว",label:"วิว"},
-    Followers:{min:20000,price:55990,unit:"คน",label:"ติดตาม"}
+    Followers:{min:20000,price:55990,unit:"คน",label:"ติดตาม"},
+    "Live Viewers":{min:100,price:0,unit:"ผู้ชม",label:"Live Viewers"}
   },
   X:{
     Likes:{min:100,price:60,unit:"ไลค์",label:"ไลค์"},
     Shares:{min:100,price:30,unit:"แชร์",label:"แชร์"},
     Views:{min:5000,price:150,unit:"วิว",label:"วิว"},
     Followers:{min:800,price:250,unit:"คน",label:"ติดตาม"}
+  },
+  Telegram:{
+    "Group / Channel Members":{min:100,price:0,unit:"สมาชิก",label:"Group / Channel Members"}
   }
 };
 let socialServices=[],selectedSocialService=null,socialPlatformCurrent="";
@@ -3158,7 +3169,7 @@ function renderSocialServices(){
   el.innerHTML=socialServices.map(x=>{
     const r=x.rule,selected=selectedSocialService?.id===x.id,isOpen=x.active!==false && Number(x.provider_service_id||0)>0 && x.id!==5;
     return '<button type="button" class="social-service-card '+(selected?"selected ":"")+(isOpen?"":"service-closed")+'" data-service-id="'+x.id+'" '+(isOpen?"":"disabled")+'>'+
-      '<span class="ssc-icon">'+({Likes:"♥",Shares:"↗",Views:"◉",Followers:"●"}[x.name]||"•")+'</span>'+
+      '<span class="ssc-icon">'+({Likes:"♥",Shares:"↗",Views:"◉",Followers:"●","Live Viewers":"🔴","Reach / Impressions":"📣","Profile Visits":"👤","Group / Channel Members":"👥"}[x.name]||"•")+'</span>'+
       '<span class="ssc-info"><strong>'+r.label+'</strong><small>ขั้นต่ำ '+formatNumber(r.min)+' '+r.unit+'</small></span>'+
       (isOpen?'<span class="ssc-price">฿'+formatNumber(r.price)+'<small>/ '+formatNumber(r.min)+'</small></span>':'<span class="ssc-price ssc-closed-label">ปิดปรับปรุง</span>')+
       '<span class="ssc-check">'+(selected?"✓":"")+'</span>'+
@@ -3952,7 +3963,7 @@ document.addEventListener("DOMContentLoaded",()=>{
     <div class="modal-card admin-card">
       <div class="admin-head">
         <div><h2>🛡️ PRIME หลังบ้าน</h2><div class="admin-sub">เฉพาะบัญชีที่อยู่ในระบบผู้ดูแล admin_users</div></div>
-        <button class="admin-refresh" type="button" data-action="refreshAdminPanel">↻ รีเฟรช</button>
+        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><button id="adminSyncSmmBtn" class="admin-refresh" type="button" data-action="syncSmmCatalog">🔄 ซิงก์บริการ SMMGo</button><button class="admin-refresh" type="button" data-action="refreshAdminPanel">↻ รีเฟรช</button></div>
       </div>
       <div id="adminDashboardContent"></div>
       <div class="modal-actions"><button class="close-btn" data-action="closeModal" data-modal="adminPanelModal">ปิด</button></div>
