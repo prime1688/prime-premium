@@ -3133,11 +3133,19 @@ async function loadAdminDashboard(){
     }
   }catch(e){}
   try{
-    const session=await getSession();
-    if(!session){finish('<div class="empty-state">กรุณาเข้าสู่ระบบใหม่</div>');return;}
+    const session=await Promise.race([getSession(),new Promise(resolve=>setTimeout(()=>resolve(null),3000))]);
+    if(!session){finish('<div class="empty-state" style="color:#b42318">เซสชันหมดอายุ กรุณาเข้าสู่ระบบใหม่</div>');return;}
     const base=supabaseClient.supabaseUrl;
     const key=supabaseClient.supabaseKey;
-    const r=await fetch(base+"/functions/v1/admin-members",{method:"POST",headers:{"Authorization":"Bearer "+session.access_token,"apikey":key,"Content-Type":"application/json"}});
+    const controller=new AbortController();
+    const timer=setTimeout(()=>controller.abort(),5000);
+    let r;
+    try{
+      r=await fetch(base+"/functions/v1/admin-members",{method:"POST",headers:{"Authorization":"Bearer "+session.access_token,"apikey":key,"Content-Type":"application/json"},signal:controller.signal});
+    }catch(e){
+      finish('<div class="empty-state" style="color:#b42318">เชื่อมต่อข้อมูลสมาชิกไม่สำเร็จ: '+escapeHtml(e?.name==="AbortError"?"หมดเวลาเชื่อมต่อ Supabase":"ไม่สามารถเชื่อมต่อได้")+'</div>');
+      return;
+    }finally{clearTimeout(timer);}
     const payload=await r.json().catch(()=>({}));
     if(!r.ok||!payload.success){finish('<div class="empty-state" style="color:#b42318">โหลดสมาชิกไม่สำเร็จ: '+escapeHtml(payload.message||"ไม่สามารถเชื่อมต่อระบบสมาชิก")+'</div>');return;}
     const rows=Array.isArray(payload.members)?payload.members:[];
