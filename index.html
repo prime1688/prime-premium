@@ -1759,7 +1759,7 @@ async function createTopup(){
   if(active && typeof active.blur==="function") active.blur();
   const amount=Number(document.getElementById("topupAmount").value);
   const file=document.getElementById("topupSlip")?.files?.[0];
-  if(!amount||amount<=0){alert("กรุณาระบุจำนวนเงินตามสลิป");return;}
+  if(!amount||amount<=0){alert("กรุณาระบุจำนวนเงินตามสลิป");return;}\n  if(amount<100){alert("เติมเงินขั้นต่ำ ฿100");return;}
   if(!file){alert("กรุณาแนบรูปสลิปก่อนตรวจสอบ");return;}
   const s=await getSession();
   if(!s){alert("กรุณาเข้าสู่ระบบก่อน");return;}
@@ -2187,7 +2187,7 @@ document.addEventListener("DOMContentLoaded",()=>{
         <img id="paymentQr" src="" alt="QR ชำระเงิน PRIME" style="width:min(100%,360px);display:block;margin:auto">
       </div>
       <div style="text-align:center;font-size:18px;font-weight:800;color:#d09aff">QR หมดอายุใน <span id="qrTimer">5:00</span></div>
-      <input id="topupAmount" type="number" min="1" step="0.01" inputmode="decimal" placeholder="จำนวนเงินที่โอน (บาท)">
+      <input id="topupAmount" type="number" min="100" step="0.01" inputmode="decimal" placeholder="จำนวนเงินที่โอน (ขั้นต่ำ ฿100)">
       <label for="topupSlip" style="display:block;margin-top:8px;color:#ddd;font-size:13px;font-weight:800">แนบสลิปการโอนเงิน</label>
       <input id="topupSlip" type="file" accept="image/jpeg,image/png,image/webp">
       <p style="color:#888;font-size:12px;line-height:1.5">กรอกยอดให้ตรงกับสลิป แล้วกดตรวจสอบ ระบบจะตรวจสอบสลิปอัตโนมัติและเพิ่มเครดิตเมื่อผ่าน</p>
