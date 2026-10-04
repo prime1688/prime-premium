@@ -1759,7 +1759,8 @@ async function createTopup(){
   if(active && typeof active.blur==="function") active.blur();
   const amount=Number(document.getElementById("topupAmount").value);
   const file=document.getElementById("topupSlip")?.files?.[0];
-  if(!amount||amount<=0){alert("กรุณาระบุจำนวนเงินตามสลิป");return;}\n  if(amount<100){alert("เติมเงินขั้นต่ำ ฿100");return;}
+  if(!amount||amount<=0){alert("กรุณาระบุจำนวนเงินตามสลิป");return;}
+  if(amount<100){alert("เติมเงินขั้นต่ำ ฿100");return;}
   if(!file){alert("กรุณาแนบรูปสลิปก่อนตรวจสอบ");return;}
   const s=await getSession();
   if(!s){alert("กรุณาเข้าสู่ระบบก่อน");return;}
