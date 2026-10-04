@@ -3150,7 +3150,7 @@ const NEW_SERVICE_RULES={
     serviceNames:["Group / Channel Members","Group / Channel Members"]
   }
 };
-function openNewService(key){
+async function openNewService(key){
   const cfg=NEW_SERVICE_RULES[key]; if(!cfg)return;
   const modal=document.getElementById("newServicesModal"),title=document.getElementById("newServiceModalTitle"),desc=document.getElementById("newServiceModalDesc"),box=document.getElementById("newServiceOptions");
   if(!modal||!box)return;
