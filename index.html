@@ -3130,7 +3130,12 @@ async function loadAdminDashboard(){
     set("admOrders",Number(d.orders||0).toLocaleString("th-TH"));
     set("admProcessing",Number(d.processing||0).toLocaleString("th-TH"));
     set("admCompleted",Number(d.completed||0).toLocaleString("th-TH"));
-    finish('<div style="padding:18px;text-align:center">สมาชิกทั้งหมด <strong style="color:#6f20c9;font-size:24px">'+Number(d.members||0).toLocaleString("th-TH")+'</strong> คน</div><div class="empty-state" style="margin-top:8px">ระบบฐานข้อมูลยังไม่ได้ส่งรายละเอียดเบอร์โทรและยอดเงินรายคน</div>');
+    const members=Array.isArray(d.member_rows)?d.member_rows:[];
+    if(members.length){
+      finish('<div style="padding:12px 4px"><div class="admin-members-head"><span>เบอร์โทรศัพท์</span><span>ยอดเงิน</span><span>สมัครเมื่อ</span></div>'+members.map(m=>'<div class="admin-member-row"><strong>'+escapeHtml(m.phone||"-")+'</strong><strong>฿'+Number(m.credit||0).toLocaleString("th-TH",{minimumFractionDigits:2})+'</strong><span>'+ (m.created_at?new Date(m.created_at).toLocaleString("th-TH"):"-")+'</span></div>').join("")+'</div>');
+    }else{
+      finish('<div style="padding:18px;text-align:center">สมาชิกทั้งหมด <strong style="color:#6f20c9;font-size:24px">'+Number(d.members||0).toLocaleString("th-TH")+'</strong> คน</div><div class="empty-state" style="margin-top:8px">ยังไม่พบรายละเอียดสมาชิกจากฐานข้อมูล</div>');
+    }
   }catch(e){finish('<div class="empty-state">เกิดข้อผิดพลาด: '+escapeHtml(e.message||"ไม่สามารถโหลดข้อมูลได้")+'</div>');}
 }
 async function openAdminPanel(){
