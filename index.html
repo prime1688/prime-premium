@@ -3133,14 +3133,17 @@ async function loadAdminDashboard(){
     }
   }catch(e){}
   try{
-    const r=await Promise.race([supabaseClient.rpc("admin_members"),new Promise(resolve=>setTimeout(()=>resolve({error:{message:"หมดเวลาโหลดสมาชิก"}}),5000))]);
-    if(r.error){finish('<div class="empty-state" style="color:#b42318">โหลดสมาชิกไม่สำเร็จ: '+escapeHtml(r.error.message||"ไม่ทราบสาเหตุ")+'</div>');return;}
-    const rows=Array.isArray(r.data)?r.data:[];
+    const session=await getSession();
+    if(!session){finish('<div class="empty-state">กรุณาเข้าสู่ระบบใหม่</div>');return;}
+    const base=supabaseClient.supabaseUrl;
+    const key=supabaseClient.supabaseKey;
+    const r=await fetch(base+"/functions/v1/admin-members",{method:"POST",headers:{"Authorization":"Bearer "+session.access_token,"apikey":key,"Content-Type":"application/json"}});
+    const payload=await r.json().catch(()=>({}));
+    if(!r.ok||!payload.success){finish('<div class="empty-state" style="color:#b42318">โหลดสมาชิกไม่สำเร็จ: '+escapeHtml(payload.message||"ไม่สามารถเชื่อมต่อระบบสมาชิก")+'</div>');return;}
+    const rows=Array.isArray(payload.members)?payload.members:[];
     if(!rows.length){finish('<div class="empty-state">ไม่พบสมาชิก</div>');return;}
     finish('<div class="admin-members-head"><span>เบอร์โทรศัพท์</span><span>ยอดเงิน</span><span>สมัครเมื่อ</span></div>'+rows.map(m=>'<div class="admin-member-row"><strong>'+escapeHtml(m.phone||"-")+'</strong><strong>฿'+Number(m.credit||0).toLocaleString("th-TH",{minimumFractionDigits:2})+'</strong><span>'+ (m.created_at?new Date(m.created_at).toLocaleString("th-TH"):"-")+'</span></div>').join(""));
-  }catch(e){
-    finish('<div class="empty-state" style="color:#b42318">โหลดสมาชิกไม่สำเร็จ: '+escapeHtml(e?.message||"เกิดข้อผิดพลาด")+'</div>');
-  }
+  }catch(e){finish('<div class="empty-state" style="color:#b42318">โหลดสมาชิกไม่สำเร็จ: '+escapeHtml(e?.message||"เกิดข้อผิดพลาด")+'</div>');}
 }
 async function openAdminPanel(){
   const modal=document.getElementById("adminPanelModal");
