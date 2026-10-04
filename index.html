@@ -2569,6 +2569,42 @@ html,body{
   font-weight:600 !important;
   line-height:1.6 !important;
 }
+
+
+/* PRIME closing section + CTA */
+.prime-why{
+  margin-top:26px;
+  padding:24px;
+  border:1px solid #d8b8f5;
+  border-radius:22px;
+  background:linear-gradient(145deg,#ffffff 0%,#fbf7ff 58%,#f0ddff 100%);
+  box-shadow:0 12px 34px rgba(78,25,140,.10),inset 0 1px 0 #fff;
+}
+.prime-why-head{text-align:center;margin-bottom:17px}
+.prime-why-head h3{margin:0;color:#24113D;font-size:25px;font-weight:950}
+.prime-why-head p{margin:6px 0 0;color:#5b496b;font-size:13px;font-weight:600}
+.prime-why-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:11px}
+.prime-why-card{display:flex;align-items:center;gap:10px;padding:14px;border:1px solid #dfc8f6;border-radius:15px;background:rgba(255,255,255,.76);box-shadow:0 6px 18px rgba(78,25,140,.06)}
+.prime-why-card>span{width:39px;height:39px;display:grid;place-items:center;flex:0 0 39px;border-radius:12px;background:#f0ddff;font-size:20px}
+.prime-why-card b{display:block;color:#32154d;font-size:13px;font-weight:950}
+.prime-why-card small{display:block;margin-top:3px;color:#6b587b;font-size:10px;line-height:1.45}
+.prime-final-cta{margin-top:18px;padding:24px 26px;border:1px solid #b56cff;border-radius:22px;background:radial-gradient(circle at 88% 20%,rgba(213,138,255,.28),transparent 35%),linear-gradient(135deg,#28103d,#100916 72%);box-shadow:0 14px 38px rgba(77,25,112,.20);display:flex;align-items:center;justify-content:space-between;gap:20px}
+.prime-final-kicker{display:block;color:#d8a5ff;font-size:10px;font-weight:950;letter-spacing:2px;margin-bottom:5px}
+.prime-final-cta h3{margin:0;color:#fff;font-size:25px;font-weight:950}
+.prime-final-cta p{margin:5px 0 0;color:#dbcce5;font-size:13px}
+.prime-final-actions{display:flex;gap:9px;flex-wrap:wrap;justify-content:flex-end}
+.prime-final-btn{min-height:43px;padding:11px 18px;border-radius:12px;text-decoration:none;font-size:13px;font-weight:950;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;box-sizing:border-box}
+.prime-final-btn.primary{border:1px solid #e1b8ff;background:linear-gradient(135deg,#d58aff,#8f35e9);color:#09050d;box-shadow:0 8px 22px rgba(181,108,255,.28)}
+.prime-final-contact{border:1px solid #4fe18a;background:#06c755;color:#fff;box-shadow:0 8px 22px rgba(6,199,85,.18)}
+.prime-footer{padding:30px 20px 38px!important;text-align:center;background:linear-gradient(180deg,#f5eaff,#ead7ff)!important;border-top:1px solid #d3a9f1;color:#5b496b!important}
+.prime-footer-brand{color:#32154d;font-size:21px;font-weight:950;letter-spacing:.5px}
+.prime-footer-desc{margin-top:5px;color:#6b587b;font-size:12px;font-weight:600}
+.prime-footer-links{display:flex;align-items:center;justify-content:center;gap:9px;margin-top:14px;font-size:12px;font-weight:800}
+.prime-footer-links button,.prime-footer-links a{border:0;background:none;color:#6d28a9;text-decoration:none;font:inherit;cursor:pointer;padding:0}
+.prime-footer-links button:hover,.prime-footer-links a:hover{text-decoration:underline}
+.prime-footer-copy{margin-top:13px;color:#806d91;font-size:11px}
+@media(max-width:850px){.prime-why-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.prime-final-cta{display:block}.prime-final-actions{justify-content:flex-start;margin-top:15px}}
+@media(max-width:600px){.prime-why{padding:17px;margin-top:18px}.prime-why-head h3{font-size:21px}.prime-why-head p{font-size:11px}.prime-why-grid{grid-template-columns:1fr 1fr;gap:8px}.prime-why-card{padding:10px;gap:7px}.prime-why-card>span{width:33px;height:33px;flex-basis:33px;font-size:17px}.prime-why-card b{font-size:11px}.prime-why-card small{font-size:9px}.prime-final-cta{padding:20px 17px;border-radius:19px}.prime-final-cta h3{font-size:21px}.prime-final-cta p{font-size:11px}.prime-final-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}.prime-final-btn{width:100%;padding:10px 8px;font-size:11px}.prime-footer{padding:25px 14px 30px!important}.prime-footer-brand{font-size:19px}}
 </style>
 </head>
 
@@ -2798,14 +2834,46 @@ html,body{
     <div class="prime-benefit"><i>⌘</i><span><b>หลายแพลตฟอร์ม</b>เลือกบริการได้ง่าย</span></div>
     <div class="prime-benefit"><i>♧</i><span><b>ดูแลสมาชิก</b>ติดต่อ PRIME ได้</span></div>
   </div>
+
+  <section class="prime-why" aria-label="ทำไมต้องเลือก PRIME">
+    <div class="prime-why-head">
+      <h3>ทำไมต้องเลือก PRIME?</h3>
+      <p>บริการโซเชียลครบในที่เดียว ราคาชัดเจน และใช้งานง่าย</p>
+    </div>
+    <div class="prime-why-grid">
+      <div class="prime-why-card"><span>⚡</span><div><b>สั่งซื้อรวดเร็ว</b><small>เลือกบริการและจำนวนได้ทันที</small></div></div>
+      <div class="prime-why-card"><span>💰</span><div><b>ราคาชัดเจน</b><small>เห็นรายละเอียดก่อนยืนยันคำสั่งซื้อ</small></div></div>
+      <div class="prime-why-card"><span>📊</span><div><b>ตรวจสอบสถานะ</b><small>ติดตามออเดอร์ได้อย่างสะดวก</small></div></div>
+      <div class="prime-why-card"><span>💬</span><div><b>มีทีมงานดูแล</b><small>ติดต่อ PRIME ผ่าน LINE ได้</small></div></div>
+    </div>
+  </section>
+
+  <section class="prime-final-cta" aria-label="เริ่มต้นใช้งาน PRIME">
+    <div>
+      <span class="prime-final-kicker">PRIME PREMIUM</span>
+      <h3>พร้อมเริ่มต้นแล้วหรือยัง?</h3>
+      <p>เลือกบริการที่ต้องการ แล้วเริ่มใช้งานกับ PRIME ได้เลย</p>
+    </div>
+    <div class="prime-final-actions">
+      <button class="prime-final-btn primary" type="button" data-action="goProducts">🛒 เลือกบริการ</button>
+      <a class="prime-final-btn prime-final-contact" href="https://lin.ee/sZghOhY" target="_blank" rel="noopener noreferrer">💬 ติดต่อ PRIME</a>
+    </div>
+  </section>
 </section>
 
 
 
   </main>
 
-  <footer class="footer">
-    © 2026 PRIME Premium. All rights reserved.
+  <footer class="footer prime-footer">
+    <div class="prime-footer-brand">PRIME Premium</div>
+    <div class="prime-footer-desc">บริการโซเชียลครบจบในที่เดียว</div>
+    <div class="prime-footer-links">
+      <button type="button" data-action="openTerms">เงื่อนไขและข้อกำหนด</button>
+      <span>•</span>
+      <a href="https://lin.ee/sZghOhY" target="_blank" rel="noopener noreferrer">ติดต่อ PRIME</a>
+    </div>
+    <div class="prime-footer-copy">© 2026 PRIME Premium. All rights reserved.</div>
   </footer>
 <!-- PRIME ↔ Supabase -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
