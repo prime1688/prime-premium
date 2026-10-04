@@ -2313,6 +2313,148 @@ html,body{
   box-shadow:0 8px 28px rgba(142,67,216,.25) !important;
 }
 
+
+/* PRIME NEW SERVICES — รายการใหม่ */
+.prime-new-services{
+  margin-top:28px;
+  padding:22px;
+  border:1px solid rgba(174,92,255,.42);
+  border-radius:24px;
+  background:
+    radial-gradient(circle at 8% 0%,rgba(255,255,255,.98),transparent 30%),
+    radial-gradient(circle at 92% 100%,rgba(198,142,255,.28),transparent 42%),
+    linear-gradient(145deg,#fff 0%,#fbf6ff 55%,#eee0ff 100%);
+  box-shadow:0 12px 34px rgba(78,25,140,.10),inset 0 1px 0 #fff;
+}
+.prime-new-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  margin-bottom:16px;
+}
+.prime-new-title{
+  display:flex;
+  align-items:center;
+  gap:9px;
+  margin:0;
+  color:#4b1594;
+  font-size:24px;
+  font-weight:950;
+}
+.prime-new-badge{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  padding:5px 10px;
+  border-radius:999px;
+  background:linear-gradient(135deg,#c982ff,#7b20d3);
+  color:#fff;
+  font-size:11px;
+  font-weight:950;
+  box-shadow:0 5px 14px rgba(111,28,214,.22);
+}
+.prime-new-sub{
+  margin:5px 0 0;
+  color:#765b92;
+  font-size:13px;
+}
+.prime-new-grid{
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:14px;
+}
+.prime-new-card{
+  position:relative;
+  overflow:hidden;
+  min-height:205px;
+  padding:18px;
+  border:1px solid #d9baf6;
+  border-radius:19px;
+  background:
+    radial-gradient(circle at 15% 5%,rgba(255,255,255,.98),transparent 33%),
+    linear-gradient(145deg,#fff,#faf4ff 62%,#eee0ff);
+  box-shadow:0 8px 22px rgba(78,25,140,.10),inset 0 1px 0 #fff;
+  transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease;
+}
+.prime-new-card:hover{
+  transform:translateY(-3px);
+  border-color:#a957f5;
+  box-shadow:0 13px 30px rgba(112,32,212,.16),0 0 16px rgba(174,92,255,.18);
+}
+.prime-new-icon{
+  width:50px;height:50px;
+  display:grid;place-items:center;
+  border-radius:15px;
+  background:linear-gradient(145deg,#fff,#e8d0ff);
+  border:1px solid #c997ff;
+  color:#7020d4;
+  font-size:25px;
+  box-shadow:0 5px 16px rgba(116,32,209,.13);
+  margin-bottom:13px;
+}
+.prime-new-card h4{
+  margin:0 0 6px;
+  color:#35115f;
+  font-size:17px;
+  font-weight:950;
+}
+.prime-new-card p{
+  min-height:42px;
+  margin:0 0 13px;
+  color:#765b92;
+  font-size:12px;
+  line-height:1.55;
+}
+.prime-new-platforms{
+  display:block;
+  margin-bottom:11px;
+  color:#6f22d9;
+  font-size:11px;
+  font-weight:850;
+}
+.prime-new-btn{
+  width:100%;
+  min-height:40px;
+  border:1px solid rgba(255,255,255,.95);
+  border-radius:12px;
+  background:linear-gradient(135deg,#c982ff,#9139ef 48%,#6512c5);
+  color:#fff;
+  font-weight:950;
+  cursor:pointer;
+  box-shadow:0 6px 17px rgba(101,18,197,.25),inset 0 1px 1px rgba(255,255,255,.42);
+}
+.prime-new-btn:hover{transform:translateY(-1px);filter:saturate(1.05)}
+.prime-new-modal{width:min(720px,100%)!important}
+.prime-new-modal-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:15px}
+.prime-new-modal-head h2{margin:0 0 5px}
+.prime-new-modal-head p{margin:0;color:#765b92;font-size:13px;line-height:1.55}
+.prime-new-options{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.prime-new-option{
+  text-align:left;
+  padding:15px;
+  border:1px solid #dcc2fa;
+  border-radius:16px;
+  background:linear-gradient(145deg,#fff,#f7efff);
+  color:#35115f;
+  cursor:pointer;
+  box-shadow:0 5px 16px rgba(78,25,140,.08);
+}
+.prime-new-option:hover{border-color:#a957f5;box-shadow:0 8px 22px rgba(112,32,212,.14)}
+.prime-new-option strong{display:block;color:#4b1594;font-size:15px;margin-bottom:4px}
+.prime-new-option span{display:block;color:#765b92;font-size:12px}
+@media(max-width:850px){.prime-new-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:600px){
+  .prime-new-services{padding:16px;border-radius:20px}
+  .prime-new-title{font-size:21px}
+  .prime-new-grid{grid-template-columns:1fr 1fr;gap:10px}
+  .prime-new-card{min-height:200px;padding:14px}
+  .prime-new-card h4{font-size:15px}
+  .prime-new-card p{font-size:11px}
+  .prime-new-platforms{font-size:10px}
+  .prime-new-options{grid-template-columns:1fr}
+}
+
 </style>
 </head>
 
@@ -2479,6 +2621,46 @@ html,body{
       <div class="prime-mini-card" data-platform="X"><span class="mini-status">● พร้อมให้บริการ</span><h5><img class="mini-logo" src="https://cdn.simpleicons.org/x" alt="X">X Shares</h5><p>เพิ่มยอดแชร์ X</p><strong>เริ่มต้น ฿30</strong><button type="button" data-action="showSocial" data-name="X">เลือกแพ็กเกจ →</button></div>
 
     </div>
+
+
+  <section class="prime-new-services" id="newServices">
+    <div class="prime-new-head">
+      <div>
+        <h3 class="prime-new-title">🆕 รายการใหม่ <span class="prime-new-badge">NEW</span></h3>
+        <p class="prime-new-sub">บริการใหม่สำหรับเพิ่มการมองเห็นและการเข้าถึงบนโซเชียล</p>
+      </div>
+    </div>
+    <div class="prime-new-grid">
+      <article class="prime-new-card">
+        <div class="prime-new-icon">🔴</div>
+        <h4>Live Viewers</h4>
+        <p>เพิ่มจำนวนผู้ชมระหว่างการไลฟ์ เพื่อช่วยสร้างบรรยากาศและการมองเห็น</p>
+        <span class="prime-new-platforms">TikTok • YouTube • Facebook</span>
+        <button class="prime-new-btn" type="button" data-action="openNewService" data-service="LiveViewers">เลือกบริการ →</button>
+      </article>
+      <article class="prime-new-card">
+        <div class="prime-new-icon">📣</div>
+        <h4>Reach / Impressions</h4>
+        <p>เพิ่มการเข้าถึงและจำนวนการแสดงผลของคอนเทนต์</p>
+        <span class="prime-new-platforms">Instagram • Facebook</span>
+        <button class="prime-new-btn" type="button" data-action="openNewService" data-service="ReachImpressions">เลือกบริการ →</button>
+      </article>
+      <article class="prime-new-card">
+        <div class="prime-new-icon">👤</div>
+        <h4>Profile Visits</h4>
+        <p>เพิ่มการเข้าชมหน้าโปรไฟล์ เพื่อช่วยให้โปรไฟล์มีการเข้าถึงมากขึ้น</p>
+        <span class="prime-new-platforms">Instagram • TikTok</span>
+        <button class="prime-new-btn" type="button" data-action="openNewService" data-service="ProfileVisits">เลือกบริการ →</button>
+      </article>
+      <article class="prime-new-card">
+        <div class="prime-new-icon">👥</div>
+        <h4>Group / Channel Members</h4>
+        <p>เพิ่มจำนวนสมาชิกกลุ่มหรือช่องในแพลตฟอร์มที่รองรับ</p>
+        <span class="prime-new-platforms">Facebook • Telegram</span>
+        <button class="prime-new-btn" type="button" data-action="openNewService" data-service="GroupChannelMembers">เลือกบริการ →</button>
+      </article>
+    </div>
+  </section>
 
   <div class="prime-benefits">
     <div class="prime-benefit"><i>🛡</i><span><b>ปลอดภัย</b>ระบบร้านค้าเป็นระบบ</span></div>
@@ -2879,6 +3061,51 @@ async function generateLineLinkCode(){
   alert("รหัสเชื่อม LINE AI ของคุณ\\n\\n"+data+"\\n\\nนำรหัสนี้ส่งในแชต PRIME Premium ว่า\\nเชื่อม "+data+"\\n\\nรหัสใช้ได้ 10 นาที และใช้ได้ครั้งเดียว");
 }
 
+
+const NEW_SERVICE_RULES={
+  LiveViewers:{
+    title:"🔴 Live Viewers",
+    desc:"เลือกแพลตฟอร์มสำหรับเพิ่มผู้ชมไลฟ์",
+    platforms:["TikTok","YouTube","Facebook"],
+    serviceNames:["Live Viewers","Live Viewers","Live Viewers"]
+  },
+  ReachImpressions:{
+    title:"📣 Reach / Impressions",
+    desc:"เลือกแพลตฟอร์มสำหรับเพิ่มการเข้าถึงและการแสดงผล",
+    platforms:["Instagram","Facebook"],
+    serviceNames:["Reach","Reach"]
+  },
+  ProfileVisits:{
+    title:"👤 Profile Visits",
+    desc:"เลือกแพลตฟอร์มสำหรับเพิ่มการเข้าชมโปรไฟล์",
+    platforms:["Instagram","TikTok"],
+    serviceNames:["Profile Visits","Profile Visits"]
+  },
+  GroupChannelMembers:{
+    title:"👥 Group / Channel Members",
+    desc:"เลือกแพลตฟอร์มสำหรับเพิ่มสมาชิกกลุ่มหรือช่อง",
+    platforms:["Facebook"],
+    serviceNames:["Group Members"]
+  }
+};
+function openNewService(key){
+  const cfg=NEW_SERVICE_RULES[key]; if(!cfg)return;
+  const modal=document.getElementById("newServicesModal"),title=document.getElementById("newServiceModalTitle"),desc=document.getElementById("newServiceModalDesc"),box=document.getElementById("newServiceOptions");
+  if(!modal||!box)return;
+  title.textContent=cfg.title;
+  desc.textContent=cfg.desc;
+  box.innerHTML=cfg.platforms.map((platform,i)=>{
+    const serviceName=cfg.serviceNames[i]||cfg.serviceNames[0];
+    return '<button type="button" class="prime-new-option" data-new-platform="'+platform+'" data-new-service="'+serviceName+'"><strong>'+platform+'</strong><span>'+serviceName+' • เลือกเพื่อสั่งซื้อ</span></button>';
+  }).join("");
+  box.querySelectorAll("[data-new-platform]").forEach(btn=>btn.addEventListener("click",async()=>{
+    const platform=btn.dataset.newPlatform,serviceName=btn.dataset.newService;
+    closeModal("newServicesModal");
+    await openSocialOrder(platform,serviceName);
+  }));
+  modal.classList.add("show");
+}
+
 const SOCIAL_RULES={
   Instagram:{
     Likes:{min:100,price:150,unit:"ไลค์",label:"ไลค์"},
@@ -2951,11 +3178,25 @@ function updateSocialSummary(){
   document.getElementById("socialQuantity").value=safe;document.getElementById("socialUnitLabel").textContent=r.unit;document.getElementById("socialQtyLabel").textContent=formatNumber(safe)+" "+r.unit;document.getElementById("socialQtyLabel2").textContent=formatNumber(safe)+" "+r.unit;document.getElementById("socialPriceEach").textContent="฿"+formatNumber(r.price)+" / "+formatNumber(r.min)+" "+r.unit;document.getElementById("socialTotal").textContent="฿"+formatNumber(total);document.getElementById("socialBuyText").textContent="สั่งซื้อ ฿"+formatNumber(total);document.getElementById("socialMinus").disabled=safe<=r.min;
 }
 function changeSocialQuantity(direction){if(!selectedSocialService)return;const r=selectedSocialService.rule,q=Number(document.getElementById("socialQuantity").value)||r.min;document.getElementById("socialQuantity").value=Math.max(r.min,q+direction*r.min);updateSocialSummary()}
-async function openSocialOrder(platform){
+async function openSocialOrder(platform,requestedService){
   const s=await getSession();if(!s){alert("กรุณาเข้าสู่ระบบก่อนสั่งซื้อ");return}
-  socialPlatformCurrent=platform;socialServices=await loadSocialServices(platform);if(!socialServices.length){alert("ยังไม่มีบริการสำหรับ "+platform);return}
-  selectedSocialService=socialServices.find(x=>x.active!==false)||null;if(!selectedSocialService)return alert("ยังไม่มีบริการที่เปิดใช้งานสำหรับ "+platform);document.getElementById("socialPlatform").textContent=platform;document.getElementById("socialTargetUrl").value="";
-  const q=document.getElementById("socialQuantity"),r=selectedSocialService.rule;q.min=r.min;q.step=r.min;q.value=r.min;renderSocialServices();updateSocialSummary();document.getElementById("socialOrderModal").classList.add("show");
+  socialPlatformCurrent=platform;
+  socialServices=await loadSocialServices(platform);
+  if(!socialServices.length){
+    alert("ยังไม่มีบริการ "+(requestedService||"")+" สำหรับ "+platform+" ในระบบ");
+    return;
+  }
+  selectedSocialService=(requestedService ? socialServices.find(x=>String(x.name).toLowerCase()===String(requestedService).toLowerCase()&&x.active!==false) : null)
+    || socialServices.find(x=>x.active!==false)||null;
+  if(!selectedSocialService){
+    alert("บริการ "+requestedService+" ของ "+platform+" ยังไม่ถูกเปิดใช้งาน");
+    return;
+  }
+  document.getElementById("socialPlatform").textContent=platform;
+  document.getElementById("socialTargetUrl").value="";
+  const q=document.getElementById("socialQuantity"),r=selectedSocialService.rule;
+  q.min=r.min;q.step=r.min;q.value=r.min;
+  renderSocialServices();updateSocialSummary();document.getElementById("socialOrderModal").classList.add("show");
 }
 async function placeSocialOrder(){
   recordLiveActivity("ordering","กำลังสั่งซื้อบริการ "+(selectedSocialService?.rule?.label||"โซเชียล"));
@@ -3414,6 +3655,7 @@ document.addEventListener("DOMContentLoaded",()=>{
       if(a==="openFreeRewards"&&typeof openFreeRewards==="function")return openFreeRewards();
       if(a==="openWithdrawNotice"&&typeof openWithdrawNotice==="function")return openWithdrawNotice();
       if(a==="openPopularPlatforms"){document.getElementById("popularPlatformsModal")?.classList.add("show");return;}
+      if(a==="openNewService"&&typeof openNewService==="function")return openNewService(b.dataset.service);
       if(a==="openTerms"){document.getElementById("termsModal")?.classList.add("show");return;}
       if(a==="openSignupPopup"){document.getElementById("signupPopup")?.classList.add("show");return;}
       if(a==="loginContinue"&&typeof performLogin==="function")return performLogin();
@@ -3574,6 +3816,23 @@ document.addEventListener("DOMContentLoaded",()=>{
       </div>
       <div class="popular-slider-dots" id="popularSliderDots"></div>
       <div class="modal-actions"><button class="close-btn" data-action="closeModal" data-modal="popularPlatformsModal">ปิด</button></div>
+    </div>
+  </div>
+
+
+  <div class="modal" id="newServicesModal" role="dialog" aria-modal="true">
+    <div class="modal-card prime-new-modal">
+      <div class="prime-new-modal-head">
+        <div>
+          <h2 id="newServiceModalTitle">🆕 รายการใหม่</h2>
+          <p id="newServiceModalDesc">เลือกแพลตฟอร์มที่ต้องการใช้บริการ</p>
+        </div>
+        <button class="popular-platform-close" type="button" data-action="closeModal" data-modal="newServicesModal" aria-label="ปิด">×</button>
+      </div>
+      <div class="prime-new-options" id="newServiceOptions"></div>
+      <div class="modal-actions">
+        <button class="close-btn" type="button" data-action="closeModal" data-modal="newServicesModal">ปิด</button>
+      </div>
     </div>
   </div>
 
