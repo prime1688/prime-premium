@@ -387,11 +387,12 @@
       font-size: 12px;
     }
     .buy { cursor: pointer; }
-    body.modal-open{
+    html.modal-open,body.modal-open{
       overflow:hidden!important;
-      overscroll-behavior:none;
-      touch-action:none;
+      overscroll-behavior:none!important;
+      touch-action:none!important;
     }
+    body.modal-open{position:fixed!important;left:0;right:0;width:100%;}
     .modal {
       display: none;
       position: fixed;
@@ -2029,9 +2030,27 @@ document.addEventListener("DOMContentLoaded",initRealtimeViewerCounters);
 document.addEventListener("DOMContentLoaded",updateLoginButton);
 document.addEventListener("DOMContentLoaded",initPromoCarousel);
 document.addEventListener("DOMContentLoaded",initLiveActivity);
+let primeModalScrollY=0;
+let primeModalLocked=false;
 function syncModalScrollLock(){
   const hasOpenModal=!!document.querySelector(".modal.show");
-  document.body.classList.toggle("modal-open",hasOpenModal);
+  const body=document.body,html=document.documentElement;
+  if(hasOpenModal && !primeModalLocked){
+    primeModalScrollY=window.scrollY||window.pageYOffset||0;
+    primeModalLocked=true;
+    html.classList.add("modal-open");
+    body.classList.add("modal-open");
+    body.style.top=(-primeModalScrollY)+"px";
+  }else if(!hasOpenModal && primeModalLocked){
+    primeModalLocked=false;
+    html.classList.remove("modal-open");
+    body.classList.remove("modal-open");
+    body.style.top="";
+    window.scrollTo(0,primeModalScrollY);
+  }else if(hasOpenModal){
+    html.classList.add("modal-open");
+    body.classList.add("modal-open");
+  }
 }
 function initModalScrollLock(){
   const observer=new MutationObserver(syncModalScrollLock);
