@@ -1289,7 +1289,7 @@ function initLiveActivity(){
 function goProducts(){document.getElementById("products")?.scrollIntoView({behavior:"smooth",block:"start"});}
 const PAYMENT_QR_PAYLOAD="00020101021130840016A00000067701011201150107537000882050219AD1749906T0883804DN0318PRIMEENTERTAINMENT53037645802TH6208070400006304E5FD";
 let qrTimer=null,qrSeconds=300;
-function paymentQrUrl(){return "https://api.qrserver.com/v1/create-qr-code/?size=420x420&margin=12&data="+encodeURIComponent(PAYMENT_QR_PAYLOAD);}
+function paymentQrUrl(){return "./payment_qr.svg";}
 function showSocial(name){recordLiveActivity("viewing","กำลังดูแพ็กเกจ "+name);openSocialOrder(name);}
 function normalizePhone(v){let p=String(v||"").trim().replace(/[\s-]/g,"");if(p.startsWith("0"))p="+66"+p.slice(1);else if(p.startsWith("66"))p="+"+p;return p;}
 function validThaiPhone(p){return /^\+66\d{9}$/.test(p);}
