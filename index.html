@@ -2522,6 +2522,28 @@ html,body{
 .admin-card .status-approved,.admin-card .st-completed{color:#24833b !important;}
 .admin-card .status-rejected,.admin-card .st-failed,.admin-card .st-cancelled{color:#c6283d !important;}
 
+
+/* EXTRA SMMGO PLATFORM CARDS */
+.prime-extra-platforms{margin-top:26px}
+.prime-extra-head{display:flex;align-items:end;justify-content:space-between;gap:14px;margin-bottom:14px}
+.prime-extra-title{margin:0;color:#430b86;font-size:20px;font-weight:950}
+.prime-extra-sub{margin:4px 0 0;color:#765b92;font-size:12px}
+.prime-extra-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
+.prime-extra-card{position:relative;overflow:hidden;min-height:185px;display:flex;flex-direction:column;padding:17px;border:1px solid rgba(174,92,255,.42);border-radius:18px;background:linear-gradient(145deg,#fff 0%,#fbf7ff 62%,#f0ddff 100%);box-shadow:0 9px 28px rgba(67,11,134,.10),inset 0 1px 0 #fff}
+.prime-extra-card::after{content:"";position:absolute;inset:-35% auto auto -15%;width:60%;height:80%;background:radial-gradient(circle,rgba(190,112,255,.18),transparent 68%);pointer-events:none}
+.prime-extra-icon{width:52px;height:52px;display:grid;place-items:center;border-radius:15px;background:linear-gradient(145deg,#fff,#ead2ff);border:1px solid #c997ff;box-shadow:0 5px 17px rgba(116,32,209,.13);font-size:27px;margin-bottom:12px}
+.prime-extra-card h4{margin:0;color:#430b86;font-size:17px;font-weight:950}
+.prime-extra-count{margin-top:4px;color:#7020d4;font-size:13px;font-weight:900}
+.prime-extra-desc{margin-top:7px;color:#765b92;font-size:11px;line-height:1.5;min-height:33px}
+.prime-extra-card .prime-new-btn{margin-top:auto}
+.prime-extra-note{margin-top:12px;color:#8a769d;font-size:10px;text-align:center}
+.prime-extra-modal{width:min(760px,100%)!important;max-width:760px!important}
+.prime-extra-options{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px;margin-top:15px}
+.prime-extra-option{position:relative;text-align:left;width:100%;padding:14px;border:1px solid #d8bcff;border-radius:14px;background:linear-gradient(145deg,#fff,#f5eaff);color:#281044;cursor:pointer;box-shadow:0 5px 15px rgba(111,34,217,.07)}
+.prime-extra-option strong{display:block;color:#430b86;font-size:14px}.prime-extra-option span{display:block;margin-top:4px;color:#765b92;font-size:11px;line-height:1.45}.prime-extra-option .extra-ready{color:#24833b;font-weight:900}.prime-extra-option .extra-closed{color:#c6283d;font-weight:900}
+.prime-extra-option:disabled{cursor:not-allowed;opacity:.88;background:#fff7f7;border-color:#efb0b0}.prime-extra-option:disabled strong,.prime-extra-option:disabled span{color:#c6283d}
+@media(max-width:900px){.prime-extra-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:600px){.prime-extra-grid{grid-template-columns:1fr 1fr;gap:10px}.prime-extra-card{min-height:176px;padding:14px}.prime-extra-icon{width:46px;height:46px;font-size:24px}.prime-extra-card h4{font-size:15px}.prime-extra-count{font-size:12px}.prime-extra-desc{font-size:10px}.prime-extra-options{grid-template-columns:1fr}}
 </style>
 </head>
 
@@ -2727,6 +2749,26 @@ html,body{
         <button class="prime-new-btn" type="button" data-action="openNewService" data-service="GroupChannelMembers">เลือกบริการ →</button>
       </article>
     </div>
+  </section>
+
+
+  <section class="prime-extra-platforms" id="extraPlatforms">
+    <div class="prime-extra-head">
+      <div>
+        <h3 class="prime-extra-title">🌐 แพลตฟอร์มเพิ่มเติมจาก SMMGo</h3>
+        <p class="prime-extra-sub">เพิ่มแพลตฟอร์มใหม่โดยใช้บริการจาก SMMGo และตรวจสอบสถานะจากฐานข้อมูล PRIME</p>
+      </div>
+    </div>
+    <div class="prime-extra-grid">
+      <article class="prime-extra-card"><div class="prime-extra-icon">✈️</div><h4>Telegram</h4><div class="prime-extra-count">330 บริการ</div><p class="prime-extra-desc">Members, Channel, Group</p><button class="prime-new-btn" type="button" data-action="openNewService" data-service="TelegramPlatform">เลือกบริการ →</button></article>
+      <article class="prime-extra-card"><div class="prime-extra-icon">💬</div><h4>WhatsApp</h4><div class="prime-extra-count">65 บริการ</div><p class="prime-extra-desc">Members / บริการด้านบัญชี</p><button class="prime-new-btn" type="button" data-action="openNewService" data-service="WhatsAppPlatform">เลือกบริการ →</button></article>
+      <article class="prime-extra-card"><div class="prime-extra-icon">🛍️</div><h4>Shopee</h4><div class="prime-extra-count">36 บริการ</div><p class="prime-extra-desc">บริการเกี่ยวกับร้าน / สินค้า</p><button class="prime-new-btn" type="button" data-action="openNewService" data-service="ShopeePlatform">เลือกบริการ →</button></article>
+      <article class="prime-extra-card"><div class="prime-extra-icon">🎧</div><h4>Spotify</h4><div class="prime-extra-count">—</div><p class="prime-extra-desc">Followers / Plays</p><button class="prime-new-btn" type="button" data-action="openNewService" data-service="SpotifyPlatform">เลือกบริการ →</button></article>
+      <article class="prime-extra-card"><div class="prime-extra-icon">🟣</div><h4>Twitch</h4><div class="prime-extra-count">—</div><p class="prime-extra-desc">Viewers / Followers</p><button class="prime-new-btn" type="button" data-action="openNewService" data-service="TwitchPlatform">เลือกบริการ →</button></article>
+      <article class="prime-extra-card"><div class="prime-extra-icon">🧵</div><h4>Threads</h4><div class="prime-extra-count">—</div><p class="prime-extra-desc">Followers / Engagement</p><button class="prime-new-btn" type="button" data-action="openNewService" data-service="ThreadsPlatform">เลือกบริการ →</button></article>
+      <article class="prime-extra-card"><div class="prime-extra-icon">📍</div><h4>Google Maps</h4><div class="prime-extra-count">—</div><p class="prime-extra-desc">รีวิว / การมองเห็น</p><button class="prime-new-btn" type="button" data-action="openNewService" data-service="GoogleMapsPlatform">เลือกบริการ →</button></article>
+    </div>
+    <div class="prime-extra-note">จำนวนบริการอ้างอิงจากแคตตาล็อก SMMGo ที่เผยแพร่ล่าสุด ส่วนรายการที่ยังไม่เปิดขายใน PRIME จะแสดงเป็น “ปิดปรับปรุง”</div>
   </section>
 
   <div class="prime-benefits">
@@ -3154,6 +3196,13 @@ const NEW_SERVICE_RULES={
     platforms:["Facebook","Telegram"],
     serviceNames:["Group / Channel Members","Group / Channel Members"]
   }
+  TelegramPlatform:{title:"✈️ Telegram",desc:"เลือกบริการ Telegram ที่ต้องการ",platforms:["Telegram","Telegram","Telegram"],serviceNames:["Members","Channel","Group"]},
+  WhatsAppPlatform:{title:"💬 WhatsApp",desc:"เลือกบริการ Members หรือบริการด้านบัญชี",platforms:["WhatsApp","WhatsApp"],serviceNames:["Members","Account Services"]},
+  ShopeePlatform:{title:"🛍️ Shopee",desc:"เลือกบริการเกี่ยวกับร้านหรือสินค้า",platforms:["Shopee","Shopee"],serviceNames:["Store Services","Product Services"]},
+  SpotifyPlatform:{title:"🎧 Spotify",desc:"เลือก Followers หรือ Plays",platforms:["Spotify","Spotify"],serviceNames:["Followers","Plays"]},
+  TwitchPlatform:{title:"🟣 Twitch",desc:"เลือก Viewers หรือ Followers",platforms:["Twitch","Twitch"],serviceNames:["Viewers","Followers"]},
+  ThreadsPlatform:{title:"🧵 Threads",desc:"เลือก Followers หรือ Engagement",platforms:["Threads","Threads"],serviceNames:["Followers","Engagement"]},
+  GoogleMapsPlatform:{title:"📍 Google Maps",desc:"เลือกบริการรีวิวหรือการมองเห็น",platforms:["Google Maps","Google Maps"],serviceNames:["Reviews","Visibility"]},
 };
 async function openNewService(key){
   const cfg=NEW_SERVICE_RULES[key]; if(!cfg)return;
@@ -3225,7 +3274,13 @@ const SOCIAL_RULES={
   },
   Telegram:{
     "Group / Channel Members":{min:100,price:0,unit:"สมาชิก",label:"Group / Channel Members"}
-  }
+  },
+  WhatsApp:{Members:{min:100,price:0,unit:"สมาชิก",label:"Members"},"Account Services":{min:1,price:0,unit:"บริการ",label:"Account Services"}},
+  Shopee:{"Store Services":{min:1,price:0,unit:"บริการ",label:"Store Services"},"Product Services":{min:1,price:0,unit:"บริการ",label:"Product Services"}},
+  Spotify:{Followers:{min:100,price:0,unit:"คน",label:"Followers"},Plays:{min:1000,price:0,unit:"plays",label:"Plays"}},
+  Twitch:{Viewers:{min:100,price:0,unit:"ผู้ชม",label:"Viewers"},Followers:{min:100,price:0,unit:"คน",label:"Followers"}},
+  Threads:{Followers:{min:100,price:0,unit:"คน",label:"Followers"},Engagement:{min:100,price:0,unit:"engagement",label:"Engagement"}},
+  "Google Maps":{Reviews:{min:1,price:0,unit:"รีวิว",label:"Reviews"},Visibility:{min:100,price:0,unit:"ครั้ง",label:"Visibility"}},
 };
 let socialServices=[],selectedSocialService=null,socialPlatformCurrent="";
 async function loadSocialServices(platform){
@@ -3728,7 +3783,7 @@ document.addEventListener("DOMContentLoaded",()=>{
   document.addEventListener("click",(event)=>{
     const b=event.target.closest("button[data-action]"); if(!b)return;
     const a=b.dataset.action;
-    if(a==="login") login(); else if(a==="loginContinue") performLogin(); else if(a==="logout") logout(); else if(a==="goProducts") goProducts(); else if(a==="openSignupPopup") document.getElementById("signupPopup")?.classList.add("show"); else if(a==="signupContinue"){performSignup();} else if(a==="signupSuccessDone"){closeSignupSuccess();} else if(a==="loginSuccessDone"){closeLoginSuccess();} else if(a==="openTopup") openTopup(); else if(a==="openTransactions") openTransactions(); else if(a==="openOrders") openOrders(); else if(a==="openFreeRewards") openFreeRewards(); else if(a==="openTerms") document.getElementById("termsModal")?.classList.add("show"); else if(a==="openCart") openCart(); else if(a==="openWithdrawNotice") openWithdrawNotice(); else if(a==="openPopularPlatforms"){document.getElementById("popularPlatformsModal")?.classList.add("show");} else if(a==="openFlashSale"){openFlashSale();} else if(a==="selectFlashPackage"){selectFlashPackage(b);} else if(a==="flashSaleContact"){flashSaleContact();} else if(a==="openPopularService"){openPopularService(b.dataset.platform,b.dataset.service);} else if(a==="popularPrev"){popularPlatformsMove(-1);} else if(a==="popularNext"){popularPlatformsMove(1);} else if(a==="openWithdraw") openWithdraw(); else if(a==="vipOnly") alert("ฟังก์ชันนี้สำหรับสมาชิก VIP เท่านั้น"); else if(a==="addToCart") addToCart(b.dataset.name,Number(b.dataset.price)); else if(a==="removeFromCart") removeFromCart(Number(b.dataset.index)); else if(a==="clearCart") clearCart(); else if(a==="showSocial") showSocial(b.dataset.name); else if(a==="closeModal") closeModal(b.dataset.modal); else if(a==="createTopup") createTopup(); else if(a==="topupSuccessHistory"){closeTopupSuccess();openTransactions();} else if(a==="topupSuccessDone"){closeTopupSuccess();window.scrollTo({top:0,behavior:"smooth"});} else if(a==="topupErrorDone"){closeTopupError();} else if(a==="checkout") checkout(); else if(a==="placeSocialOrder") placeSocialOrder(); else if(a==="openAdminPanel") openAdminPanel(); else if(a==="refreshAdminPanel") refreshAdminPanel(); else if(a==="syncSmmCatalog") syncSmmCatalog();
+    if(a==="login") login(); else if(a==="loginContinue") performLogin(); else if(a==="logout") logout(); else if(a==="goProducts") goProducts(); else if(a==="openSignupPopup") document.getElementById("signupPopup")?.classList.add("show"); else if(a==="signupContinue"){performSignup();} else if(a==="signupSuccessDone"){closeSignupSuccess();} else if(a==="loginSuccessDone"){closeLoginSuccess();} else if(a==="openTopup") openTopup(); else if(a==="openTransactions") openTransactions(); else if(a==="openOrders") openOrders(); else if(a==="openFreeRewards") openFreeRewards(); else if(a==="openTerms") document.getElementById("termsModal")?.classList.add("show"); else if(a==="openCart") openCart(); else if(a==="openWithdrawNotice") openWithdrawNotice(); else if(a==="openPopularPlatforms"){document.getElementById("popularPlatformsModal")?.classList.add("show");} else if(a==="openNewService") openNewService(b.dataset.service); else if(a==="openFlashSale"){openFlashSale();} else if(a==="selectFlashPackage"){selectFlashPackage(b);} else if(a==="flashSaleContact"){flashSaleContact();} else if(a==="openPopularService"){openPopularService(b.dataset.platform,b.dataset.service);} else if(a==="popularPrev"){popularPlatformsMove(-1);} else if(a==="popularNext"){popularPlatformsMove(1);} else if(a==="openWithdraw") openWithdraw(); else if(a==="vipOnly") alert("ฟังก์ชันนี้สำหรับสมาชิก VIP เท่านั้น"); else if(a==="addToCart") addToCart(b.dataset.name,Number(b.dataset.price)); else if(a==="removeFromCart") removeFromCart(Number(b.dataset.index)); else if(a==="clearCart") clearCart(); else if(a==="showSocial") showSocial(b.dataset.name); else if(a==="closeModal") closeModal(b.dataset.modal); else if(a==="createTopup") createTopup(); else if(a==="topupSuccessHistory"){closeTopupSuccess();openTransactions();} else if(a==="topupSuccessDone"){closeTopupSuccess();window.scrollTo({top:0,behavior:"smooth"});} else if(a==="topupErrorDone"){closeTopupError();} else if(a==="checkout") checkout(); else if(a==="placeSocialOrder") placeSocialOrder(); else if(a==="openAdminPanel") openAdminPanel(); else if(a==="refreshAdminPanel") refreshAdminPanel(); else if(a==="syncSmmCatalog") syncSmmCatalog();
   });
 });</script>
 <script>
@@ -3916,6 +3971,18 @@ document.addEventListener("DOMContentLoaded",()=>{
     </div>
   </div>
 
+
+
+  <div class="modal" id="extraPlatformsModal" role="dialog" aria-modal="true">
+    <div class="modal-card prime-extra-modal">
+      <div class="prime-new-modal-head">
+        <div><h2 id="extraPlatformModalTitle">🌐 แพลตฟอร์ม</h2><p id="extraPlatformModalDesc">เลือกบริการที่ต้องการ</p></div>
+        <button class="popular-platform-close" type="button" data-action="closeModal" data-modal="extraPlatformsModal" aria-label="ปิด">×</button>
+      </div>
+      <div class="prime-extra-options" id="extraPlatformOptions"></div>
+      <div class="modal-actions"><button class="close-btn" type="button" data-action="closeModal" data-modal="extraPlatformsModal">ปิด</button></div>
+    </div>
+  </div>
 
   <div class="modal" id="newServicesModal" role="dialog" aria-modal="true">
     <div class="modal-card prime-new-modal">
