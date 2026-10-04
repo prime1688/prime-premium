@@ -3161,21 +3161,27 @@ async function openNewService(key){
   if(!modal||!box)return;
   title.textContent=cfg.title;
   desc.textContent=cfg.desc;
-  const checks=await Promise.all(cfg.platforms.map(async(platform,i)=>{
-    const serviceName=cfg.serviceNames[i]||cfg.serviceNames[0];
-    try{
-      const {data}=await supabaseClient.from("services").select("price,active,provider_service_id").eq("platform",platform).eq("name",serviceName).maybeSingle();
-      const ready=!!data && data.active===true && Number(data.price)>0 && Number(data.provider_service_id)>0;
-      return {platform,serviceName,ready};
-    }catch(e){return {platform,serviceName,ready:false};}
-  }));
-  box.innerHTML=checks.map(x=>'<button type="button" class="prime-new-option '+(x.ready?"":"service-closed")+'" '+(x.ready?"":"disabled")+' data-new-platform="'+x.platform+'" data-new-service="'+x.serviceName+'"><strong>'+x.platform+'</strong><span>'+x.serviceName+' • '+(x.ready?"พร้อมสั่งซื้อ":"ปิดปรับปรุง")+'</span></button>').join("");
-  box.querySelectorAll("[data-new-platform]:not(:disabled)").forEach(btn=>btn.addEventListener("click",async()=>{
-    const platform=btn.dataset.newPlatform,serviceName=btn.dataset.newService;
-    closeModal("newServicesModal");
-    await openSocialOrder(platform,serviceName);
-  }));
   modal.classList.add("show");
+  box.innerHTML='<div class="empty-state">กำลังตรวจสอบบริการ...</div>';
+
+  try{
+    const checks=await Promise.all(cfg.platforms.map(async(platform,i)=>{
+      const serviceName=cfg.serviceNames[i]||cfg.serviceNames[0];
+      try{
+        const {data}=await supabaseClient.from("services").select("price,active,provider_service_id").eq("platform",platform).eq("name",serviceName).maybeSingle();
+        const ready=!!data && data.active===true && Number(data.price)>0 && Number(data.provider_service_id)>0;
+        return {platform,serviceName,ready};
+      }catch(e){return {platform,serviceName,ready:false};}
+    }));
+    box.innerHTML=checks.map(x=>'<button type="button" class="prime-new-option '+(x.ready?"":"service-closed")+'" '+(x.ready?"":"disabled")+' data-new-platform="'+x.platform+'" data-new-service="'+x.serviceName+'"><strong>'+x.platform+'</strong><span>'+x.serviceName+' • '+(x.ready?"พร้อมสั่งซื้อ":"ปิดปรับปรุง")+'</span></button>').join("");
+    box.querySelectorAll("[data-new-platform]:not(:disabled)").forEach(btn=>btn.addEventListener("click",async()=>{
+      const platform=btn.dataset.newPlatform,serviceName=btn.dataset.newService;
+      closeModal("newServicesModal");
+      await openSocialOrder(platform,serviceName);
+    }));
+  }catch(e){
+    box.innerHTML='<div class="empty-state">ไม่สามารถตรวจสอบบริการได้ กรุณาลองใหม่</div>';
+  }
 }
 
 const SOCIAL_RULES={
