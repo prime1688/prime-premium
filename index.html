@@ -3120,7 +3120,7 @@ function adminStatusText(status){const m={pending:"รอดำเนินก�
 async function loadAdminDashboard(){
   const box=document.getElementById("adminDashboardContent"); if(!box)return;
   box.innerHTML='<div class="admin-grid"><div class="admin-stat"><span>สมาชิก</span><strong id="admMembers">-</strong></div><div class="admin-stat"><span>ออเดอร์ทั้งหมด</span><strong id="admOrders">-</strong></div><div class="admin-stat"><span>กำลังดำเนินการ</span><strong id="admProcessing">-</strong></div><div class="admin-stat"><span>สำเร็จแล้ว</span><strong id="admCompleted">-</strong></div></div><div class="admin-members-box"><div class="admin-section-title">👥 สมาชิกและยอดเงิน</div><div id="admMembersList" class="empty-state">กำลังโหลดสมาชิก...</div></div>';
-  const r=await Promise.race([supabaseClient.rpc("admin_members"),new Promise(resolve=>setTimeout(()=>resolve({error:{message:"หมดเวลา"}}),5000))]);
+  let r; try { r=await Promise.race([supabaseClient.rpc("admin_members"),new Promise(resolve=>setTimeout(()=>resolve({error:{message:"หมดเวลา"}}),4000))]); } catch(e) { r={error:{message:e?.message||"เกิดข้อผิดพลาด"}}; }
   const el=document.getElementById("admMembersList");
   if(!el)return;
   if(r.error){el.innerHTML='<div class="empty-state">โหลดสมาชิกไม่สำเร็จ: '+escapeHtml(r.error.message||"หมดเวลา")+'</div>';return;}
