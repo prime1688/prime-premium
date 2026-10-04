@@ -1229,6 +1229,100 @@ button.ok,button.ok *{
 .status-approved,.st-completed{color:#26823b !important;}
 .status-rejected,.st-failed,.st-cancelled{color:#c6283d !important;}
 
+
+/* REFERENCE-MATCH THEME — purple/white glossy, not pale lavender */
+:root{
+  --prime-purple:#6d18d9;
+  --prime-violet:#8a2be2;
+  --prime-bright:#b65cff;
+  --prime-lavender:#ead8ff;
+  --prime-white:#ffffff;
+  --prime-ink:#241044;
+}
+html,body{
+  background:
+    radial-gradient(circle at 50% -10%,rgba(182,92,255,.30),transparent 34%),
+    radial-gradient(circle at 0% 35%,rgba(138,43,226,.13),transparent 30%),
+    radial-gradient(circle at 100% 45%,rgba(182,92,255,.13),transparent 30%),
+    linear-gradient(180deg,#ffffff 0%,#fbf8ff 55%,#f5ecff 100%) !important;
+  color:var(--prime-ink) !important;
+}
+.header{
+  background:rgba(255,255,255,.94) !important;
+  border-bottom:1px solid #dfc7ff !important;
+  box-shadow:0 4px 22px rgba(109,24,217,.10) !important;
+}
+.logo span,h1 span,.section-title,.card h3,.modal-card h2,.social-modal-head h2{
+  color:var(--prime-purple) !important;
+}
+h1{
+  color:#2a1250 !important;
+  text-shadow:0 2px 14px rgba(138,43,226,.12) !important;
+}
+.badge,.service-tag{
+  background:linear-gradient(135deg,#fff,#f2e5ff) !important;
+  color:var(--prime-purple) !important;
+  border-color:#d4aaff !important;
+}
+.card,.modal-card,.account-box{
+  background:linear-gradient(145deg,#ffffff 0%,#fcf8ff 68%,#f4e8ff 100%) !important;
+  border:1px solid #d7b3ff !important;
+  box-shadow:
+    0 8px 25px rgba(109,24,217,.08),
+    inset 0 1px 0 rgba(255,255,255,.95) !important;
+}
+.card:hover{border-color:#a957ff !important;}
+.icon{
+  background:linear-gradient(145deg,#fdf8ff,#ead6ff) !important;
+  color:var(--prime-purple) !important;
+  border:1px solid #d0a1ff !important;
+  box-shadow:inset 0 0 18px rgba(182,92,255,.12) !important;
+}
+.primary,.buy,.topup-highlight,.line-link-highlight,.reward-claim,
+.auth-popup .auth-main,.withdraw-notice-done,.topup-error-home,
+.topup-success-done,.popular-platform-btn,.social-order-btn,
+.service-btn{
+  background:linear-gradient(135deg,#c06cff 0%,#8a2be2 48%,#6412c9 100%) !important;
+  color:#fff !important;
+  border-color:#d7a7ff !important;
+  box-shadow:0 7px 25px rgba(109,24,217,.25) !important;
+}
+.secondary,.nav-btn,.close-btn{
+  background:#fff !important;
+  color:#2a1250 !important;
+  border:1px solid #d7b3ff !important;
+}
+.price,.amount,.account-box strong,.topup-success-balance strong,
+.reward-progress strong,.topup-success-amount span{
+  color:#711bd8 !important;
+}
+.subtitle,.card p,.muted,.social-modal-head p,.reward-head p,
+.reward-progress span,.withdraw-notice-sub,.topup-success-time,
+.topup-error-desc{
+  color:#705d86 !important;
+}
+.modal{background:rgba(50,18,78,.45) !important;backdrop-filter:blur(8px) !important;}
+.modal-card input,.modal-card select,.modal-card textarea,.auth-popup input{
+  background:#fff !important;
+  color:#241044 !important;
+  border-color:#d8baff !important;
+}
+.modal-card input::placeholder,.modal-card textarea::placeholder{color:#9b89ad !important;}
+.quantity-control,.social-summary,.reward-calendar,.reward-progress{
+  background:#fff !important;
+  border-color:#dfc7ff !important;
+}
+.qty-btn{
+  background:linear-gradient(135deg,#b65cff,#7418d2) !important;
+  color:#fff !important;
+}
+.reward-day{background:#fff !important;border-color:#eadcff !important;}
+.reward-day.today{border-color:#9b4dff !important;box-shadow:0 0 14px rgba(155,77,255,.25) !important;}
+.reward-day.claimed{background:#efe0ff !important;border-color:#a957ff !important;}
+.status-pending,.st-pending{color:#9a6500 !important;}
+.status-approved,.st-completed{color:#27853d !important;}
+.status-rejected,.st-failed,.st-cancelled{color:#c6283d !important;}
+
 </style>
 </head>
 
