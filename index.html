@@ -1712,7 +1712,17 @@ async function placeSocialOrder(){
   const {data,error}=await supabaseClient.functions.invoke("submit-social-order",{
     body:{serviceId:selectedSocialService.id,providerServiceId,targetUrl:url,quantity:qty}
   });
-  if(error)return alert("สั่งซื้อไม่สำเร็จ: "+(error.message||"เกิดข้อผิดพลาด"));
+  if(error){
+    let msg=error.message||"เกิดข้อผิดพลาด";
+    try{
+      if(error.context){
+        const raw=await error.context.text();
+        const detail=JSON.parse(raw);
+        if(detail?.message)msg=detail.message;
+      }
+    }catch(e){}
+    return alert("สั่งซื้อไม่สำเร็จ: "+msg);
+  }
   if(!data?.success)return alert(data?.message||"สั่งซื้อไม่สำเร็จ");
   closeModal("socialOrderModal");
   recordLiveActivity("ordered","สั่งซื้อบริการ "+r.label+" จำนวน "+formatNumber(qty)+" "+r.unit);
