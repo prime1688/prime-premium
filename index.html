@@ -3119,24 +3119,28 @@ async function isPrimeAdmin(){
 function adminStatusText(status){const m={pending:"รอดำเนินการ",processing:"กำลังดำเนินการ",completed:"สำเร็จ",failed:"ล้มเหลว",cancelled:"ยกเลิก"};return m[status]||status||"-";}
 async function loadAdminDashboard(){
   const box=document.getElementById("adminDashboardContent"); if(!box)return;
-  box.innerHTML='<div class="admin-grid"><div class="admin-stat"><span>สมาชิก</span><strong id="admMembers">-</strong></div><div class="admin-stat"><span>ออเดอร์ทั้งหมด</span><strong id="admOrders">-</strong></div><div class="admin-stat"><span>กำลังดำเนินการ</span><strong id="admProcessing">-</strong></div><div class="admin-stat"><span>สำเร็จแล้ว</span><strong id="admCompleted">-</strong></div></div><div class="admin-members-box"><div class="admin-section-title">👥 สมาชิกและยอดเงิน</div><div id="admMembersList" class="empty-state">กำลังโหลด...</div></div>';
+  box.innerHTML='<div class="admin-grid"><div class="admin-stat"><span>สมาชิก</span><strong id="admMembers">-</strong></div><div class="admin-stat"><span>ออเดอร์ทั้งหมด</span><strong id="admOrders">-</strong></div><div class="admin-stat"><span>กำลังดำเนินการ</span><strong id="admProcessing">-</strong></div><div class="admin-stat"><span>สำเร็จแล้ว</span><strong id="admCompleted">-</strong></div></div><div class="admin-members-box"><div class="admin-section-title">👥 สมาชิกและยอดเงิน</div><div id="admMembersList" class="empty-state">กำลังโหลดสมาชิก...</div></div>';
   const set=(id,v)=>{const e=document.getElementById(id);if(e)e.textContent=v};
   const finish=(html)=>{const e=document.getElementById("admMembersList");if(e)e.innerHTML=html};
   try{
-    const r=await Promise.race([supabaseClient.rpc("get_admin_dashboard"),new Promise(resolve=>setTimeout(()=>resolve({error:{message:"หมดเวลา"}}),5000))]);
-    if(r.error){finish('<div class="empty-state">โหลดข้อมูลไม่สำเร็จ: '+escapeHtml(r.error.message||"หมดเวลา")+'</div>');return;}
-    const d=r.data||{};
-    set("admMembers",Number(d.members||0).toLocaleString("th-TH"));
-    set("admOrders",Number(d.orders||0).toLocaleString("th-TH"));
-    set("admProcessing",Number(d.processing||0).toLocaleString("th-TH"));
-    set("admCompleted",Number(d.completed||0).toLocaleString("th-TH"));
-    const members=Array.isArray(d.member_rows)?d.member_rows:[];
-    if(members.length){
-      finish('<div style="padding:12px 4px"><div class="admin-members-head"><span>เบอร์โทรศัพท์</span><span>ยอดเงิน</span><span>สมัครเมื่อ</span></div>'+members.map(m=>'<div class="admin-member-row"><strong>'+escapeHtml(m.phone||"-")+'</strong><strong>฿'+Number(m.credit||0).toLocaleString("th-TH",{minimumFractionDigits:2})+'</strong><span>'+ (m.created_at?new Date(m.created_at).toLocaleString("th-TH"):"-")+'</span></div>').join("")+'</div>');
-    }else{
-      finish('<div style="padding:18px;text-align:center">สมาชิกทั้งหมด <strong style="color:#6f20c9;font-size:24px">'+Number(d.members||0).toLocaleString("th-TH")+'</strong> คน</div><div class="empty-state" style="margin-top:8px">ยังไม่พบรายละเอียดสมาชิกจากฐานข้อมูล</div>');
+    const stats=await Promise.race([supabaseClient.rpc("admin_dashboard_stats"),new Promise(resolve=>setTimeout(()=>resolve({error:{message:"หมดเวลาโหลดสถิติ"}}),5000))]);
+    if(stats.data){
+      const d=stats.data;
+      set("admMembers",Number(d.members||0).toLocaleString("th-TH"));
+      set("admOrders",Number(d.orders||d.total_orders||0).toLocaleString("th-TH"));
+      set("admProcessing",Number(d.processing||d.processing_orders||0).toLocaleString("th-TH"));
+      set("admCompleted",Number(d.completed||d.completed_orders||0).toLocaleString("th-TH"));
     }
-  }catch(e){finish('<div class="empty-state">เกิดข้อผิดพลาด: '+escapeHtml(e.message||"ไม่สามารถโหลดข้อมูลได้")+'</div>');}
+  }catch(e){}
+  try{
+    const r=await Promise.race([supabaseClient.rpc("admin_members"),new Promise(resolve=>setTimeout(()=>resolve({error:{message:"หมดเวลาโหลดสมาชิก"}}),5000))]);
+    if(r.error){finish('<div class="empty-state" style="color:#b42318">โหลดสมาชิกไม่สำเร็จ: '+escapeHtml(r.error.message||"ไม่ทราบสาเหตุ")+'</div>');return;}
+    const rows=Array.isArray(r.data)?r.data:[];
+    if(!rows.length){finish('<div class="empty-state">ไม่พบสมาชิก</div>');return;}
+    finish('<div class="admin-members-head"><span>เบอร์โทรศัพท์</span><span>ยอดเงิน</span><span>สมัครเมื่อ</span></div>'+rows.map(m=>'<div class="admin-member-row"><strong>'+escapeHtml(m.phone||"-")+'</strong><strong>฿'+Number(m.credit||0).toLocaleString("th-TH",{minimumFractionDigits:2})+'</strong><span>'+ (m.created_at?new Date(m.created_at).toLocaleString("th-TH"):"-")+'</span></div>').join(""));
+  }catch(e){
+    finish('<div class="empty-state" style="color:#b42318">โหลดสมาชิกไม่สำเร็จ: '+escapeHtml(e?.message||"เกิดข้อผิดพลาด")+'</div>');
+  }
 }
 async function openAdminPanel(){
   const modal=document.getElementById("adminPanelModal");
