@@ -3119,13 +3119,19 @@ async function isPrimeAdmin(){
 function adminStatusText(status){const m={pending:"รอดำเนินการ",processing:"กำลังดำเนินการ",completed:"สำเร็จ",failed:"ล้มเหลว",cancelled:"ยกเลิก"};return m[status]||status||"-";}
 async function loadAdminDashboard(){
   const box=document.getElementById("adminDashboardContent"); if(!box)return;
-  box.innerHTML='<div class="admin-grid"><div class="admin-stat"><span>สมาชิก</span><strong id="admMembers">-</strong></div><div class="admin-stat"><span>ออเดอร์ทั้งหมด</span><strong id="admOrders">-</strong></div><div class="admin-stat"><span>กำลังดำเนินการ</span><strong id="admProcessing">-</strong></div><div class="admin-stat"><span>สำเร็จแล้ว</span><strong id="admCompleted">-</strong></div></div><div class="admin-members-box"><div class="admin-section-title">👥 สมาชิกและยอดเงิน</div><div id="admMembersList" class="empty-state">กำลังโหลดสมาชิก...</div></div>';
-  let r; try { r=await Promise.race([supabaseClient.rpc("admin_members"),new Promise(resolve=>setTimeout(()=>resolve({error:{message:"หมดเวลา"}}),4000))]); } catch(e) { r={error:{message:e?.message||"เกิดข้อผิดพลาด"}}; }
-  const el=document.getElementById("admMembersList");
-  if(!el)return;
-  if(r.error){el.innerHTML='<div class="empty-state">โหลดสมาชิกไม่สำเร็จ: '+escapeHtml(r.error.message||"หมดเวลา")+'</div>';return;}
-  const rows=Array.isArray(r.data)?r.data:[];
-  el.innerHTML=rows.length?'<div class="admin-members-head"><span>เบอร์โทรศัพท์</span><span>ยอดเงิน</span><span>สมัครเมื่อ</span></div>'+rows.map(m=>'<div class="admin-member-row"><strong>'+escapeHtml(m.phone||"-")+'</strong><strong>฿'+Number(m.credit||0).toFixed(2)+'</strong><span>'+ (m.created_at?new Date(m.created_at).toLocaleString("th-TH"):"-")+'</span></div>').join(""):'<div class="empty-state">ยังไม่มีสมาชิก</div>';
+  box.innerHTML='<div class="admin-grid"><div class="admin-stat"><span>สมาชิก</span><strong id="admMembers">-</strong></div><div class="admin-stat"><span>ออเดอร์ทั้งหมด</span><strong id="admOrders">-</strong></div><div class="admin-stat"><span>กำลังดำเนินการ</span><strong id="admProcessing">-</strong></div><div class="admin-stat"><span>สำเร็จแล้ว</span><strong id="admCompleted">-</strong></div></div><div class="admin-members-box"><div class="admin-section-title">👥 สมาชิกและยอดเงิน</div><div id="admMembersList" class="empty-state">กำลังโหลด...</div></div>';
+  const set=(id,v)=>{const e=document.getElementById(id);if(e)e.textContent=v};
+  const finish=(html)=>{const e=document.getElementById("admMembersList");if(e)e.innerHTML=html};
+  try{
+    const r=await Promise.race([supabaseClient.rpc("get_admin_dashboard"),new Promise(resolve=>setTimeout(()=>resolve({error:{message:"หมดเวลา"}}),5000))]);
+    if(r.error){finish('<div class="empty-state">โหลดข้อมูลไม่สำเร็จ: '+escapeHtml(r.error.message||"หมดเวลา")+'</div>');return;}
+    const d=r.data||{};
+    set("admMembers",Number(d.members||0).toLocaleString("th-TH"));
+    set("admOrders",Number(d.orders||0).toLocaleString("th-TH"));
+    set("admProcessing",Number(d.processing||0).toLocaleString("th-TH"));
+    set("admCompleted",Number(d.completed||0).toLocaleString("th-TH"));
+    finish('<div style="padding:18px;text-align:center">สมาชิกทั้งหมด <strong style="color:#6f20c9;font-size:24px">'+Number(d.members||0).toLocaleString("th-TH")+'</strong> คน</div><div class="empty-state" style="margin-top:8px">ระบบฐานข้อมูลยังไม่ได้ส่งรายละเอียดเบอร์โทรและยอดเงินรายคน</div>');
+  }catch(e){finish('<div class="empty-state">เกิดข้อผิดพลาด: '+escapeHtml(e.message||"ไม่สามารถโหลดข้อมูลได้")+'</div>');}
 }
 async function openAdminPanel(){
   const modal=document.getElementById("adminPanelModal");
