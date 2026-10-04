@@ -2416,15 +2416,17 @@ html,body{
 .prime-new-btn{
   width:100%;
   min-height:40px;
-  border:1px solid rgba(255,255,255,.95);
+  border:1px solid #dcb8ff;
   border-radius:12px;
-  background:linear-gradient(135deg,#c982ff,#9139ef 48%,#6512c5);
-  color:#fff;
+  background:linear-gradient(145deg,#ffffff 0%,#fcf8ff 55%,#f2e4ff 100%);
+  color:#35115f;
   font-weight:950;
   cursor:pointer;
-  box-shadow:0 6px 17px rgba(101,18,197,.25),inset 0 1px 1px rgba(255,255,255,.42);
+  box-shadow:0 6px 17px rgba(101,18,197,.12),inset 0 1px 1px rgba(255,255,255,.95);
 }
-.prime-new-btn:hover{transform:translateY(-1px);filter:saturate(1.05)}
+.prime-new-btn:hover{transform:translateY(-1px);filter:brightness(1.01);border-color:#b96cff}
+.prime-new-btn:active{transform:translateY(0)}
+.prime-new-btn:disabled{cursor:not-allowed;opacity:.65}
 .prime-new-modal{width:min(720px,100%)!important}
 .prime-new-modal-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:15px}
 .prime-new-modal-head h2{margin:0 0 5px}
