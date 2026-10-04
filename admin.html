@@ -1,5 +1,26 @@
 <!doctype html><html lang="th"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>PRIME Admin</title><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><style>
 body{margin:0;background:#09060d;color:#fff;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}.wrap{max-width:1100px;margin:auto;padding:20px}.card{background:#15101d;border:1px solid #35234a;border-radius:18px;padding:18px;margin:14px 0}.row{display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap}.title{color:#c879ff;font-size:28px;font-weight:900}.muted{color:#aaa}.err{color:#ff7777}.amount{font-size:22px;font-weight:900;color:#d78cff}.pill{padding:6px 10px;border-radius:99px;background:#2b1c35;color:#dca5ff}.login{max-width:430px;margin:80px auto}.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.stat{background:#100c14;border:1px solid #30203e;border-radius:14px;padding:14px}.stat small{color:#999}.stat strong{display:block;color:#d78cff;font-size:22px;margin-top:5px}.orders{max-height:55vh;overflow:auto}.order{padding:13px 0;border-bottom:1px solid #29202f}.order:last-child{border-bottom:0}.st-pending{color:#ffd166}.st-processing{color:#d09aff}.st-completed{color:#7ee787}.st-failed,.st-cancelled{color:#ff7777}button{border:0;border-radius:12px;padding:11px 16px;font-weight:800;cursor:pointer}.ok{background:#9d4edd;color:#fff}.no{background:#3a263f;color:#fff}@media(max-width:700px){.stats{grid-template-columns:repeat(2,1fr)}.wrap{padding:12px}.stat strong{font-size:19px}}
+
+/* PRIME PURPLE-WHITE VISUAL THEME — COLOR ONLY */
+html,body{background:
+  radial-gradient(circle at 15% 0%,rgba(197,138,255,.22),transparent 30%),
+  radial-gradient(circle at 85% 10%,rgba(155,77,255,.16),transparent 28%),
+  linear-gradient(180deg,#faf7ff 0%,#f1e8ff 52%,#fbf9ff 100%) !important;
+  color:#211044 !important;
+}
+.card,.stat{
+  background:linear-gradient(145deg,rgba(255,255,255,.96),rgba(244,235,255,.92)) !important;
+  border-color:#e1caff !important;
+  color:#211044 !important;
+  box-shadow:0 10px 28px rgba(111,34,217,.08) !important;
+}
+.title,.amount,.stat strong{color:#6f22d9 !important;}
+.muted,.stat small{color:#725f8e !important;}
+.pill{background:#eee0ff !important;color:#6f22d9 !important;}
+button.ok{background:linear-gradient(135deg,#a957ff,#6f22d9) !important;color:#fff !important;}
+button.no{background:linear-gradient(180deg,#fff,#f1e6ff) !important;color:#211044 !important;border:1px solid #e1caff !important;}
+.order{border-bottom-color:#eadcff !important;}
+
 </style></head><body><div class="wrap"><div class="row"><div class="title">PRIME ADMIN</div><button class="no" onclick="location.href='./'">กลับ PRIME</button></div><div id="app"><div class="card login"><h2>กำลังตรวจสอบสิทธิ์...</h2><div class="muted">หน้านี้เข้าได้เฉพาะบัญชีแอดมิน</div></div></div></div><script>
 const SUPABASE_URL="https://uxatabaoxbmgswcqrptq.supabase.co",SUPABASE_KEY="sb_publishable_WIFz-7unS6IQFspqOSoj_Q_BST2Hr4o";const sb=supabase.createClient(SUPABASE_URL,SUPABASE_KEY),app=document.getElementById("app");
 function esc(v){return String(v??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]))}
