@@ -3492,7 +3492,7 @@ async function loadSocialServices(platform){
     const min=Number(x.min_quantity||1),max=Number(x.max_quantity||0);
     const rate=Number(x.rate||0);
     const price=Number(x.selling_price??(rate*4));
-    return {...x,id:Number(x.provider_service_id),platform,rule:{
+    return {...x,id:Number(x.provider_service_id||x.id),platform,rule:{
       min,max,providerMin:min,providerMax:max,price,rate,
       refill:x.refill===true,cancel:x.cancel===true,maintenance:x.maintenance===true,
       label:String(x.name||"บริการ BEE-TH"),unit:"หน่วย"
