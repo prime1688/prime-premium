@@ -3172,6 +3172,25 @@ async function openAdminPanel(){
 }
 async function refreshAdminPanel(){await loadAdminDashboard();}
 
+async function syncBeeServices(){
+  const btn=document.getElementById("adminSyncBeeBtn");
+  const s=await getSession();
+  if(!s){alert("กรุณาเข้าสู่ระบบก่อน");return;}
+  if(btn){btn.disabled=true;btn.textContent="กำลังดึงบริการ BEE-TH...";}
+  try{
+    const {data,error}=await supabaseClient.functions.invoke("sync-bee-th-services",{body:{}});
+    if(error){
+      let msg=error.message||"ซิงก์บริการ BEE-TH ไม่สำเร็จ";
+      try{if(error.context){const t=await error.context.text();const j=JSON.parse(t);msg=j?.message||msg;}}catch(e){}
+      if(/เฉพาะผู้ดูแลระบบ|403|Forbidden/i.test(msg)){alert("บัญชีนี้ไม่มีสิทธิ์ผู้ดูแลระบบ");return;}
+      throw new Error(msg);
+    }
+    if(!data?.success)throw new Error(data?.message||"ซิงก์บริการ BEE-TH ไม่สำเร็จ");
+    alert("ซิงก์บริการ BEE-TH สำเร็จ\\nดึงบริการทั้งหมด "+Number(data.count||0)+" รายการ\\nบันทึกลง Supabase เรียบร้อยแล้ว");
+  }catch(e){alert(e?.message||"ซิงก์บริการ BEE-TH ไม่สำเร็จ");}
+  finally{if(btn){btn.disabled=false;btn.textContent="🐝 ซิงก์บริการ BEE-TH";}}
+}
+
 async function syncSmmCatalog(){
   const btn=document.getElementById("adminSyncSmmBtn");
   const s=await getSession();
@@ -4224,7 +4243,7 @@ document.addEventListener("click",(event)=>{
     <div class="modal-card admin-card">
       <div class="admin-head">
         <div><h2>🛡️ PRIME หลังบ้าน</h2><div class="admin-sub">เฉพาะบัญชีที่อยู่ในระบบผู้ดูแล admin_users</div></div>
-        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><button id="adminSyncSmmBtn" class="admin-refresh" type="button" data-action="syncSmmCatalog">🔄 ซิงก์บริการ SMMGo</button><button class="admin-refresh" type="button" data-action="refreshAdminPanel">↻ รีเฟรช</button></div>
+        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><button id="adminSyncSmmBtn" class="admin-refresh" type="button" data-action="syncSmmCatalog">🔄 ซิงก์บริการ SMMGo</button><button id="adminSyncBeeBtn" class="admin-refresh" type="button" data-action="syncBeeServices">🐝 ซิงก์บริการ BEE-TH</button><button class="admin-refresh" type="button" data-action="refreshAdminPanel">↻ รีเฟรช</button></div>
       </div>
       <div id="adminDashboardContent"></div>
       <div class="modal-actions"><button class="close-btn" data-action="closeModal" data-modal="adminPanelModal">ปิด</button></div>
