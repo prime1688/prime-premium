@@ -3525,22 +3525,24 @@ function socialFeatureChips(x){
 function renderSocialServices(){
   const el=document.getElementById("socialServiceCards");if(!el)return;
   el.innerHTML=socialServices.map(x=>{
-    const r=x.rule,selected=selectedSocialService?.id===x.id;
+    const r=x.rule||{},selected=selectedSocialService?.id===x.id;
     const active=x.active!==false,maintenance=x.maintenance===true;
-    const isOpen=active&&!maintenance&&Number(x.provider_service_id||0)>0;
+    const isOpen=active&&!maintenance&&Number(x.provider_service_id||x.id||0)>0;
     const status=maintenance?"🔴 ปิดปรับปรุง":(!active?"🟡 หมดชั่วคราว":"🟢 พร้อมใช้งาน");
     const button=isOpen?"🛒 เลือกบริการ":(maintenance?"ปิดปรับปรุง":"ยังไม่พร้อมสั่งซื้อ");
     const chips=socialFeatureChips(x).map(c=>"<span>"+c+"</span>").join("");
-    return '<button type="button" class="social-service-card '+(selected?"selected ":"")+(isOpen?"":"service-closed")+'" data-action="selectSocialService" data-service-id="'+x.id+'" aria-disabled="'+(!isOpen)+'" onclick="event.preventDefault();event.stopPropagation();selectSocialService(this.dataset.serviceId)">'+
+    const sid=String(x.id);
+    return '<div role="button" tabindex="'+(isOpen?"0":"-1")+'" class="social-service-card '+(selected?"selected ":"")+(isOpen?"":"service-closed")+'" data-action="selectSocialService" data-service-id="'+sid+'" data-service-open="'+isOpen+'" onclick="selectSocialService(this.getAttribute(\'data-service-id\'))" onkeydown="if(event.key===\'Enter\'||event.key===\' \'){event.preventDefault();selectSocialService(this.getAttribute(\'data-service-id\'))}">'+
       '<div class="ssc-top"><span class="ssc-icon">'+socialPlatformLogo(document.getElementById("socialPlatform")?.textContent||"")+'</span><strong class="ssc-title">'+socialShortName(x.name)+'</strong></div>'+
       '<div class="ssc-chips">'+chips+'</div>'+
       '<div class="ssc-price">฿'+formatNumber(r.price)+' <small>/ 1,000</small></div>'+
-      '<div class="ssc-meta"><span>ขั้นต่ำ '+formatNumber(r.min)+'</span><span>สูงสุด '+(r.max?formatNumber(r.max):"—")+'</span><span>เติมให้ '+(r.refill?"✅":"❌")+'</span><span>ยกเลิก '+(r.cancel?"✅":"❌")+'</span></div>'+
+      '<div class="ssc-meta"><span>ขั้นต่ำ '+formatNumber(r.min||1)+'</span><span>สูงสุด '+(r.max?formatNumber(r.max):"—")+'</span><span>เติมให้ '+(r.refill?"✅":"❌")+'</span><span>ยกเลิก '+(r.cancel?"✅":"❌")+'</span></div>'+
       '<div class="ssc-status '+(isOpen?"ready":maintenance?"maintenance":"temporary")+'">'+status+'</div>'+
       '<div class="ssc-action">'+button+'</div>'+
-      '</button>';
+      '</div>';
   }).join("");
-}function selectSocialService(serviceId){
+}
+function selectSocialService(serviceId){
   const id=String(serviceId||"");
   const service=socialServices.find(x=>String(x.id)===id)||null;
   if(!service){
