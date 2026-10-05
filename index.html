@@ -393,7 +393,15 @@
     html.modal-open,body.modal-open{
       overflow:hidden!important;
       overscroll-behavior:none!important;
-      touch-action:none!important;
+      touch-action:auto!important;
+    }
+    body.modal-open #socialOrderModal,
+    body.modal-open #socialOrderModal .modal-card{
+      touch-action:pan-y!important;
+    }
+    body.modal-open #socialServiceCards,
+    body.modal-open #socialServiceCards .social-service-card{
+      touch-action:manipulation!important;
     }
     body.modal-open{position:fixed!important;left:0;right:0;width:100%;}
     .modal {
