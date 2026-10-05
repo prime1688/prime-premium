@@ -3549,7 +3549,6 @@ async function openSocialOrder(platform,requestedService){
   renderSocialServices();updateSocialSummary();document.getElementById("socialOrderModal").classList.add("show");
 }
 async function placeSocialOrder(){
-  recordLiveActivity("ordering","กำลังสั่งซื้อบริการ "+(selectedSocialService?.rule?.label||"โซเชียล"));
   if(!selectedSocialService)return alert("กรุณาเลือกบริการ");
   if(selectedSocialService.active===false||selectedSocialService.maintenance===true)return alert("บริการนี้ปิดปรับปรุงชั่วคราว");
   const url=document.getElementById("socialTargetUrl").value.trim(),r=selectedSocialService.rule;
@@ -3563,16 +3562,30 @@ async function placeSocialOrder(){
   if(!/^https?:\/\//i.test(url))return alert("กรุณาใส่ลิงก์ที่ขึ้นต้นด้วย https:// หรือ http://");
   const expectedTotal=Number((qty*Number(r.price||0)/1000).toFixed(2));
   if(!Number.isFinite(expectedTotal)||expectedTotal<0)return alert("คำนวณยอดชำระไม่ถูกต้อง");
-  const {data,error}=await supabaseClient.functions.invoke("submit-bee-th-order",{body:{providerServiceId,quantity:qty,targetUrl:url}});
-  if(error){
-    let msg=error.message||"เกิดข้อผิดพลาด";
-    try{if(error.context){const raw=await error.context.text();const detail=JSON.parse(raw);if(detail?.message)msg=detail.message;}}catch(e){}
-    return alert("สั่งซื้อไม่สำเร็จ: "+msg);
+  const btn=document.querySelector('[data-action="placeSocialOrder"]');
+  if(btn?.disabled)return;
+  const oldText=btn?.innerHTML;
+  if(btn){btn.disabled=true;btn.innerHTML="<span>กำลังตรวจสอบและสั่งซื้อ...</span>";}
+  const clientRequestId=(crypto?.randomUUID?crypto.randomUUID():"prime-"+Date.now()+"-"+Math.random().toString(36).slice(2));
+  try{
+    recordLiveActivity("ordering","กำลังสั่งซื้อบริการ "+(r.label||"โซเชียล"));
+    const {data,error}=await supabaseClient.functions.invoke("submit-bee-th-order",{body:{providerServiceId,quantity:qty,targetUrl:url,clientRequestId}});
+    if(error){
+      let msg=error.message||"เกิดข้อผิดพลาด";
+      try{if(error.context){const raw=await error.context.text();const detail=JSON.parse(raw);if(detail?.message)msg=detail.message;}}catch(e){}
+      return alert("สั่งซื้อไม่สำเร็จ: "+msg);
+    }
+    if(data?.manual_review||data?.unknown){
+      return alert("BEE-TH ยังไม่ยืนยันคำสั่งซื้อ\nระบบยังไม่คืนเครดิตอัตโนมัติ และส่งรายการเข้า Manual Review แล้ว\nOrder ID: "+(data.order_id||"-"));
+    }
+    if(!data?.success)return alert(data?.message||"สั่งซื้อไม่สำเร็จ");
+    closeModal("socialOrderModal");
+    recordLiveActivity("ordered","สั่งซื้อบริการ "+r.label+" จำนวน "+formatNumber(qty)+" "+r.unit);
+    await updateLoginButton();
+    alert("สั่งซื้อสำเร็จ\n"+r.label+" "+formatNumber(qty)+" "+r.unit+"\nยอดที่หัก ฿"+formatNumber(Number(data.total??expectedTotal))+"\nเครดิตคงเหลือ ฿"+formatNumber(Number(data.credit??0))+"\nBEE-TH Order ID: "+(data.provider_order_id||"-"));
+  }finally{
+    if(btn){btn.disabled=false;btn.innerHTML=oldText||"สั่งซื้อ";}
   }
-  if(!data?.success)return alert(data?.message||"สั่งซื้อไม่สำเร็จ");
-  closeModal("socialOrderModal"); recordLiveActivity("ordered","สั่งซื้อบริการ "+r.label+" จำนวน "+formatNumber(qty)+" "+r.unit);
-  await updateLoginButton();
-  alert("สั่งซื้อสำเร็จ\n"+r.label+" "+formatNumber(qty)+" "+r.unit+"\nยอดที่หัก ฿"+formatNumber(Number(data.total??expectedTotal))+"\nเครดิตคงเหลือ ฿"+formatNumber(Number(data.credit??0)));
 }
 
 let topupSubmitting=false;
