@@ -3497,7 +3497,7 @@ function renderSocialServices(){
       "Cancel "+(r.cancel?"✓":"✕")
     ].join(" · ");
     return '<button type="button" class="social-service-card '+(selected?"selected ":"")+(isOpen?"":"service-closed")+'" data-service-id="'+x.id+'" '+(isOpen?"":"disabled")+'>'+
-      '<span class="ssc-icon">'+({Likes:"♥",Shares:"↗",Views:"◉",Followers:"●","Live Viewers":"🔴","Reach / Impressions":"📣","Profile Visits:"👤","Group / Channel Members":"👥"}[x.name]||"•")+'</span>'+
+      '<span class="ssc-icon">'+({Likes:"♥",Shares:"↗",Views:"◉",Followers:"●","Live Viewers":"🔴","Reach / Impressions":"📣",""Profile Visits":"👤","Group / Channel Members":"👥"}[x.name]||"•")+'</span>'+
       '<span class="ssc-info"><strong>'+r.label+'</strong><small>'+meta+'</small></span>'+
       (isOpen?'<span class="ssc-price">฿'+formatNumber(r.price)+'<small>/ 1,000</small></span>':'<span class="ssc-price ssc-closed-label">'+(x.maintenance?"ปิดปรับปรุง":"ปิดบริการ")+'</span>')+
       '<span class="ssc-check">'+(selected?"✓":"")+'</span>'+
@@ -3514,7 +3514,7 @@ function renderSocialServices(){
 function updateSocialSummary(){
   if(!selectedSocialService)return;const r=selectedSocialService.rule;
   const raw=Number(document.getElementById("socialQuantity").value)||r.min;
-  const q=Math.max(r.min,r.max?Math.min(r.max,raw):raw),safe=Math.ceil(q/r.min)*r.min,total=socialTotal(safe,r);
+  const q=Math.max(r.min,r.max?Math.min(r.max,raw):raw);let safe=Math.ceil(q/r.min)*r.min;if(r.max&&safe>r.max)safe=Math.floor(r.max/r.min)*r.min;const total=socialTotal(safe,r);
   document.getElementById("socialQuantity").value=safe;document.getElementById("socialUnitLabel").textContent=r.unit;
   document.getElementById("socialQtyLabel").textContent=formatNumber(safe)+" "+r.unit;
   document.getElementById("socialQtyLabel2").textContent=formatNumber(safe)+" "+r.unit;
