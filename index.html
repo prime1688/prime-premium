@@ -2619,7 +2619,7 @@ html,body{
 #socialServiceCards{position:relative!important;z-index:10000!important;pointer-events:auto!important}
 #socialServiceCards .social-service-card{position:relative!important;z-index:10001!important;pointer-events:auto!important;touch-action:manipulation!important}
 #socialServiceCards .social-service-card *{pointer-events:none!important}
-</style></head>
+\n/* DIRECT SERVICE BUTTON */\n#socialServiceCards .ssc-action{position:relative!important;z-index:100!important;pointer-events:auto!important;touch-action:manipulation!important;cursor:pointer!important;-webkit-appearance:none!important;appearance:none!important}\n</style></head>
 
 <body>
 
@@ -3545,7 +3545,7 @@ function renderSocialServices(){
       '<div class="ssc-price">฿'+formatNumber(r.price)+' <small>/ 1,000</small></div>'+
       '<div class="ssc-meta"><span>ขั้นต่ำ '+formatNumber(r.min||1)+'</span><span>สูงสุด '+(r.max?formatNumber(r.max):"—")+'</span><span>เติมให้ '+(r.refill?"✅":"❌")+'</span><span>ยกเลิก '+(r.cancel?"✅":"❌")+'</span></div>'+
       '<div class="ssc-status '+(isOpen?"ready":maintenance?"maintenance":"temporary")+'">'+status+'</div>'+
-      '<div class="ssc-action">'+button+'</div>'+
+      '<button type="button" class="ssc-action" '+(isOpen?'':'disabled')+' onclick="event.preventDefault();event.stopPropagation();selectSocialService(this.closest(\'.social-service-card\').getAttribute(\'data-service-id\'))">'+button+'</button>'+
       '</div>';
   }).join("");
 
