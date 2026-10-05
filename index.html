@@ -3557,7 +3557,7 @@ function selectSocialService(serviceId){
     console.error("[PRIME] selectSocialService: service not found",id);
     return;
   }
-  if(service.active===false||service.maintenance===true||Number(service.provider_service_id||0)<=0){
+  if(service.active===false||service.maintenance===true||Number(service.provider_service_id||service.id||0)<=0){
     console.warn("[PRIME] selectSocialService: service unavailable",service);
     return;
   }
