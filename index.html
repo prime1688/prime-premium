@@ -2619,7 +2619,16 @@ html,body{
 #socialServiceCards{position:relative!important;z-index:10000!important;pointer-events:auto!important}
 #socialServiceCards .social-service-card{position:relative!important;z-index:10001!important;pointer-events:auto!important;touch-action:manipulation!important}
 #socialServiceCards .social-service-card *{pointer-events:none!important}
-\n/* DIRECT SERVICE BUTTON */\n#socialServiceCards .ssc-action{position:relative!important;z-index:100!important;pointer-events:auto!important;touch-action:manipulation!important;cursor:pointer!important;-webkit-appearance:none!important;appearance:none!important}\n</style></head>
+\n/* DIRECT SERVICE BUTTON */\n#socialServiceCards .ssc-action{position:relative!important;z-index:100!important;pointer-events:auto!important;touch-action:manipulation!important;cursor:pointer!important;-webkit-appearance:none!important;appearance:none!important}\n
+/* PRIME SOCIAL ORDER UX */
+.social-order-card{display:flex!important;flex-direction:column!important;max-height:calc(100dvh - 24px)!important;overflow:hidden!important}
+.social-order-card .social-modal-head{flex:0 0 auto!important}
+.social-order-card .social-service-cards{flex:1 1 auto!important;min-height:120px!important;overflow-y:auto!important;overflow-x:hidden!important;overscroll-behavior:contain!important;-webkit-overflow-scrolling:touch!important;padding:2px 4px 12px!important}
+.social-order-card .social-order-controls{flex:0 0 auto!important;background:linear-gradient(180deg,rgba(255,255,255,.94),#fff 20%)!important;padding:10px 2px 0!important;border-top:1px solid rgba(174,92,255,.22)!important;box-shadow:0 -8px 20px rgba(92,28,170,.07)!important}
+.social-order-card .social-order-controls .social-summary{margin:10px 0!important}
+.social-order-card .social-order-controls .modal-actions{margin:10px 0 0!important;position:sticky!important;bottom:0!important;padding-bottom:max(2px,env(safe-area-inset-bottom))!important}
+@media(max-width:600px){.social-order-card{padding:14px!important}.social-order-card .social-service-cards{max-height:none!important}.social-order-card .social-order-controls{padding-top:8px!important}.social-order-card .social-order-controls .social-label{margin:7px 0 4px!important}.social-order-card .social-order-controls .social-summary{padding:10px!important}.social-order-card .social-order-controls .modal-actions button{min-height:48px!important}}
+</style></head>
 
 <body>
 
@@ -3532,7 +3541,18 @@ function socialFeatureChips(x){
 }
 function renderSocialServices(){
   const el=document.getElementById("socialServiceCards");if(!el)return;
-  el.innerHTML=socialServices.map(x=>{
+  const seen=new Set();
+  const visibleServices=socialServices.filter(x=>{
+    const name=String(x.name||"").toLowerCase()
+      .replace(/[^a-z0-9ก-๙]+/g," ")
+      .replace(/^(instagram|facebook|tiktok|youtube|twitter|x)\s*/,"")
+      .trim();
+    const key=name+"|"+Number(x.rule?.price||0)+"|"+Number(x.rule?.min||0)+"|"+Number(x.rule?.max||0);
+    if(seen.has(key))return false;
+    seen.add(key);
+    return true;
+  }).slice(0,8);
+  el.innerHTML=visibleServices.map(x=>{
     const r=x.rule||{},selected=selectedSocialService?.id===x.id;
     const active=x.active!==false,maintenance=x.maintenance===true;
     const isOpen=active&&!maintenance&&Number(x.provider_service_id||x.id||0)>0;
@@ -4752,21 +4772,23 @@ document.addEventListener("click",(event)=>{
         <button class="modal-x" data-action="closeModal" data-modal="socialOrderModal">×</button>
       </div>
       <div id="socialServiceCards" class="social-service-cards"></div>
-      <label class="social-label">ลิงก์โพสต์ / วิดีโอ / โปรไฟล์</label>
-      <input id="socialTargetUrl" type="url" placeholder="https://...">
-      <label class="social-label">จำนวน <span id="socialUnitLabel">หน่วย</span></label>
-      <div class="quantity-control">
-        <button type="button" id="socialMinus" class="qty-btn" onclick="changeSocialQuantity(-1)">−</button>
-        <div class="qty-number"><input id="socialQuantity" type="number" min="1" value="1" oninput="updateSocialSummary()"><span id="socialQtyLabel">1 หน่วย</span></div>
-        <button type="button" id="socialPlus" class="qty-btn" onclick="changeSocialQuantity(1)">+</button>
-      </div>
-      <div class="social-summary">
-        <div><span>จำนวนที่ได้รับ</span><strong id="socialQtyLabel2"></strong></div>
-        <div><span id="socialPriceEach">ราคา</span><strong id="socialTotal">฿0</strong></div>
-      </div>
-      <div class="modal-actions">
-        <button class="close-btn" data-action="closeModal" data-modal="socialOrderModal">ปิด</button>
-        <button class="primary" data-action="placeSocialOrder"><span id="socialBuyText">สั่งซื้อ</span></button>
+      <div class="social-order-controls">
+        <label class="social-label">ลิงก์โพสต์ / วิดีโอ / โปรไฟล์</label>
+        <input id="socialTargetUrl" type="url" placeholder="https://...">
+        <label class="social-label">จำนวน <span id="socialUnitLabel">หน่วย</span></label>
+        <div class="quantity-control">
+          <button type="button" id="socialMinus" class="qty-btn" onclick="changeSocialQuantity(-1)">−</button>
+          <div class="qty-number"><input id="socialQuantity" type="number" min="1" value="1" oninput="updateSocialSummary()"><span id="socialQtyLabel">1 หน่วย</span></div>
+          <button type="button" id="socialPlus" class="qty-btn" onclick="changeSocialQuantity(1)">+</button>
+        </div>
+        <div class="social-summary">
+          <div><span>จำนวนที่ได้รับ</span><strong id="socialQtyLabel2"></strong></div>
+          <div><span id="socialPriceEach">ราคา</span><strong id="socialTotal">฿0</strong></div>
+        </div>
+        <div class="modal-actions">
+          <button class="close-btn" data-action="closeModal" data-modal="socialOrderModal">ปิด</button>
+          <button class="primary" data-action="placeSocialOrder"><span id="socialBuyText">สั่งซื้อ</span></button>
+        </div>
       </div>
     </div>
   </div>
