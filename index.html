@@ -3451,7 +3451,7 @@ const SOCIAL_RULES={
 let socialServices=[],selectedSocialService=null,socialPlatformCurrent="";
 async function loadSocialServices(platform){
   if(!requireSupabase())return [];
-  const {data,error}=await supabaseClient.from("bee_th_services")
+  const {data,error}=await supabaseClient.from("bee_th_services_public")
     .select("id,provider_service_id,name,type,category,rate,selling_price,min_quantity,max_quantity,refill,cancel,active,maintenance,maintenance_reason")
     .order("provider_service_id");
   if(error){alert("โหลดบริการ BEE-TH ไม่สำเร็จ: "+error.message);return [];}
