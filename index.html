@@ -3624,7 +3624,13 @@ function selectServiceAndOpenCheckoutById(serviceId){
   if(desc)desc.textContent=(socialPlatformCurrent||"")+" · "+socialShortName(found.name);
   updateSocialSummary();
   const popup=document.getElementById("socialCheckoutPopup");
-  if(popup){popup.classList.add("show");popup.setAttribute("aria-hidden","false");}
+  if(!popup)return false;
+  // Keep the checkout popup outside the scrolling/overflow-hidden service modal.
+  // This prevents iOS Safari from clipping or swallowing the popup.
+  if(popup.parentElement!==document.body) document.body.appendChild(popup);
+  popup.classList.remove("show");
+  popup.setAttribute("aria-hidden","false");
+  requestAnimationFrame(()=>popup.classList.add("show"));
   return true;
 }
 
