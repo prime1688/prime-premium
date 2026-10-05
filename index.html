@@ -397,13 +397,13 @@
     }
     body.modal-open #socialOrderModal,
     body.modal-open #socialOrderModal .modal-card{
-      touch-action:pan-y!important;
+      touch-action:auto!important;
     }
     body.modal-open #socialServiceCards,
     body.modal-open #socialServiceCards .social-service-card{
-      touch-action:manipulation!important;
+      touch-action:auto!important;
     }
-    body.modal-open{position:fixed!important;left:0;right:0;width:100%;}
+    body.modal-open{width:100%;}
     .modal {
       display: none;
       position: fixed;
@@ -421,6 +421,7 @@
       -webkit-overflow-scrolling:touch;
     }
     .modal.show { display: flex; }
+    button, a, input, select, textarea, [data-action]{touch-action:manipulation;}
     .modal-card {
       width: min(440px,100%);
       background: #111;
@@ -4262,27 +4263,6 @@ function initModalScrollLock(){
   syncModalScrollLock();
 }
 document.addEventListener("DOMContentLoaded",initModalScrollLock);
-
-/* PRIME MOBILE TAP FIX — iOS/Safari: activate real buttons on touchend, while preserving vertical scrolling */
-(function initPrimeMobileTapFix(){
-  let sx=0,sy=0,st=0;
-  document.addEventListener("touchstart",e=>{
-    const t=e.touches?.[0];
-    if(!t)return;
-    sx=t.clientX; sy=t.clientY; st=Date.now();
-  },{capture:true,passive:true});
-  document.addEventListener("touchend",e=>{
-    const t=e.changedTouches?.[0];
-    if(!t)return;
-    const dx=Math.abs(t.clientX-sx),dy=Math.abs(t.clientY-sy);
-    if(dx>12||dy>12||Date.now()-st>1500)return;
-    const b=e.target?.closest?.("[data-action],button");
-    if(!b || b.disabled || b.getAttribute("aria-disabled")==="true")return;
-    e.preventDefault();
-    e.stopPropagation();
-    try{ b.click(); }catch(err){ console.error("[PRIME] mobile tap dispatch failed",err); }
-  },{capture:true,passive:false});
-})();
 
 document.addEventListener("click",(event)=>{
     const b=event.target.closest("[data-action]"); if(!b)return;
