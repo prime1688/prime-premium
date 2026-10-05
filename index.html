@@ -3580,9 +3580,31 @@ function renderSocialServices(){
   }).join("");
 
   updateSocialSummary();  document.querySelectorAll("#socialServiceCards .social-service-card").forEach(card=>{
-    card.setAttribute("aria-pressed",String(card.dataset.serviceId===id));
+    card.setAttribute("aria-pressed",String(Number(card.dataset.serviceId)===Number(selectedSocialService?.id)));
   });
   return true;
+}
+function selectServiceAndOpenCheckout(button){
+  const card=button?.closest(".social-service-card");
+  if(!card||card.dataset.serviceOpen!=="true") return;
+  const serviceId=Number(card.dataset.serviceId);
+  const found=socialServices.find(x=>Number(x.id)===serviceId);
+  if(!found) return alert("ไม่พบบริการนี้ กรุณารีเฟรชหน้าแล้วลองใหม่");
+  selectedSocialService=found;
+  const r=found.rule||{};
+  const q=document.getElementById("socialQuantity");
+  if(q){q.min=r.min||1;q.max=r.max||"";q.step=r.min||1;q.value=r.min||1;}
+  const title=document.getElementById("socialCheckoutTitle");
+  const desc=document.getElementById("socialCheckoutService");
+  if(title) title.textContent="สั่งซื้อบริการ";
+  if(desc) desc.textContent=(socialPlatformCurrent||"")+" · "+socialShortName(found.name);
+  updateSocialSummary();
+  const popup=document.getElementById("socialCheckoutPopup");
+  if(popup){popup.classList.add("show");popup.setAttribute("aria-hidden","false");}
+}
+function closeSocialCheckout(){
+  const popup=document.getElementById("socialCheckoutPopup");
+  if(popup){popup.classList.remove("show");popup.setAttribute("aria-hidden","true");}
 }
 function updateSocialSummary(){
   if(!selectedSocialService)return;const r=selectedSocialService.rule;
