@@ -3451,22 +3451,36 @@ const SOCIAL_RULES={
 let socialServices=[],selectedSocialService=null,socialPlatformCurrent="";
 async function loadSocialServices(platform){
   if(!requireSupabase())return [];
-  const {data,error}=await supabaseClient.from("services").select("id,name,platform,price,min_quantity,active,provider_service_id,provider_min_quantity,provider_max_quantity,provider_name").eq("platform",platform).order("id");
-  if(error){alert("โหลดบริการไม่สำเร็จ: "+error.message);return [];}
-  const rules=SOCIAL_RULES[platform]||{};
-  const rows=(data||[]).filter(x=>rules[x.name]);
-  const byName=new Map(rows.map(x=>[x.name,x]));
-  return Object.keys(rules).map((name,index)=>{
-    const x=byName.get(name)||{
-      id:-((Object.keys(rules).indexOf(name)+1)*1000+String(platform).length),
-      name,platform,price:0,min_quantity:rules[name].min||1,active:false,provider_service_id:null,
-      provider_min_quantity:null,provider_max_quantity:null,provider_name:null
-    };
-    const base=rules[name];
-    const primeMin=Number(x.min_quantity||base.min||1);
-    const providerMin=Number(x.provider_min_quantity||0);
-    const providerMax=Number(x.provider_max_quantity||0);
-    return {...x,rule:{...base,min:Math.max(primeMin,providerMin||0),price:Number(x.price||0),providerMin,providerMax}};
+  const {data,error}=await supabaseClient.from("bee_th_services")
+    .select("id,provider_service_id,name,type,category,rate,selling_price,min_quantity,max_quantity,refill,cancel,active,maintenance,maintenance_reason")
+    .order("provider_service_id");
+  if(error){alert("โหลดบริการ BEE-TH ไม่สำเร็จ: "+error.message);return [];}
+  const p=String(platform||"").toLowerCase();
+  const matchPlatform=(x)=>{
+    const t=(String(x.category||"")+" "+String(x.name||"")).toLowerCase();
+    if(p==="instagram")return /instagram|\big\b|reels|story/.test(t);
+    if(p==="tiktok")return /tiktok/.test(t);
+    if(p==="facebook")return /facebook/.test(t);
+    if(p==="youtube")return /youtube/.test(t);
+    if(p==="x")return /twitter|\bx\s*\//.test(t);
+    if(p==="telegram")return /telegram/.test(t);
+    if(p==="whatsapp")return /whatsapp/.test(t);
+    if(p==="shopee")return /shopee/.test(t);
+    if(p==="spotify")return /spotify/.test(t);
+    if(p==="twitch")return /twitch/.test(t);
+    if(p==="threads")return /threads/.test(t);
+    if(p==="google maps")return /google\s*maps/.test(t);
+    return t.includes(p);
+  };
+  return (data||[]).filter(matchPlatform).map(x=>{
+    const min=Number(x.min_quantity||1),max=Number(x.max_quantity||0);
+    const price=Number(x.selling_price??(Number(x.rate||0)*4));
+    const label=String(x.name||"บริการ BEE-TH");
+    return {...x,id:Number(x.provider_service_id),platform,rule:{
+      min, max, providerMin:min, providerMax:max, price, rate:Number(x.rate||0),
+      refill:x.refill===true,cancel:x.cancel===true,maintenance:x.maintenance===true,
+      label,unit:"หน่วย"
+    }};
   });
 }
 function formatNumber(n){return Number(n).toLocaleString("th-TH");}
