@@ -2605,6 +2605,10 @@ html,body{
 .prime-footer-copy{margin-top:13px;color:#806d91;font-size:11px}
 @media(max-width:850px){.prime-why-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.prime-final-cta{display:block}.prime-final-actions{justify-content:flex-start;margin-top:15px}}
 @media(max-width:600px){.prime-why{padding:17px;margin-top:18px}.prime-why-head h3{font-size:21px}.prime-why-head p{font-size:11px}.prime-why-grid{grid-template-columns:1fr 1fr;gap:8px}.prime-why-card{padding:10px;gap:7px}.prime-why-card>span{width:33px;height:33px;flex-basis:33px;font-size:17px}.prime-why-card b{font-size:11px}.prime-why-card small{font-size:9px}.prime-final-cta{padding:20px 17px;border-radius:19px}.prime-final-cta h3{font-size:21px}.prime-final-cta p{font-size:11px}.prime-final-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}.prime-final-btn{width:100%;padding:10px 8px;font-size:11px}.prime-footer{padding:25px 14px 30px!important}.prime-footer-brand{font-size:19px}}
+/* PRIME SERVICE BUTTON HARD FIX */
+#socialServiceCards{position:relative!important;z-index:10000!important;pointer-events:auto!important}
+#socialServiceCards .social-service-card{position:relative!important;z-index:10001!important;pointer-events:auto!important;touch-action:manipulation!important;-webkit-tap-highlight-color:transparent!important}
+#socialServiceCards .social-service-card *{pointer-events:none!important}
 </style>
 <style>.admin-members-box{margin:14px 0 18px;padding:14px;border:1px solid rgba(157,78,221,.25);border-radius:16px;background:rgba(255,255,255,.45)}.admin-section-title{font-size:18px;font-weight:900;margin-bottom:10px}.admin-section-title small{font-size:12px;color:#8b6b9e;font-weight:700}.admin-members-head,.admin-member-row{display:grid;grid-template-columns:1.2fr .8fr 1.1fr;gap:8px;align-items:center;padding:10px;border-bottom:1px solid rgba(157,78,221,.14)}.admin-members-head{font-size:12px;color:#80668f}.admin-member-row strong:nth-child(2){color:#6f20c9}.admin-member-row span{font-size:12px;color:#80668f}@media(max-width:600px){.admin-members-head,.admin-member-row{grid-template-columns:1fr 1fr}.admin-members-head span:last-child,.admin-member-row span:last-child{grid-column:1/-1}}</style></head>
 
@@ -3536,27 +3540,22 @@ function renderSocialServices(){
       '</button>';
   }).join("");
 }function selectSocialService(serviceId){
-  const id=String(serviceId||"");
+  const id=String(serviceId??"").trim();
   const service=socialServices.find(x=>String(x.id)===id)||null;
-  if(!service){
-    console.error("[PRIME] selectSocialService: service not found",id);
-    return;
-  }
-  if(service.active===false||service.maintenance===true||Number(service.provider_service_id||0)<=0){
-    console.warn("[PRIME] selectSocialService: service unavailable",service);
-    return;
+  console.log("[PRIME] SERVICE SELECT",{id,found:!!service});
+  if(!service){alert("ไม่พบบริการนี้ กรุณาโหลดบริการใหม่");return false;}
+  if(service.active===false||service.maintenance===true||Number(service.provider_service_id||service.id||0)<=0){
+    alert(service.maintenance===true?"บริการนี้ปิดปรับปรุงอยู่":"บริการนี้ยังไม่พร้อมสั่งซื้อ");
+    return false;
   }
   selectedSocialService=service;
-  const q=document.getElementById("socialQuantity"),r=service.rule;
-  if(q){
-    q.min=r.min;
-    q.max=r.max||"";
-    q.step=r.min;
-    q.value=r.min;
-  }
+  const q=document.getElementById("socialQuantity"),r=service.rule||{};
+  if(q){q.min=r.min||1;q.max=r.max||"";q.step=r.min||1;q.value=r.min||1;}
   renderSocialServices();
   updateSocialSummary();
+  return true;
 }
+
 function updateSocialSummary(){
   if(!selectedSocialService)return;const r=selectedSocialService.rule;
   const raw=Number(document.getElementById("socialQuantity").value)||r.min;
