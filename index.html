@@ -3526,7 +3526,7 @@ function renderSocialServices(){
     const status=maintenance?"🔴 ปิดปรับปรุง":(!active?"🟡 หมดชั่วคราว":"🟢 พร้อมใช้งาน");
     const button=isOpen?"🛒 เลือกบริการ":(maintenance?"ปิดปรับปรุง":"ยังไม่พร้อมสั่งซื้อ");
     const chips=socialFeatureChips(x).map(c=>"<span>"+c+"</span>").join("");
-    return '<button type="button" class="social-service-card '+(selected?"selected ":"")+(isOpen?"":"service-closed")+'" data-action="selectSocialService" data-service-id="'+x.id+'" aria-disabled="'+(!isOpen)+'">'+
+    return '<button type="button" class="social-service-card '+(selected?"selected ":"")+(isOpen?"":"service-closed")+'" data-action="selectSocialService" data-service-id="'+x.id+'" aria-disabled="'+(!isOpen)+'" onclick="event.preventDefault();event.stopPropagation();selectSocialService(this.dataset.serviceId)">'+
       '<div class="ssc-top"><span class="ssc-icon">'+socialPlatformLogo(document.getElementById("socialPlatform")?.textContent||"")+'</span><strong class="ssc-title">'+socialShortName(x.name)+'</strong></div>'+
       '<div class="ssc-chips">'+chips+'</div>'+
       '<div class="ssc-price">฿'+formatNumber(r.price)+' <small>/ 1,000</small></div>'+
