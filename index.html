@@ -3665,6 +3665,27 @@ window.PRIME_ORDER_DEBUG={
   last:()=>PRIME_ORDER_TRACE.slice(-1)[0]||null
 };
 
+let primeSocialOrderConfirmBusy=false;
+function confirmSocialOrder(){
+  if(primeSocialOrderConfirmBusy)return false;
+  if(!selectedSocialService)return false;
+  const r=selectedSocialService.rule||{};
+  const q=Number(document.getElementById("socialQuantity")?.value)||r.min||1;
+  const total=Number((q*Number(r.price||0)/1000).toFixed(2));
+  const name=socialShortName(selectedSocialService.name);
+  const ok=window.confirm("ยืนยันการสั่งซื้อ?\n\n"+name+"\nจำนวน "+formatNumber(q)+" "+(r.unit||"หน่วย")+"\nราคา ฿"+formatNumber(total)+"\n\nกด OK เพื่อยืนยันการสั่งซื้อ");
+  if(!ok)return false;
+  primeSocialOrderConfirmBusy=true;
+  const btn=document.querySelector('#socialCheckoutPopup [data-action="placeSocialOrder"]');
+  if(btn){btn.disabled=true;btn.dataset.confirmed="true";}
+  Promise.resolve(placeSocialOrder()).finally(()=>{
+    setTimeout(()=>{
+      primeSocialOrderConfirmBusy=false;
+      if(btn){btn.disabled=false;delete btn.dataset.confirmed;}
+    },700);
+  });
+  return true;
+}
 async function placeSocialOrder(){
   primeOrderLog("1. ORDER BUTTON CLICK");
 
@@ -4297,23 +4318,32 @@ document.addEventListener("DOMContentLoaded",initModalScrollLock);
 document.addEventListener("click",(event)=>{
     const b=event.target.closest("[data-action]"); if(!b)return;
     const a=b.dataset.action;
-    if(a==="login") login(); else if(a==="loginContinue") performLogin(); else if(a==="logout") logout(); else if(a==="goProducts") goProducts(); else if(a==="openSignupPopup") document.getElementById("signupPopup")?.classList.add("show"); else if(a==="signupContinue"){performSignup();} else if(a==="signupSuccessDone"){closeSignupSuccess();} else if(a==="loginSuccessDone"){closeLoginSuccess();} else if(a==="openTopup") openTopup(); else if(a==="openTransactions") openTransactions(); else if(a==="openOrders") openOrders(); else if(a==="openFreeRewards") openFreeRewards(); else if(a==="openTerms") document.getElementById("termsModal")?.classList.add("show"); else if(a==="openCart") openCart(); else if(a==="openWithdrawNotice") openWithdrawNotice(); else if(a==="openPopularPlatforms"){document.getElementById("popularPlatformsModal")?.classList.add("show");} else if(a==="openNewService") openNewService(b.dataset.service); else if(a==="openFlashSale"){openFlashSale();} else if(a==="selectFlashPackage"){selectFlashPackage(b);} else if(a==="flashSaleContact"){flashSaleContact();} else if(a==="openPopularService"){openPopularService(b.dataset.platform,b.dataset.service);} else if(a==="popularPrev"){popularPlatformsMove(-1);} else if(a==="popularNext"){popularPlatformsMove(1);} else if(a==="openWithdraw") openWithdraw(); else if(a==="vipOnly") alert("ฟังก์ชันนี้สำหรับสมาชิก VIP เท่านั้น"); else if(a==="addToCart") addToCart(b.dataset.name,Number(b.dataset.price)); else if(a==="removeFromCart") removeFromCart(Number(b.dataset.index)); else if(a==="clearCart") clearCart(); else if(a==="showSocial") showSocial(b.dataset.name); else if(a==="selectSocialService") selectServiceAndOpenCheckoutById(b.dataset.serviceId); else if(a==="closeModal") closeModal(b.dataset.modal); else if(a==="createTopup") createTopup(); else if(a==="topupSuccessHistory"){closeTopupSuccess();openTransactions();} else if(a==="topupSuccessDone"){closeTopupSuccess();window.scrollTo({top:0,behavior:"smooth"});} else if(a==="topupErrorDone"){closeTopupError();} else if(a==="checkout") checkout(); else if(a==="placeSocialOrder") placeSocialOrder(); else if(a==="openAdminPanel") openAdminPanel(); else if(a==="refreshAdminPanel") refreshAdminPanel(); else if(a==="syncSmmCatalog") syncSmmCatalog(); else if(a==="syncBeeServices") syncBeeServices();
+    if(a==="login") login(); else if(a==="loginContinue") performLogin(); else if(a==="logout") logout(); else if(a==="goProducts") goProducts(); else if(a==="openSignupPopup") document.getElementById("signupPopup")?.classList.add("show"); else if(a==="signupContinue"){performSignup();} else if(a==="signupSuccessDone"){closeSignupSuccess();} else if(a==="loginSuccessDone"){closeLoginSuccess();} else if(a==="openTopup") openTopup(); else if(a==="openTransactions") openTransactions(); else if(a==="openOrders") openOrders(); else if(a==="openFreeRewards") openFreeRewards(); else if(a==="openTerms") document.getElementById("termsModal")?.classList.add("show"); else if(a==="openCart") openCart(); else if(a==="openWithdrawNotice") openWithdrawNotice(); else if(a==="openPopularPlatforms"){document.getElementById("popularPlatformsModal")?.classList.add("show");} else if(a==="openNewService") openNewService(b.dataset.service); else if(a==="openFlashSale"){openFlashSale();} else if(a==="selectFlashPackage"){selectFlashPackage(b);} else if(a==="flashSaleContact"){flashSaleContact();} else if(a==="openPopularService"){openPopularService(b.dataset.platform,b.dataset.service);} else if(a==="popularPrev"){popularPlatformsMove(-1);} else if(a==="popularNext"){popularPlatformsMove(1);} else if(a==="openWithdraw") openWithdraw(); else if(a==="vipOnly") alert("ฟังก์ชันนี้สำหรับสมาชิก VIP เท่านั้น"); else if(a==="addToCart") addToCart(b.dataset.name,Number(b.dataset.price)); else if(a==="removeFromCart") removeFromCart(Number(b.dataset.index)); else if(a==="clearCart") clearCart(); else if(a==="showSocial") showSocial(b.dataset.name); else if(a==="selectSocialService") selectServiceAndOpenCheckoutById(b.dataset.serviceId); else if(a==="closeModal") closeModal(b.dataset.modal); else if(a==="createTopup") createTopup(); else if(a==="topupSuccessHistory"){closeTopupSuccess();openTransactions();} else if(a==="topupSuccessDone"){closeTopupSuccess();window.scrollTo({top:0,behavior:"smooth"});} else if(a==="topupErrorDone"){closeTopupError();} else if(a==="checkout") checkout(); else if(a==="confirmSocialOrder") confirmSocialOrder(); else if(a==="openAdminPanel") openAdminPanel(); else if(a==="refreshAdminPanel") refreshAdminPanel(); else if(a==="syncSmmCatalog") syncSmmCatalog(); else if(a==="syncBeeServices") syncBeeServices();
   });
 
 /* Stable mobile tap handling for PRIME SOCIAL service buttons */
 (function initStableSocialServiceTap(){
-  let lastTapId=0,lastTapAt=0;
-  document.addEventListener("pointerup",(event)=>{
-    const btn=event.target.closest("#socialServiceCards .ssc-action");
+  let down=null,lastTapId=0,lastTapAt=0;
+  const zone=document.getElementById("socialServiceCards");
+  if(!zone)return;
+  zone.addEventListener("pointerdown",(event)=>{
+    const btn=event.target.closest(".ssc-action");
     if(!btn||btn.disabled)return;
-    const id=Number(btn.dataset.serviceId||0), now=Date.now();
-    if(!id)return;
-    if(id===lastTapId&&now-lastTapAt<500)return;
+    down={btn,x:event.clientX,y:event.clientY,time:Date.now(),pointerId:event.pointerId};
+  },{passive:true});
+  zone.addEventListener("pointerup",(event)=>{
+    if(!down)return;
+    const d=down;down=null;
+    const moved=Math.hypot(event.clientX-d.x,event.clientY-d.y);
+    if(d.pointerId!==event.pointerId||moved>12||Date.now()-d.time>1200)return;
+    const id=Number(d.btn.dataset.serviceId||0),now=Date.now();
+    if(!id||id===lastTapId&&now-lastTapAt<500)return;
     lastTapId=id;lastTapAt=now;
     event.preventDefault();
     event.stopPropagation();
     selectServiceAndOpenCheckoutById(id);
   },{passive:false});
+  zone.addEventListener("pointercancel",()=>{down=null;},{passive:true});
 })();
  
 /* =========================================================
@@ -4331,7 +4361,7 @@ document.addEventListener("click",(event)=>{
     "openPopularService","popularPrev","popularNext","openWithdraw","vipOnly",
     "addToCart","removeFromCart","clearCart","showSocial","selectSocialService",
     "closeModal","createTopup","topupSuccessHistory","topupSuccessDone","topupErrorDone",
-    "checkout","placeSocialOrder","openAdminPanel","refreshAdminPanel",
+    "checkout","placeSocialOrder","confirmSocialOrder","openAdminPanel","refreshAdminPanel",
     "syncSmmCatalog","syncBeeServices"
   ]);
 
@@ -4812,7 +4842,7 @@ document.addEventListener("click",(event)=>{
           </div>
           <div class="modal-actions">
             <button class="close-btn" type="button" onclick="closeSocialCheckout()">ยกเลิก</button>
-            <button class="primary" type="button" data-action="placeSocialOrder"><span id="socialBuyText">สั่งซื้อ</span></button>
+            <button class="primary" type="button" data-action="confirmSocialOrder"><span id="socialBuyText">สั่งซื้อ</span></button>
           </div>
         </div>
       </div>
