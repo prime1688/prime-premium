@@ -3579,6 +3579,7 @@ function renderSocialServices(){
   }).join("");
 
   const choose=(card,e)=>{
+    if(e?.target?.closest?.(".ssc-action"))return;
     if(e){e.preventDefault();e.stopPropagation();}
     if(card.dataset.serviceOpen!=="true")return;
     const now=Date.now();
