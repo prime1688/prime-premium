@@ -3458,18 +3458,18 @@ async function loadSocialServices(platform){
   const p=String(platform||"").toLowerCase();
   const matchPlatform=(x)=>{
     const t=(String(x.category||"")+" "+String(x.name||"")).toLowerCase();
-    if(p==="instagram")return /instagram|\\big\\b|reels|story/.test(t);
+    if(p==="instagram")return /instagram|\big\b|reels|story/.test(t);
     if(p==="tiktok")return /tiktok/.test(t);
     if(p==="facebook")return /facebook/.test(t);
     if(p==="youtube")return /youtube/.test(t);
-    if(p==="x")return /twitter|\\bx\\s*\\//.test(t);
+    if(p==="x")return /twitter|\bx\s*\//.test(t);
     if(p==="telegram")return /telegram/.test(t);
     if(p==="whatsapp")return /whatsapp/.test(t);
     if(p==="shopee")return /shopee/.test(t);
     if(p==="spotify")return /spotify/.test(t);
     if(p==="twitch")return /twitch/.test(t);
     if(p==="threads")return /threads/.test(t);
-    if(p==="google maps")return /google\\s*maps/.test(t);
+    if(p==="google maps")return /google\s*maps/.test(t);
     return t.includes(p);
   };
   return (data||[]).filter(matchPlatform).map(x=>{
@@ -3497,7 +3497,7 @@ function renderSocialServices(){
       "Cancel "+(r.cancel?"✓":"✕")
     ].join(" · ");
     return '<button type="button" class="social-service-card '+(selected?"selected ":"")+(isOpen?"":"service-closed")+'" data-service-id="'+x.id+'" '+(isOpen?"":"disabled")+'>'+
-      '<span class="ssc-icon">'+({Likes:"♥",Shares:"↗",Views:"◉",Followers:"●","Live Viewers":"🔴","Reach / Impressions":"📣",""Profile Visits":"👤","Group / Channel Members":"👥"}[x.name]||"•")+'</span>'+
+      '<span class="ssc-icon">'+({Likes:"♥",Shares:"↗",Views:"◉",Followers:"●","Live Viewers":"🔴","Reach / Impressions":"📣","Profile Visits":"👤","Group / Channel Members":"👥"}[x.name]||"•")+'</span>'+
       '<span class="ssc-info"><strong>'+r.label+'</strong><small>'+meta+'</small></span>'+
       (isOpen?'<span class="ssc-price">฿'+formatNumber(r.price)+'<small>/ 1,000</small></span>':'<span class="ssc-price ssc-closed-label">'+(x.maintenance?"ปิดปรับปรุง":"ปิดบริการ")+'</span>')+
       '<span class="ssc-check">'+(selected?"✓":"")+'</span>'+
