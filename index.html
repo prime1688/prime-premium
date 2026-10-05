@@ -3591,43 +3591,250 @@ async function openSocialOrder(platform,requestedService){
   q.min=r.min;q.step=r.min;q.value=r.min;
   renderSocialServices();updateSocialSummary();document.getElementById("socialOrderModal").classList.add("show");
 }
+const PRIME_ORDER_DEBUG=true;
+const PRIME_ORDER_TRACE=[];
+
+function primeOrderLog(step,data=null,level="log"){
+  const row={time:new Date().toISOString(),step,data};
+  PRIME_ORDER_TRACE.push(row);
+  if(PRIME_ORDER_TRACE.length>200)PRIME_ORDER_TRACE.shift();
+  const fn=console[level]||console.log;
+  fn.call(console,"%c[PRIME ORDER] "+step,"color:#7c3aed;font-weight:900",data??"");
+}
+
+window.PRIME_ORDER_DEBUG={
+  trace:()=>PRIME_ORDER_TRACE.slice(),
+  clear:()=>{PRIME_ORDER_TRACE.length=0;},
+  last:()=>PRIME_ORDER_TRACE.slice(-1)[0]||null
+};
+
 async function placeSocialOrder(){
-  if(!selectedSocialService)return alert("กรุณาเลือกบริการ");
-  if(selectedSocialService.active===false||selectedSocialService.maintenance===true)return alert("บริการนี้ปิดปรับปรุงชั่วคราว");
-  const url=document.getElementById("socialTargetUrl").value.trim(),r=selectedSocialService.rule;
-  const rawQty=Number(document.getElementById("socialQuantity").value)||r.min;
+  primeOrderLog("1. ORDER BUTTON CLICK");
+
+  if(!selectedSocialService){
+    primeOrderLog("2. VALIDATION FAILED",{reason:"NO_SELECTED_SERVICE"},"error");
+    return alert("กรุณาเลือกบริการ");
+  }
+
+  primeOrderLog("2. SELECTED SERVICE",{
+    id:selectedSocialService.id,
+    provider_service_id:selectedSocialService.provider_service_id,
+    name:selectedSocialService.name,
+    active:selectedSocialService.active,
+    maintenance:selectedSocialService.maintenance,
+    rule:selectedSocialService.rule
+  });
+
+  if(selectedSocialService.active===false||selectedSocialService.maintenance===true){
+    primeOrderLog("3. VALIDATION FAILED",{reason:"SERVICE_UNAVAILABLE"},"warn");
+    return alert("บริการนี้ปิดปรับปรุงชั่วคราว");
+  }
+
+  const urlEl=document.getElementById("socialTargetUrl");
+  const qtyEl=document.getElementById("socialQuantity");
+  const url=String(urlEl?.value||"").trim();
+  const r=selectedSocialService.rule||{};
+  const rawQty=Number(qtyEl?.value)||r.min;
   const qty=Math.ceil(rawQty/r.min)*r.min;
   const providerServiceId=Number(selectedSocialService.provider_service_id||selectedSocialService.id||0);
-  if(!providerServiceId)return alert("ไม่พบ BEE-TH Service ID");
-  if(r.providerMin&&qty<r.providerMin)return alert("BEE-TH กำหนดขั้นต่ำ "+formatNumber(r.providerMin)+" "+r.unit);
-  if(r.providerMax&&qty>r.providerMax)return alert("BEE-TH กำหนดสูงสุด "+formatNumber(r.providerMax)+" "+r.unit);
-  if(!url)return alert("กรุณาใส่ลิงก์เป้าหมาย");
-  if(!/^https?:\/\//i.test(url))return alert("กรุณาใส่ลิงก์ที่ขึ้นต้นด้วย https:// หรือ http://");
+
+  primeOrderLog("3. FORM DATA",{
+    service_id:selectedSocialService.id,
+    provider_service_id:providerServiceId,
+    service_name:selectedSocialService.name,
+    target_url:url,
+    raw_quantity:rawQty,
+    normalized_quantity:qty,
+    min:r.min,
+    max:r.max||null,
+    price_per_1000:Number(r.price||0),
+    unit:r.unit
+  });
+
+  if(!providerServiceId){
+    primeOrderLog("4. VALIDATION FAILED",{reason:"MISSING_PROVIDER_SERVICE_ID"},"error");
+    return alert("ไม่พบ BEE-TH Service ID");
+  }
+  if(r.providerMin&&qty<r.providerMin){
+    primeOrderLog("4. VALIDATION FAILED",{reason:"BELOW_PROVIDER_MIN",qty,providerMin:r.providerMin},"error");
+    return alert("BEE-TH กำหนดขั้นต่ำ "+formatNumber(r.providerMin)+" "+r.unit);
+  }
+  if(r.providerMax&&qty>r.providerMax){
+    primeOrderLog("4. VALIDATION FAILED",{reason:"ABOVE_PROVIDER_MAX",qty,providerMax:r.providerMax},"error");
+    return alert("BEE-TH กำหนดสูงสุด "+formatNumber(r.providerMax)+" "+r.unit);
+  }
+  if(!url){
+    primeOrderLog("4. VALIDATION FAILED",{reason:"EMPTY_TARGET_URL"},"error");
+    return alert("กรุณาใส่ลิงก์เป้าหมาย");
+  }
+  if(!/^https?:\/\//i.test(url)){
+    primeOrderLog("4. VALIDATION FAILED",{reason:"INVALID_TARGET_URL"},"error");
+    return alert("กรุณาใส่ลิงก์ที่ขึ้นต้นด้วย https:// หรือ http://");
+  }
+
   const expectedTotal=Number((qty*Number(r.price||0)/1000).toFixed(2));
-  if(!Number.isFinite(expectedTotal)||expectedTotal<0)return alert("คำนวณยอดชำระไม่ถูกต้อง");
+  if(!Number.isFinite(expectedTotal)||expectedTotal<0){
+    primeOrderLog("4. VALIDATION FAILED",{reason:"INVALID_TOTAL",expectedTotal},"error");
+    return alert("คำนวณยอดชำระไม่ถูกต้อง");
+  }
+
   const btn=document.querySelector('[data-action="placeSocialOrder"]');
-  if(btn?.disabled)return;
+  if(btn?.disabled){
+    primeOrderLog("5. ORDER BLOCKED",{reason:"BUTTON_ALREADY_DISABLED"},"warn");
+    return;
+  }
+
   const oldText=btn?.innerHTML;
   if(btn){btn.disabled=true;btn.innerHTML="<span>กำลังตรวจสอบและสั่งซื้อ...</span>";}
+
   const clientRequestId=(crypto?.randomUUID?crypto.randomUUID():"prime-"+Date.now()+"-"+Math.random().toString(36).slice(2));
+
+  const orderData={
+    providerServiceId,
+    quantity:qty,
+    targetUrl:url,
+    clientRequestId
+  };
+
+  primeOrderLog("6. ORDER DATA READY",{
+    ...orderData,
+    service_id:selectedSocialService.id,
+    service_name:selectedSocialService.name,
+    expectedTotal
+  });
+
   try{
+    const session=await getSession();
+    primeOrderLog("7. SESSION CHECK",{
+      authenticated:!!session,
+      user_id:session?.user?.id||null
+    });
+
+    if(!session){
+      primeOrderLog("7. REQUEST ABORTED",{reason:"NO_SESSION"},"error");
+      return alert("กรุณาเข้าสู่ระบบก่อนสั่งซื้อ");
+    }
+
     recordLiveActivity("ordering","กำลังสั่งซื้อบริการ "+(r.label||"โซเชียล"));
-    const {data,error}=await supabaseClient.functions.invoke("submit-bee-th-order",{body:{providerServiceId,quantity:qty,targetUrl:url,clientRequestId}});
+
+    primeOrderLog("8. SUPABASE FUNCTION REQUEST",{
+      function:"submit-bee-th-order",
+      body:orderData
+    });
+
+    const requestStarted=performance.now();
+    let response;
+
+    try{
+      response=await supabaseClient.functions.invoke("submit-bee-th-order",{body:orderData});
+    }catch(invokeError){
+      const elapsed=Math.round(performance.now()-requestStarted);
+      primeOrderLog("9. SUPABASE INVOKE EXCEPTION",{
+        elapsed_ms:elapsed,
+        name:invokeError?.name,
+        message:invokeError?.message,
+        stack:invokeError?.stack
+      },"error");
+      throw invokeError;
+    }
+
+    const {data,error}=response;
+    const elapsed=Math.round(performance.now()-requestStarted);
+
+    primeOrderLog("9. SUPABASE RESPONSE",{
+      elapsed_ms:elapsed,
+      has_data:!!data,
+      has_error:!!error,
+      data:data||null,
+      error:error?{
+        name:error.name,
+        message:error.message,
+        code:error.code,
+        details:error.details,
+        hint:error.hint,
+        status:error.status
+      }:null
+    },error?"error":"log");
+
     if(error){
       let msg=error.message||"เกิดข้อผิดพลาด";
-      try{if(error.context){const raw=await error.context.text();const detail=JSON.parse(raw);if(detail?.message)msg=detail.message;}}catch(e){}
+      let detail=null;
+
+      try{
+        if(error.context){
+          const raw=await error.context.text();
+          primeOrderLog("10. SUPABASE ERROR CONTEXT",{raw},"error");
+          try{
+            detail=JSON.parse(raw);
+            if(detail?.message)msg=detail.message;
+          }catch(parseError){
+            primeOrderLog("10. ERROR CONTEXT NOT JSON",{parse_error:parseError.message},"warn");
+          }
+        }
+      }catch(contextError){
+        primeOrderLog("10. ERROR CONTEXT READ FAILED",{message:contextError.message},"warn");
+      }
+
+      primeOrderLog("11. ORDER SAVE FAILED",{
+        reason:"SUPABASE_FUNCTION_ERROR",
+        message:msg,
+        code:error.code||null,
+        status:error.status||null,
+        detail:detail||null,
+        orderData
+      },"error");
+
       return alert("สั่งซื้อไม่สำเร็จ: "+msg);
     }
+
     if(data?.manual_review||data?.unknown){
+      primeOrderLog("11. ORDER REQUIRES MANUAL REVIEW",{
+        order_id:data.order_id||null,
+        provider_order_id:data.provider_order_id||null,
+        data
+      },"warn");
       return alert("BEE-TH ยังไม่ยืนยันคำสั่งซื้อ\nระบบยังไม่คืนเครดิตอัตโนมัติ และส่งรายการเข้า Manual Review แล้ว\nOrder ID: "+(data.order_id||"-"));
     }
-    if(!data?.success)return alert(data?.message||"สั่งซื้อไม่สำเร็จ");
+
+    if(!data?.success){
+      primeOrderLog("11. ORDER SAVE FAILED",{
+        reason:"FUNCTION_RETURNED_SUCCESS_FALSE",
+        message:data?.message||null,
+        data,
+        orderData
+      },"error");
+      return alert(data?.message||"สั่งซื้อไม่สำเร็จ");
+    }
+
+    primeOrderLog("11. ORDER SUCCESS",{
+      order_id:data.order_id||null,
+      provider_order_id:data.provider_order_id||null,
+      total:data.total??expectedTotal,
+      credit:data.credit??null,
+      response:data
+    });
+
     closeModal("socialOrderModal");
     recordLiveActivity("ordered","สั่งซื้อบริการ "+r.label+" จำนวน "+formatNumber(qty)+" "+r.unit);
     await updateLoginButton();
+
     alert("สั่งซื้อสำเร็จ\n"+r.label+" "+formatNumber(qty)+" "+r.unit+"\nยอดที่หัก ฿"+formatNumber(Number(data.total??expectedTotal))+"\nเครดิตคงเหลือ ฿"+formatNumber(Number(data.credit??0))+"\nBEE-TH Order ID: "+(data.provider_order_id||"-"));
+  }catch(e){
+    primeOrderLog("12. ORDER FAILED UNEXPECTED",{
+      reason:"UNEXPECTED_EXCEPTION",
+      name:e?.name,
+      message:e?.message,
+      stack:e?.stack,
+      orderData
+    },"error");
+    alert(e?.message||"สั่งซื้อไม่สำเร็จ กรุณาลองใหม่");
   }finally{
     if(btn){btn.disabled=false;btn.innerHTML=oldText||"สั่งซื้อ";}
+    primeOrderLog("13. ORDER FLOW FINISHED",{
+      button_restored:!!btn,
+      button_disabled:!!btn?.disabled,
+      last_trace_count:PRIME_ORDER_TRACE.length
+    });
   }
 }
 
