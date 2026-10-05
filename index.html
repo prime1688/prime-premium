@@ -3337,64 +3337,67 @@ const NEW_SERVICE_RULES={
   GoogleMapsPlatform:{title:"📍 Google Maps",desc:"เลือกบริการรีวิวหรือการมองเห็น",platforms:["Google Maps","Google Maps"],serviceNames:["Reviews","Visibility"]},
 };
 
+async function getBeeThPublicServices(){
+  if(!supabaseClient)return [];
+  const {data,error}=await supabaseClient.from("bee_th_services_public")
+    .select("id,provider_service_id,name,type,category,rate,selling_price,min_quantity,max_quantity,refill,cancel,active,maintenance,maintenance_reason")
+    .order("provider_service_id");
+  if(error)throw error;
+  return data||[];
+}
+function beeThText(row){return (String(row?.category||"")+" "+String(row?.name||"")).toLowerCase();}
+function beeThPlatformMatch(row,platform){
+  const t=beeThText(row),p=String(platform||"").toLowerCase();
+  if(p==="google maps")return /google\s*maps/.test(t);
+  if(p==="x")return /twitter|(^|\W)x(\W|$)/.test(t);
+  return t.includes(p);
+}
+function beeThFeatureMatch(row,platform,serviceName){
+  if(!beeThPlatformMatch(row,platform))return false;
+  const t=beeThText(row),s=String(serviceName||"").toLowerCase();
+  if(!s)return true;
+  const tokens=s.split(/\s*\/\s*|\s*\+\s*|\s+/).map(x=>x.trim()).filter(x=>x.length>=3);
+  return !tokens.length||tokens.some(token=>t.includes(token));
+}
 async function refreshNewServiceStatuses(){
   if(!supabaseClient)return;
-  const checks=[];
-  const cfgs=Object.entries(NEW_SERVICE_RULES);
-  for(const [key,cfg] of cfgs){
-    if(!document.querySelector('[data-new-card="'+key+'"]'))continue;
-    for(let i=0;i<cfg.platforms.length;i++) checks.push({key,platform:cfg.platforms[i],name:cfg.serviceNames[i]||cfg.serviceNames[0]});
-  }
-  for(const card of document.querySelectorAll('[data-extra-platform]')){
-    const platform=card.dataset.extraPlatform;
-    const cfg=NEW_SERVICE_RULES[platform+'Platform'];
-    if(cfg) for(let i=0;i<cfg.platforms.length;i++) checks.push({key:platform+'Platform',platform:cfg.platforms[i],name:cfg.serviceNames[i]||cfg.serviceNames[0]});
-  }
-  const results=await Promise.all(checks.map(async x=>{
-    const {data}=await supabaseClient.from('services').select('active,price,provider_service_id').eq('platform',x.platform).eq('name',x.name).maybeSingle();
-    return {...x,ready:!!data&&data.active===true&&Number(data.price)>0&&Number(data.provider_service_id)>0};
-  }));
-  for(const [key] of cfgs){
-    const card=document.querySelector('[data-new-card="'+key+'"]');if(!card)continue;
-    const ready=results.some(x=>x.key===key&&x.ready),status=card.querySelector('.prime-new-card-status'),btn=card.querySelector('.prime-new-btn');
-    status.textContent=ready?'● พร้อมให้บริการ':'● ปิดปรับปรุง';status.className='prime-new-card-status '+(ready?'ready':'closed');
-    btn.textContent=ready?'เลือกบริการ →':'ปิดปรับปรุง';btn.classList.toggle('is-closed',!ready);btn.disabled=!ready;
-  }
-  for(const card of document.querySelectorAll('[data-extra-platform]')){
-    const key=card.dataset.extraPlatform+'Platform',ready=results.some(x=>x.key===key&&x.ready),status=card.querySelector('.prime-extra-status'),btn=card.querySelector('.prime-new-btn');
-    status.textContent=ready?'● พร้อมให้บริการ':'● ปิดปรับปรุง';status.className='prime-extra-status '+(ready?'ready':'closed');
-    btn.textContent=ready?'เลือกบริการ →':'ปิดปรับปรุง';btn.classList.toggle('is-closed',!ready);btn.disabled=!ready;
-  }
+  try{
+    const rows=await getBeeThPublicServices(),cfgs=Object.entries(NEW_SERVICE_RULES);
+    for(const [key,cfg] of cfgs){
+      const card=document.querySelector('[data-new-card="'+key+'"]');if(!card)continue;
+      const ready=cfg.platforms.some((platform,i)=>rows.some(r=>r.active===true&&r.maintenance!==true&&Number(r.selling_price)>0&&Number(r.provider_service_id)>0&&beeThFeatureMatch(r,platform,cfg.serviceNames[i]||cfg.serviceNames[0])));
+      const status=card.querySelector('.prime-new-card-status'),btn=card.querySelector('.prime-new-btn');
+      if(status){status.textContent=ready?'● พร้อมให้บริการ':'● ปิดปรับปรุง';status.className='prime-new-card-status '+(ready?'ready':'closed');}
+      if(btn){btn.textContent=ready?'เลือกบริการ →':'ปิดปรับปรุง';btn.classList.toggle('is-closed',!ready);btn.disabled=!ready;}
+    }
+    for(const card of document.querySelectorAll('[data-extra-platform]')){
+      const platform=card.dataset.extraPlatform,ready=rows.some(r=>r.active===true&&r.maintenance!==true&&Number(r.selling_price)>0&&Number(r.provider_service_id)>0&&beeThPlatformMatch(r,platform));
+      const status=card.querySelector('.prime-extra-status'),btn=card.querySelector('.prime-new-btn');
+      if(status){status.textContent=ready?'● พร้อมให้บริการ':'● ปิดปรับปรุง';status.className='prime-extra-status '+(ready?'ready':'closed');}
+      if(btn){btn.textContent=ready?'เลือกบริการ →':'ปิดปรับปรุง';btn.classList.toggle('is-closed',!ready);btn.disabled=!ready;}
+    }
+  }catch(e){console.error("BEE-TH status check failed",e);}
 }
 async function openNewService(key){
-  const cfg=NEW_SERVICE_RULES[key]; if(!cfg)return;
+  const cfg=NEW_SERVICE_RULES[key];if(!cfg)return;
   const modal=document.getElementById("newServicesModal"),title=document.getElementById("newServiceModalTitle"),desc=document.getElementById("newServiceModalDesc"),box=document.getElementById("newServiceOptions");
   if(!modal||!box)return;
-  title.textContent=cfg.title;
-  desc.textContent=cfg.desc;
-  modal.classList.add("show");
-  box.innerHTML='<div class="empty-state">กำลังตรวจสอบบริการ...</div>';
-
+  title.textContent=cfg.title;desc.textContent=cfg.desc;modal.classList.add("show");
+  box.innerHTML='<div class="empty-state">กำลังตรวจสอบบริการ BEE-TH...</div>';
   try{
-    const checks=await Promise.all(cfg.platforms.map(async(platform,i)=>{
+    const rows=await getBeeThPublicServices(),items=[];
+    cfg.platforms.forEach((platform,i)=>{
       const serviceName=cfg.serviceNames[i]||cfg.serviceNames[0];
-      try{
-        const {data}=await supabaseClient.from("services").select("price,active,provider_service_id").eq("platform",platform).eq("name",serviceName).maybeSingle();
-        const ready=!!data && data.active===true && Number(data.price)>0 && Number(data.provider_service_id)>0;
-        return {platform,serviceName,ready};
-      }catch(e){return {platform,serviceName,ready:false};}
-    }));
-    box.innerHTML=checks.map(x=>'<button type="button" class="prime-new-option '+(x.ready?"":"service-closed")+'" '+(x.ready?"":"disabled")+' data-new-platform="'+x.platform+'" data-new-service="'+x.serviceName+'"><strong>'+x.platform+'</strong><span>'+x.serviceName+' • '+(x.ready?"พร้อมสั่งซื้อ":"ปิดปรับปรุง")+'</span></button>').join("");
-    box.querySelectorAll("[data-new-platform]:not(:disabled)").forEach(btn=>btn.addEventListener("click",async()=>{
-      const platform=btn.dataset.newPlatform,serviceName=btn.dataset.newService;
-      closeModal("newServicesModal");
-      await openSocialOrder(platform,serviceName);
-    }));
-  }catch(e){
-    box.innerHTML='<div class="empty-state">ไม่สามารถตรวจสอบบริการได้ กรุณาลองใหม่</div>';
-  }
+      rows.filter(r=>r.active===true&&r.maintenance!==true&&Number(r.selling_price)>0&&Number(r.provider_service_id)>0&&beeThFeatureMatch(r,platform,serviceName)).slice(0,12).forEach(r=>items.push({platform,service:r}));
+    });
+    const unique=new Map();items.forEach(x=>unique.set(String(x.service.provider_service_id),x));
+    const list=[...unique.values()];
+    if(!list.length){box.innerHTML='<div class="empty-state">ยังไม่มีบริการที่เปิดขายสำหรับรายการนี้</div>';return;}
+    const esc=s=>String(s??"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+    box.innerHTML=list.map(x=>'<button type="button" class="prime-new-option" data-new-platform="'+esc(x.platform)+'" data-new-service="'+esc(x.service.name||"")+'"><strong>'+esc(x.platform)+'</strong><span>'+esc(x.service.name||"BEE-TH Service")+' • ฿'+Number(x.service.selling_price||0).toLocaleString("th-TH",{minimumFractionDigits:2,maximumFractionDigits:2})+' / 1,000</span></button>').join("");
+    box.querySelectorAll("[data-new-platform]").forEach(btn=>btn.addEventListener("click",async()=>{const platform=btn.dataset.newPlatform,serviceName=btn.dataset.newService;closeModal("newServicesModal");await openSocialOrder(platform,serviceName);}));
+  }catch(e){console.error("BEE-TH new service load failed",e);box.innerHTML='<div class="empty-state">ไม่สามารถโหลดบริการ BEE-TH ได้ กรุณาลองใหม่</div>';}
 }
-
 const SOCIAL_RULES={
   Instagram:{
     Likes:{min:100,price:150,unit:"ไลค์",label:"ไลค์"},
