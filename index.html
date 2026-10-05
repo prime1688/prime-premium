@@ -3458,56 +3458,71 @@ async function loadSocialServices(platform){
   const p=String(platform||"").toLowerCase();
   const matchPlatform=(x)=>{
     const t=(String(x.category||"")+" "+String(x.name||"")).toLowerCase();
-    if(p==="instagram")return /instagram|\big\b|reels|story/.test(t);
+    if(p==="instagram")return /instagram|\\big\\b|reels|story/.test(t);
     if(p==="tiktok")return /tiktok/.test(t);
     if(p==="facebook")return /facebook/.test(t);
     if(p==="youtube")return /youtube/.test(t);
-    if(p==="x")return /twitter|\bx\s*\//.test(t);
+    if(p==="x")return /twitter|\\bx\\s*\\//.test(t);
     if(p==="telegram")return /telegram/.test(t);
     if(p==="whatsapp")return /whatsapp/.test(t);
     if(p==="shopee")return /shopee/.test(t);
     if(p==="spotify")return /spotify/.test(t);
     if(p==="twitch")return /twitch/.test(t);
     if(p==="threads")return /threads/.test(t);
-    if(p==="google maps")return /google\s*maps/.test(t);
+    if(p==="google maps")return /google\\s*maps/.test(t);
     return t.includes(p);
   };
   return (data||[]).filter(matchPlatform).map(x=>{
     const min=Number(x.min_quantity||1),max=Number(x.max_quantity||0);
-    const price=Number(x.selling_price??(Number(x.rate||0)*4));
-    const label=String(x.name||"บริการ BEE-TH");
+    const rate=Number(x.rate||0);
+    const price=Number(x.selling_price??(rate*4));
     return {...x,id:Number(x.provider_service_id),platform,rule:{
-      min, max, providerMin:min, providerMax:max, price, rate:Number(x.rate||0),
+      min,max,providerMin:min,providerMax:max,price,rate,
       refill:x.refill===true,cancel:x.cancel===true,maintenance:x.maintenance===true,
-      label,unit:"หน่วย"
+      label:String(x.name||"บริการ BEE-TH"),unit:"หน่วย"
     }};
   });
 }
 function formatNumber(n){return Number(n).toLocaleString("th-TH");}
-function socialTotal(qty,rule){return Math.ceil(Number(qty)/rule.min)*rule.price;}
+function socialTotal(qty,rule){return Number((Number(qty)*rule.price/1000).toFixed(2));}
 function renderSocialServices(){
   const el=document.getElementById("socialServiceCards");if(!el)return;
   el.innerHTML=socialServices.map(x=>{
-    const r=x.rule,selected=selectedSocialService?.id===x.id,isOpen=x.active!==false && Number(x.provider_service_id||0)>0 && x.id!==5;
+    const r=x.rule,selected=selectedSocialService?.id===x.id;
+    const isOpen=x.active!==false && x.maintenance!==true && Number(x.provider_service_id||0)>0;
+    const meta=[
+      "Min "+formatNumber(r.min),
+      "Max "+(r.max?formatNumber(r.max):"—"),
+      "Refill "+(r.refill?"✓":"✕"),
+      "Cancel "+(r.cancel?"✓":"✕")
+    ].join(" · ");
     return '<button type="button" class="social-service-card '+(selected?"selected ":"")+(isOpen?"":"service-closed")+'" data-service-id="'+x.id+'" '+(isOpen?"":"disabled")+'>'+
-      '<span class="ssc-icon">'+({Likes:"♥",Shares:"↗",Views:"◉",Followers:"●","Live Viewers":"🔴","Reach / Impressions":"📣","Profile Visits":"👤","Group / Channel Members":"👥"}[x.name]||"•")+'</span>'+
-      '<span class="ssc-info"><strong>'+r.label+'</strong><small>ขั้นต่ำ '+formatNumber(r.min)+' '+r.unit+'</small></span>'+
-      (isOpen?'<span class="ssc-price">฿'+formatNumber(r.price)+'<small>/ '+formatNumber(r.min)+'</small></span>':'<span class="ssc-price ssc-closed-label">ปิดปรับปรุง</span>')+
+      '<span class="ssc-icon">'+({Likes:"♥",Shares:"↗",Views:"◉",Followers:"●","Live Viewers":"🔴","Reach / Impressions":"📣","Profile Visits:"👤","Group / Channel Members":"👥"}[x.name]||"•")+'</span>'+
+      '<span class="ssc-info"><strong>'+r.label+'</strong><small>'+meta+'</small></span>'+
+      (isOpen?'<span class="ssc-price">฿'+formatNumber(r.price)+'<small>/ 1,000</small></span>':'<span class="ssc-price ssc-closed-label">'+(x.maintenance?"ปิดปรับปรุง":"ปิดบริการ")+'</span>')+
       '<span class="ssc-check">'+(selected?"✓":"")+'</span>'+
-      (isOpen?"":'<span class="ssc-status">ปิดปรับปรุง</span>')+
+      (isOpen?"":'<span class="ssc-status">'+(x.maintenance?"ปิดปรับปรุง":"ปิดบริการ")+'</span>')+
       '</button>';
   }).join("");
   el.querySelectorAll("[data-service-id]:not(:disabled)").forEach(btn=>btn.addEventListener("click",()=>{
     selectedSocialService=socialServices.find(x=>x.id===Number(btn.dataset.serviceId))||null;
-    if(!selectedSocialService?.active)return;
+    if(!selectedSocialService?.active||selectedSocialService.maintenance)return;
     const q=document.getElementById("socialQuantity"),r=selectedSocialService.rule;
-    q.min=r.min;q.step=r.min;q.value=r.min;updateSocialSummary();renderSocialServices();
+    q.min=r.min;q.max=r.max||"";q.step=r.min;q.value=r.min;updateSocialSummary();renderSocialServices();
   }));
 }
 function updateSocialSummary(){
   if(!selectedSocialService)return;const r=selectedSocialService.rule;
-  const q=Math.max(r.min,Number(document.getElementById("socialQuantity").value)||r.min),safe=Math.ceil(q/r.min)*r.min,total=socialTotal(safe,r);
-  document.getElementById("socialQuantity").value=safe;document.getElementById("socialUnitLabel").textContent=r.unit;document.getElementById("socialQtyLabel").textContent=formatNumber(safe)+" "+r.unit;document.getElementById("socialQtyLabel2").textContent=formatNumber(safe)+" "+r.unit;document.getElementById("socialPriceEach").textContent="฿"+formatNumber(r.price)+" / "+formatNumber(r.min)+" "+r.unit;document.getElementById("socialTotal").textContent="฿"+formatNumber(total);document.getElementById("socialBuyText").textContent="สั่งซื้อ ฿"+formatNumber(total);document.getElementById("socialMinus").disabled=safe<=r.min;
+  const raw=Number(document.getElementById("socialQuantity").value)||r.min;
+  const q=Math.max(r.min,r.max?Math.min(r.max,raw):raw),safe=Math.ceil(q/r.min)*r.min,total=socialTotal(safe,r);
+  document.getElementById("socialQuantity").value=safe;document.getElementById("socialUnitLabel").textContent=r.unit;
+  document.getElementById("socialQtyLabel").textContent=formatNumber(safe)+" "+r.unit;
+  document.getElementById("socialQtyLabel2").textContent=formatNumber(safe)+" "+r.unit;
+  document.getElementById("socialPriceEach").textContent="฿"+formatNumber(r.price)+" / 1,000 "+r.unit;
+  document.getElementById("socialTotal").textContent="฿"+formatNumber(total);
+  document.getElementById("socialBuyText").textContent="สั่งซื้อ ฿"+formatNumber(total);
+  document.getElementById("socialMinus").disabled=safe<=r.min;
+  document.getElementById("socialPlus").disabled=!!r.max&&safe+r.min>r.max;
 }
 function changeSocialQuantity(direction){if(!selectedSocialService)return;const r=selectedSocialService.rule,q=Number(document.getElementById("socialQuantity").value)||r.min;document.getElementById("socialQuantity").value=Math.max(r.min,q+direction*r.min);updateSocialSummary()}
 async function openSocialOrder(platform,requestedService){
