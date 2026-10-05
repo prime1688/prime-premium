@@ -3514,7 +3514,7 @@ function socialFeatureChips(x){
   if(/like|likes|follower|follow|view|วิว|comment|คอมเมนต์|save|bookmark|share|แชร์/.test(n)) chips.push("⚡ เริ่มเร็ว");
   if(/real|บัญชีจริง|quality|hq|คุณภาพ/.test(n)) chips.push("👤 บัญชีจริง");
   if(x.refill===true) chips.push("♻️ รับประกัน");
-  if(!chips.length) chips.push("• บริการมาตรฐาน");
+  
   return chips.slice(0,3);
 }
 function renderSocialServices(){
