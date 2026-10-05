@@ -3592,14 +3592,29 @@ function renderSocialServices(){
       '<div class="ssc-price">฿'+formatNumber(r.price)+' <small>/ 1,000</small></div>'+
       '<div class="ssc-meta"><span>ขั้นต่ำ '+formatNumber(r.min||1)+'</span><span>สูงสุด '+(r.max?formatNumber(r.max):"—")+'</span><span>เติมให้ '+(r.refill?"✅":"❌")+'</span><span>ยกเลิก '+(r.cancel?"✅":"❌")+'</span></div>'+
       '<div class="ssc-status '+(isOpen?"ready":maintenance?"maintenance":"temporary")+'">'+status+'</div>'+
-      '<button type="button" class="ssc-action" data-service-id="'+String(x.id)+'" '+(isOpen?'':'disabled')+' onclick="event.preventDefault();event.stopPropagation();return selectServiceAndOpenCheckoutById(this.dataset.serviceId)">'+button+'</button>'+
+      '<button type="button" class="ssc-action" data-service-id="'+String(x.id)+'" '+(isOpen?'':'disabled')+'>'+button+'</button>'+
       '</div>';
   }).join("");
 
+  bindSocialServiceButtons();
   updateSocialSummary();  document.querySelectorAll("#socialServiceCards .social-service-card").forEach(card=>{
     card.setAttribute("aria-pressed",String(Number(card.dataset.serviceId)===Number(selectedSocialService?.id)));
   });
   return true;
+}
+function bindSocialServiceButtons(){
+  const zone=document.getElementById("socialServiceCards");
+  if(!zone)return;
+  zone.querySelectorAll(".ssc-action").forEach(btn=>{
+    btn.onclick=null;
+    btn.addEventListener("click",(event)=>{
+      event.preventDefault();
+      event.stopPropagation();
+      if(btn.disabled)return;
+      const id=Number(btn.dataset.serviceId||0);
+      if(id)selectServiceAndOpenCheckoutById(id);
+    },{passive:false});
+  });
 }
 function selectServiceAndOpenCheckout(button){
   const serviceId=Number(button?.dataset?.serviceId||button?.closest?.(".social-service-card")?.dataset?.serviceId||0);
