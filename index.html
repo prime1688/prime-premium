@@ -3526,7 +3526,7 @@ function renderSocialServices(){
     const status=maintenance?"🔴 ปิดปรับปรุง":(!active?"🟡 หมดชั่วคราว":"🟢 พร้อมใช้งาน");
     const button=isOpen?"🛒 เลือกบริการ":(maintenance?"ปิดปรับปรุง":"ยังไม่พร้อมสั่งซื้อ");
     const chips=socialFeatureChips(x).map(c=>"<span>"+c+"</span>").join("");
-    return '<button type="button" class="social-service-card '+(selected?"selected ":"")+(isOpen?"":"service-closed")+'" data-service-id="'+x.id+'" '+(isOpen?"":"disabled")+'>'+
+    return '<button type="button" class="social-service-card '+(selected?"selected ":"")+(isOpen?"":"service-closed")+'" data-action="selectSocialService" data-service-id="'+x.id+'" '+(isOpen?"":"disabled")+'>'+
       '<div class="ssc-top"><span class="ssc-icon">'+socialPlatformLogo(document.getElementById("socialPlatform")?.textContent||"")+'</span><strong class="ssc-title">'+socialShortName(x.name)+'</strong></div>'+
       '<div class="ssc-chips">'+chips+'</div>'+
       '<div class="ssc-price">฿'+formatNumber(r.price)+' <small>/ 1,000</small></div>'+
@@ -3535,12 +3535,27 @@ function renderSocialServices(){
       '<div class="ssc-action">'+button+'</div>'+
       '</button>';
   }).join("");
-  el.querySelectorAll("[data-service-id]:not(:disabled)").forEach(btn=>btn.addEventListener("click",()=>{
-    selectedSocialService=socialServices.find(x=>x.id===Number(btn.dataset.serviceId))||null;
-    if(!selectedSocialService?.active||selectedSocialService.maintenance)return;
-    const q=document.getElementById("socialQuantity"),r=selectedSocialService.rule;
-    q.min=r.min;q.max=r.max||"";q.step=r.min;q.value=r.min;updateSocialSummary();renderSocialServices();
-  }));
+}function selectSocialService(serviceId){
+  const id=String(serviceId||"");
+  const service=socialServices.find(x=>String(x.id)===id)||null;
+  if(!service){
+    console.error("[PRIME] selectSocialService: service not found",id);
+    return;
+  }
+  if(service.active===false||service.maintenance===true||Number(service.provider_service_id||0)<=0){
+    console.warn("[PRIME] selectSocialService: service unavailable",service);
+    return;
+  }
+  selectedSocialService=service;
+  const q=document.getElementById("socialQuantity"),r=service.rule;
+  if(q){
+    q.min=r.min;
+    q.max=r.max||"";
+    q.step=r.min;
+    q.value=r.min;
+  }
+  renderSocialServices();
+  updateSocialSummary();
 }
 function updateSocialSummary(){
   if(!selectedSocialService)return;const r=selectedSocialService.rule;
@@ -4016,9 +4031,9 @@ function initModalScrollLock(){
 document.addEventListener("DOMContentLoaded",initModalScrollLock);
 
 document.addEventListener("click",(event)=>{
-    const b=event.target.closest("button[data-action]"); if(!b)return;
+    const b=event.target.closest("[data-action]"); if(!b)return;
     const a=b.dataset.action;
-    if(a==="login") login(); else if(a==="loginContinue") performLogin(); else if(a==="logout") logout(); else if(a==="goProducts") goProducts(); else if(a==="openSignupPopup") document.getElementById("signupPopup")?.classList.add("show"); else if(a==="signupContinue"){performSignup();} else if(a==="signupSuccessDone"){closeSignupSuccess();} else if(a==="loginSuccessDone"){closeLoginSuccess();} else if(a==="openTopup") openTopup(); else if(a==="openTransactions") openTransactions(); else if(a==="openOrders") openOrders(); else if(a==="openFreeRewards") openFreeRewards(); else if(a==="openTerms") document.getElementById("termsModal")?.classList.add("show"); else if(a==="openCart") openCart(); else if(a==="openWithdrawNotice") openWithdrawNotice(); else if(a==="openPopularPlatforms"){document.getElementById("popularPlatformsModal")?.classList.add("show");} else if(a==="openNewService") openNewService(b.dataset.service); else if(a==="openFlashSale"){openFlashSale();} else if(a==="selectFlashPackage"){selectFlashPackage(b);} else if(a==="flashSaleContact"){flashSaleContact();} else if(a==="openPopularService"){openPopularService(b.dataset.platform,b.dataset.service);} else if(a==="popularPrev"){popularPlatformsMove(-1);} else if(a==="popularNext"){popularPlatformsMove(1);} else if(a==="openWithdraw") openWithdraw(); else if(a==="vipOnly") alert("ฟังก์ชันนี้สำหรับสมาชิก VIP เท่านั้น"); else if(a==="addToCart") addToCart(b.dataset.name,Number(b.dataset.price)); else if(a==="removeFromCart") removeFromCart(Number(b.dataset.index)); else if(a==="clearCart") clearCart(); else if(a==="showSocial") showSocial(b.dataset.name); else if(a==="closeModal") closeModal(b.dataset.modal); else if(a==="createTopup") createTopup(); else if(a==="topupSuccessHistory"){closeTopupSuccess();openTransactions();} else if(a==="topupSuccessDone"){closeTopupSuccess();window.scrollTo({top:0,behavior:"smooth"});} else if(a==="topupErrorDone"){closeTopupError();} else if(a==="checkout") checkout(); else if(a==="placeSocialOrder") placeSocialOrder(); else if(a==="openAdminPanel") openAdminPanel(); else if(a==="refreshAdminPanel") refreshAdminPanel(); else if(a==="syncSmmCatalog") syncSmmCatalog(); else if(a==="syncBeeServices") syncBeeServices();
+    if(a==="login") login(); else if(a==="loginContinue") performLogin(); else if(a==="logout") logout(); else if(a==="goProducts") goProducts(); else if(a==="openSignupPopup") document.getElementById("signupPopup")?.classList.add("show"); else if(a==="signupContinue"){performSignup();} else if(a==="signupSuccessDone"){closeSignupSuccess();} else if(a==="loginSuccessDone"){closeLoginSuccess();} else if(a==="openTopup") openTopup(); else if(a==="openTransactions") openTransactions(); else if(a==="openOrders") openOrders(); else if(a==="openFreeRewards") openFreeRewards(); else if(a==="openTerms") document.getElementById("termsModal")?.classList.add("show"); else if(a==="openCart") openCart(); else if(a==="openWithdrawNotice") openWithdrawNotice(); else if(a==="openPopularPlatforms"){document.getElementById("popularPlatformsModal")?.classList.add("show");} else if(a==="openNewService") openNewService(b.dataset.service); else if(a==="openFlashSale"){openFlashSale();} else if(a==="selectFlashPackage"){selectFlashPackage(b);} else if(a==="flashSaleContact"){flashSaleContact();} else if(a==="openPopularService"){openPopularService(b.dataset.platform,b.dataset.service);} else if(a==="popularPrev"){popularPlatformsMove(-1);} else if(a==="popularNext"){popularPlatformsMove(1);} else if(a==="openWithdraw") openWithdraw(); else if(a==="vipOnly") alert("ฟังก์ชันนี้สำหรับสมาชิก VIP เท่านั้น"); else if(a==="addToCart") addToCart(b.dataset.name,Number(b.dataset.price)); else if(a==="removeFromCart") removeFromCart(Number(b.dataset.index)); else if(a==="clearCart") clearCart(); else if(a==="showSocial") showSocial(b.dataset.name); else if(a==="selectSocialService") selectSocialService(b.dataset.serviceId); else if(a==="closeModal") closeModal(b.dataset.modal); else if(a==="createTopup") createTopup(); else if(a==="topupSuccessHistory"){closeTopupSuccess();openTransactions();} else if(a==="topupSuccessDone"){closeTopupSuccess();window.scrollTo({top:0,behavior:"smooth"});} else if(a==="topupErrorDone"){closeTopupError();} else if(a==="checkout") checkout(); else if(a==="placeSocialOrder") placeSocialOrder(); else if(a==="openAdminPanel") openAdminPanel(); else if(a==="refreshAdminPanel") refreshAdminPanel(); else if(a==="syncSmmCatalog") syncSmmCatalog(); else if(a==="syncBeeServices") syncBeeServices();
   });
 </script>
   <div class="modal" id="loginPopup">
