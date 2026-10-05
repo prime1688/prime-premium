@@ -2619,7 +2619,7 @@ html,body{
 /* SERVICE CARD CLICK FIX */
 #socialServiceCards{position:relative!important;z-index:10000!important;pointer-events:auto!important}
 #socialServiceCards .social-service-card{position:relative!important;z-index:10001!important;pointer-events:auto!important;touch-action:manipulation!important}
-#socialServiceCards .social-service-card *{pointer-events:none!important}
+#socialServiceCards .social-service-card > *{pointer-events:auto!important}
 \n/* DIRECT SERVICE BUTTON */\n#socialServiceCards .ssc-action{position:relative!important;z-index:100!important;pointer-events:auto!important;touch-action:manipulation!important;cursor:pointer!important;-webkit-appearance:none!important;appearance:none!important}\n
 /* PRIME SOCIAL ORDER UX */
 .social-order-card{display:flex!important;flex-direction:column!important;max-height:calc(100dvh - 24px)!important;overflow:hidden!important}
