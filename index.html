@@ -3597,6 +3597,7 @@ function selectServiceAndOpenCheckoutById(serviceId){
   const found=socialServices.find(x=>Number(x.id)===id);
   if(!found)return false;
   selectedSocialService=found;
+  renderSocialServices();
   const r=found.rule||{};
   const q=document.getElementById("socialQuantity");
   if(q){q.min=r.min||1;q.max=r.max||"";q.step=r.min||1;q.value=r.min||1;}
