@@ -3574,59 +3574,11 @@ function renderSocialServices(){
       '<div class="ssc-price">฿'+formatNumber(r.price)+' <small>/ 1,000</small></div>'+
       '<div class="ssc-meta"><span>ขั้นต่ำ '+formatNumber(r.min||1)+'</span><span>สูงสุด '+(r.max?formatNumber(r.max):"—")+'</span><span>เติมให้ '+(r.refill?"✅":"❌")+'</span><span>ยกเลิก '+(r.cancel?"✅":"❌")+'</span></div>'+
       '<div class="ssc-status '+(isOpen?"ready":maintenance?"maintenance":"temporary")+'">'+status+'</div>'+
-      '<button type="button" class="ssc-action" '+(isOpen?'':'disabled')+' onclick="event.preventDefault();event.stopPropagation();selectSocialService(this.closest(\'.social-service-card\').getAttribute(\'data-service-id\'))&&openSocialCheckout()">'+button+'</button>'+
+      '<button type="button" class="ssc-action" '+(isOpen?'':'disabled')+' onclick="event.preventDefault();event.stopPropagation();selectServiceAndOpenCheckout(this)">'+button+'</button>'+
       '</div>';
   }).join("");
 
-  const choose=(card,e)=>{
-    if(e?.target?.closest?.(".ssc-action"))return;
-    if(e){e.preventDefault();e.stopPropagation();}
-    if(card.dataset.serviceOpen!=="true")return;
-    const now=Date.now();
-    if(card.dataset.lastSelect && now-Number(card.dataset.lastSelect)<250)return;
-    card.dataset.lastSelect=String(now);
-    selectSocialService(card.dataset.serviceId);
-  };
-  el.querySelectorAll(".social-service-card").forEach(card=>{
-    card.addEventListener("pointerup",e=>choose(card,e),{passive:false});
-    card.addEventListener("touchend",e=>choose(card,e),{passive:false});
-    card.addEventListener("click",e=>choose(card,e),{passive:false});
-    card.addEventListener("keydown",e=>{
-      if(e.key==="Enter"||e.key===" "){choose(card,e);}
-    });
-  });
-}
-function openSocialCheckout(){
-  const popup=document.getElementById("socialCheckoutPopup");
-  const service=selectedSocialService;
-  if(!popup||!service)return;
-  const title=document.getElementById("socialCheckoutTitle");
-  const name=document.getElementById("socialCheckoutService");
-  if(title)title.textContent="สั่งซื้อบริการ";
-  if(name)name.textContent=(socialShortName(service.name)||service.name)+" • ฿"+formatNumber(service.rule?.price||0)+" / 1,000";
-  popup.classList.add("show");
-  popup.setAttribute("aria-hidden","false");
-  setTimeout(()=>document.getElementById("socialTargetUrl")?.focus(),80);
-}
-function closeSocialCheckout(){
-  const popup=document.getElementById("socialCheckoutPopup");
-  if(!popup)return;
-  popup.classList.remove("show");
-  popup.setAttribute("aria-hidden","true");
-}
-function selectSocialService(serviceId){
-  const id=String(serviceId||"").trim();
-  const service=socialServices.find(x=>String(x.id)===id)||null;
-  if(!service){console.error("[PRIME] service not found",id);return false;}
-  if(service.active===false||service.maintenance===true||Number(service.provider_service_id||service.id||0)<=0){
-    console.warn("[PRIME] service unavailable",service);return false;
-  }
-  selectedSocialService=service;
-  const q=document.getElementById("socialQuantity"),r=service.rule||{};
-  if(q){q.min=r.min||1;q.max=r.max||"";q.step=r.min||1;q.value=r.min||1;}
-  renderSocialServices();
-  updateSocialSummary();
-  document.querySelectorAll("#socialServiceCards .social-service-card").forEach(card=>{
+  updateSocialSummary();  document.querySelectorAll("#socialServiceCards .social-service-card").forEach(card=>{
     card.setAttribute("aria-pressed",String(card.dataset.serviceId===id));
   });
   return true;
