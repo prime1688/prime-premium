@@ -4263,6 +4263,27 @@ function initModalScrollLock(){
 }
 document.addEventListener("DOMContentLoaded",initModalScrollLock);
 
+/* PRIME MOBILE TAP FIX — iOS/Safari: activate real buttons on touchend, while preserving vertical scrolling */
+(function initPrimeMobileTapFix(){
+  let sx=0,sy=0,st=0;
+  document.addEventListener("touchstart",e=>{
+    const t=e.touches?.[0];
+    if(!t)return;
+    sx=t.clientX; sy=t.clientY; st=Date.now();
+  },{capture:true,passive:true});
+  document.addEventListener("touchend",e=>{
+    const t=e.changedTouches?.[0];
+    if(!t)return;
+    const dx=Math.abs(t.clientX-sx),dy=Math.abs(t.clientY-sy);
+    if(dx>12||dy>12||Date.now()-st>1500)return;
+    const b=e.target?.closest?.("[data-action],button");
+    if(!b || b.disabled || b.getAttribute("aria-disabled")==="true")return;
+    e.preventDefault();
+    e.stopPropagation();
+    try{ b.click(); }catch(err){ console.error("[PRIME] mobile tap dispatch failed",err); }
+  },{capture:true,passive:false});
+})();
+
 document.addEventListener("click",(event)=>{
     const b=event.target.closest("[data-action]"); if(!b)return;
     const a=b.dataset.action;
