@@ -3613,7 +3613,7 @@ function selectServiceAndOpenCheckoutById(serviceId){
   renderSocialServices();
   const r=found.rule||{};
   const q=document.getElementById("socialQuantity");
-  if(q){q.min=r.min||1;q.max=r.max||"";q.step=r.min||1;q.value=r.min||1;}
+  if(q){q.disabled=false;q.min=r.min||1;q.max=r.max||"";q.step=r.min||1;q.value=r.min||1;}
   const title=document.getElementById("socialCheckoutTitle");
   const desc=document.getElementById("socialCheckoutService");
   if(title)title.textContent="สั่งซื้อบริการ";
@@ -3650,17 +3650,28 @@ async function openSocialOrder(platform,requestedService){
     alert("ยังไม่มีบริการ "+(requestedService||"")+" สำหรับ "+platform+" ในระบบ");
     return;
   }
-  selectedSocialService=(requestedService ? socialServices.find(x=>String(x.name).toLowerCase()===String(requestedService).toLowerCase()&&x.active!==false) : null)
-    || socialServices.find(x=>x.active!==false)||null;
-  if(!selectedSocialService){
+  selectedSocialService=(requestedService
+    ? socialServices.find(x=>String(x.name).toLowerCase()===String(requestedService).toLowerCase()&&x.active!==false)
+    : null);
+  if(requestedService && !selectedSocialService){
     alert("บริการ "+requestedService+" ของ "+platform+" ยังไม่ถูกเปิดใช้งาน");
     return;
   }
   document.getElementById("socialPlatform").textContent=platform;
   document.getElementById("socialTargetUrl").value="";
-  const q=document.getElementById("socialQuantity"),r=selectedSocialService.rule;
-  q.min=r.min;q.step=r.min;q.value=r.min;
-  renderSocialServices();updateSocialSummary();document.getElementById("socialOrderModal").classList.add("show");
+  const q=document.getElementById("socialQuantity");
+  if(selectedSocialService){
+    const r=selectedSocialService.rule;
+    q.min=r.min;q.step=r.min;q.value=r.min;
+  }else{
+    q.value="";
+    q.removeAttribute("min");
+    q.removeAttribute("max");
+    q.disabled=true;
+  }
+  renderSocialServices();
+  if(selectedSocialService) updateSocialSummary();
+  document.getElementById("socialOrderModal").classList.add("show");
 }
 const PRIME_ORDER_DEBUG=true;
 const PRIME_ORDER_TRACE=[];
