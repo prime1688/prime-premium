@@ -3549,6 +3549,7 @@ async function loadSocialServices(platform){
 }
 function socialServiceType(x){
   const n=(String(x?.name||"")+" "+String(x?.category||"")).toLowerCase();
+  if(/live\s*(viewer|viewers)|live stream|คนเข้าชมไลฟ์|คนดูไลฟ์|ผู้ชมไลฟ์|ไลฟ์สด/.test(n)) return "liveviewers";
   if(/comment|คอมเมนต์/.test(n)) return "comments";
   if(/follower|followers|ผู้ติดตาม|ติดตาม/.test(n)) return "followers";
   if(/share|shares|แชร์/.test(n)) return "shares";
@@ -3622,16 +3623,18 @@ function renderSocialServices(){
   const wanted=
     platformKey==="facebook"||platformKey==="instagram"||platformKey==="youtube"
       ? ["likes","comments","shares","followers","views"]
-      : platformKey==="x"
-        ? ["likes","followers","views","shares"]
-        : null;
+      : platformKey==="tiktok"
+        ? ["likes","comments","shares","followers","views","liveviewers","saves"]
+        : platformKey==="x"
+          ? ["likes","followers","views","shares"]
+          : null;
   const visibleServices=[];
   if(wanted){
     wanted.forEach(type=>{
       const match=deduped.find(x=>socialServiceType(x)===type);
       if(match)visibleServices.push(match);
     });
-    deduped.forEach(x=>{if(visibleServices.length<8&&!visibleServices.includes(x))visibleServices.push(x);});
+    deduped.forEach(x=>{if(visibleServices.length<12&&!visibleServices.includes(x))visibleServices.push(x);});
   }else{
     deduped.slice(0,12).forEach(x=>visibleServices.push(x));
   }
