@@ -32,7 +32,29 @@ function esc(v){return String(v??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&l
 async function session(){const r=await Promise.race([sb.auth.getSession(),new Promise((_,j)=>setTimeout(()=>j(new Error("หมดเวลาตรวจสอบเซสชัน")),8000))]);return r?.data?.session||null}
 function loginBox(msg){app.innerHTML='<div class="card login"><h2>เข้าสู่ระบบแอดมิน</h2><p class="err">'+esc(msg)+'</p><p class="muted">กลับหน้า PRIME แล้วเข้าสู่ระบบด้วยบัญชีแอดมิน จากนั้นเปิดหน้า Admin อีกครั้ง</p><button class="ok" onclick="location.href='./'">กลับ PRIME</button></div>'}
 async function init(){try{const s=await session();if(!s)return loginBox("ไม่พบเซสชัน กรุณาเข้าสู่ระบบก่อน");const r=await sb.rpc("is_prime_admin");if(r.error)return loginBox("ตรวจสอบสิทธิ์ไม่สำเร็จ: "+r.error.message);if(!r.data)return loginBox("บัญชีนี้ไม่มีสิทธิ์แอดมิน");render();await refreshAll()}catch(e){loginBox(e.message||"เกิดข้อผิดพลาด")}}
-function render(){app.innerHTML='<div class="card"><div class="row"><div><h2>Dashboard</h2><div class="muted">ข้อมูลจริงจาก PRIME · อัปเดตเมื่อกดรีเฟรช</div></div><button class="no" onclick="refreshAll()">รีเฟรชทั้งหมด</button></div><div id="stats" class="stats" style="margin-top:15px"></div></div><div class="card"><div class="row"><div><h2>สมาชิก</h2><div class="muted">ดูเบอร์โทรศัพท์และยอดเงินคงเหลือของสมาชิก</div></div><button class="no" onclick="loadMembers()">รีเฟรชสมาชิก</button></div><div id="members" class="members-table-wrap"></div></div><div class="card"><div class="row"><div><h2>ออเดอร์ล่าสุด</h2><div class="muted">ติดตามออเดอร์ของลูกค้า</div></div></div><div id="orders" class="orders"></div></div><div class="card"><div class="row"><div><h2>รายการเติมเงินรออนุมัติ</h2><div class="muted">ตรวจสอบยอดโอนก่อนเพิ่มเครดิต</div></div></div><div id="deposits"></div></div>'}
+function render(){app.innerHTML='<div class="card"><div class="row"><div><h2>Dashboard</h2><div class="muted">ข้อมูลจริงจาก PRIME · อัปเดตเมื่อกดรีเฟรช</div></div><button class="no" onclick="refreshAll()">รีเฟรชทั้งหมด</button><button class="no" id="syncBeeBtn" onclick="syncBeeTH()">↻ ซิงก์ BEE-TH Services</button><span id="syncBeeStatus" class="muted" style="margin-left:8px"></span></div><div id="stats" class="stats" style="margin-top:15px"></div></div><div class="card"><div class="row"><div><h2>สมาชิก</h2><div class="muted">ดูเบอร์โทรศัพท์และยอดเงินคงเหลือของสมาชิก</div></div><button class="no" onclick="loadMembers()">รีเฟรชสมาชิก</button></div><div id="members" class="members-table-wrap"></div></div><div class="card"><div class="row"><div><h2>ออเดอร์ล่าสุด</h2><div class="muted">ติดตามออเดอร์ของลูกค้า</div></div></div><div id="orders" class="orders"></div></div><div class="card"><div class="row"><div><h2>รายการเติมเงินรออนุมัติ</h2><div class="muted">ตรวจสอบยอดโอนก่อนเพิ่มเครดิต</div></div></div><div id="deposits"></div></div>'}
+async function syncBeeTH(){
+  const btn=document.getElementById("syncBeeBtn"),status=document.getElementById("syncBeeStatus");
+  if(!btn||!status)return;
+  btn.disabled=true;btn.textContent="กำลังซิงก์...";status.className="muted";status.textContent="กำลังเชื่อมต่อ BEE-TH";
+  try{
+    const s=await sb.auth.getSession(),token=s?.data?.session?.access_token;
+    if(!token)throw new Error("ไม่พบเซสชัน Admin กรุณาเข้าสู่ระบบใหม่");
+    const r=await fetch(SUPABASE_URL+"/functions/v1/sync-bee-th-services",{
+      method:"POST",
+      headers:{"Authorization":"Bearer "+token,"apikey":SUPABASE_KEY,"Content-Type":"application/json"}
+    });
+    const data=await r.json().catch(()=>({}));
+    if(!r.ok||!data.success)throw new Error(data.message||data.error||("HTTP "+r.status));
+    status.className="muted";
+    status.textContent="✓ สำเร็จ: "+Number(data.count||0).toLocaleString("th-TH")+" บริการ · จับคู่ PRIME "+Number(data.matched_prime_services||0)+" · เปิด Refill "+Number(data.refill_enabled_prime_services||0);
+    await refreshAll();
+  }catch(e){
+    status.className="err";status.textContent="✕ ซิงก์ไม่สำเร็จ: "+(e.message||String(e));
+  }finally{
+    btn.disabled=false;btn.textContent="↻ ซิงก์ BEE-TH Services";
+  }
+}
 async function refreshAll(){await Promise.all([loadStats(),loadMembers(),loadOrders(),loadDeposits()])}
 async function loadStats(){const el=document.getElementById("stats");if(!el)return;const r=await sb.rpc("admin_dashboard_stats");if(r.error){el.innerHTML='<div class="err">'+esc(r.error.message)+'</div>';return}const x=r.data||{};el.innerHTML='<div class="stat"><small>ยอดขายวันนี้</small><strong>฿'+Number(x.today_sales||0).toFixed(2)+'</strong></div><div class="stat"><small>ออเดอร์วันนี้</small><strong>'+Number(x.today_orders||0)+'</strong></div><div class="stat"><small>สมาชิกทั้งหมด</small><strong>'+Number(x.members||0).toLocaleString("th-TH")+'</strong></div><div class="stat"><small>เติมเงินวันนี้</small><strong>฿'+Number(x.today_deposits||0).toFixed(2)+'</strong></div><div class="stat"><small>รอดำเนินการ</small><strong>'+Number(x.pending_orders||0)+'</strong></div><div class="stat"><small>กำลังดำเนินการ</small><strong>'+Number(x.processing_orders||0)+'</strong></div><div class="stat"><small>สำเร็จแล้ว</small><strong>'+Number(x.completed_orders||0)+'</strong></div>'}
 async function loadMembers(){
