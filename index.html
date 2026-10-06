@@ -6060,8 +6060,20 @@ padding:9px 10px !important}}
     if(title)title.textContent=isAdmin?"🔔 แจ้งเตือนแอดมิน":"🔔 แจ้งเตือนของฉัน";
     if(sub)sub.textContent=isAdmin?"งานเติมเงิน • Order • Refund • API":"เติมเงิน • สั่งซื้อ • สำเร็จ • ล้มเหลว • คืนเครดิต";
     try{
-      const orders=await loadOrders();
-      notifyItems=orderItems(orders,isAdmin);
+      await supabaseClient.rpc("sync_prime_notifications");
+      const {data:realNotifications,error:notifyError}=await supabaseClient
+        .from("prime_notifications")
+        .select("id,user_id,audience,kind,title,body,meta,severity,important,source_table,source_id,created_at")
+        .eq("audience",isAdmin?"admin":"customer")
+        .order("created_at",{ascending:false})
+        .limit(50);
+      if(notifyError) console.warn("prime notifications:",notifyError);
+      notifyItems=(realNotifications||[]).map(n=>({
+        id:n.id,type:n.severity||"info",icon:n.kind==="refund"?"↩":n.kind==="api_error"?"⚠":n.kind==="topup"?"฿":n.kind==="order"?(n.severity==="success"?"✓":"⏳"):"🔔",
+        title:n.title,body:n.body,meta:n.meta,time:n.created_at,important:n.important,
+        orderId:n.source_table==="orders"?n.source_id:null,
+        action:n.source_table==="orders"?"openOrders":null
+      }));
       if(isAdmin){
         const failed=orders.filter(o=>["failed","cancelled"].includes(String(o.status||"").toLowerCase())).length;
         if(failed)notifyItems.unshift({id:"admin-errors",type:"error",icon:"⚠",title:"มี Order ที่ต้องตรวจสอบ",body:"พบ "+failed+" รายการที่ล้มเหลวหรือถูกยกเลิก",meta:"ตรวจสอบ Order และ Refund ให้ครบ",important:true,action:"openOrders",time:new Date().toISOString()});
