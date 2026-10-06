@@ -411,7 +411,42 @@ radial-gradient(circle at 50% 45%,hsla(var(--sceneHue),90%,60%,.13),transparent 
 @media(min-width:430px){
  #gameBody .mockHud{grid-template-columns:46px minmax(0,1fr) minmax(0,1fr);grid-template-rows:46px 36px;gap:8px}
  #gameBody .controls{height:82px;min-height:82px;gap:12px}
-}</style>
+}/* MOBILE GAME LIST OVERFLOW FIX V10 */
+html,body{width:100%;max-width:100%;overflow-x:hidden}
+.wrap{box-sizing:border-box;width:100%;max-width:1100px}
+@media(max-width:760px){
+  body{padding-bottom:0}
+  .wrap{padding:14px 10px calc(96px + env(safe-area-inset-bottom));overflow:visible}
+  .hero{padding:20px 14px;border-radius:22px}
+  .grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:12px;align-items:stretch}
+  .game{box-sizing:border-box;width:100%;min-width:0;min-height:0;height:100%;padding:11px;border-radius:17px;overflow:hidden}
+  .game .ico{height:105px;min-height:105px;display:grid;place-items:center;margin:-11px -11px 0;font-size:52px;overflow:hidden;border-radius:16px 16px 0 0}
+  .game h3{font-size:17px;line-height:1.2;min-height:41px;margin:10px 0 4px;overflow:hidden}
+  .game p{font-size:11px;line-height:1.35;min-height:31px;max-height:46px;overflow:hidden}
+  .game .play{box-sizing:border-box;width:100%;min-height:48px;height:48px;margin:10px 0 0;padding:9px 8px;font-size:14px;white-space:nowrap;overflow:hidden}
+  .game .play:before{width:22px;height:22px;margin-right:5px}
+  .mobile-game-nav{height:auto;min-height:62px;box-sizing:border-box;padding-top:6px;padding-bottom:max(6px,env(safe-area-inset-bottom));}
+}
+@media(max-width:390px){
+  .wrap{padding-left:8px;padding-right:8px}
+  .grid{gap:8px}
+  .game{padding:9px;border-radius:15px}
+  .game .ico{height:92px;min-height:92px;margin:-9px -9px 0;font-size:46px;border-radius:14px 14px 0 0}
+  .game h3{font-size:15px;min-height:36px;margin-top:8px}
+  .game p{font-size:10px;min-height:28px;max-height:42px}
+  .game .play{height:46px;min-height:46px;margin-top:8px;font-size:13px;padding:8px 5px;border-radius:12px}
+}
+@media(max-width:360px){
+  .wrap{padding-left:7px;padding-right:7px}
+  .grid{gap:7px}
+  .game{padding:8px;border-radius:14px}
+  .game .ico{height:82px;min-height:82px;margin:-8px -8px 0;font-size:40px;border-radius:13px 13px 0 0}
+  .game h3{font-size:14px;min-height:34px}
+  .game p{font-size:9.5px;min-height:26px;max-height:39px}
+  .game .play{height:44px;min-height:44px;margin-top:7px;font-size:12px;border-radius:11px;padding:7px 3px}
+  .game .play:before{width:20px;height:20px;margin-right:3px;font-size:9px}
+}
+</style>
 </head>
 <body>
 <header class="header"><div class="nav"><a class="brand" href="./index.html">PRIME<span>.</span></a><a class="back" href="./index.html">← กลับ PRIME</a></div></header>
