@@ -192,7 +192,7 @@ const SUPABASE_URL="https://uxatabaoxbmgswcqrptq.supabase.co";
 const SUPABASE_KEY="sb_publishable_WIFz-7unS6IQFspqOSoj_Q_BST2Hr4o";
 const supabaseClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 const $=s=>document.querySelector(s);
-let points=0,plays=0,gameTimer=null,gameLoop=null,currentSession=null,lockedScrollY=0,gameStarting=false,currentGameId=null;
+let points=0,plays=0,gameTimer=null,gameLoop=null,hudSyncTimer=null,currentSession=null,lockedScrollY=0,gameStarting=false,currentGameId=null;
 
 async function session(){
   const {data:{session}}=await supabaseClient.auth.getSession();
@@ -280,7 +280,7 @@ async function openGame(id){
   clearGame();
   try{await games[id]();enhanceGameScene(id)}finally{gameStarting=false}
 }
-function closeGame(){clearGame();currentSession=null;currentGameId=null;$("#gameBody").removeAttribute("data-game");gameStarting=false;$("#gameModal").classList.remove("show");closeModal()}
+function closeGame(){clearGame();clearInterval(hudSyncTimer);hudSyncTimer=null;currentSession=null;currentGameId=null;$("#gameBody").removeAttribute("data-game");gameStarting=false;$("#gameModal").classList.remove("show");closeModal()}
 function enhanceGameScene(id){
   const body=$("#gameBody"); if(!body)return;
   body.dataset.game=id;
@@ -292,6 +292,7 @@ function enhanceGameScene(id){
   hud.innerHTML='<button class="pauseHud" type="button" aria-label="หยุดเกม" onclick="pausePrimeGame()">Ⅱ</button><div class="statHud"><small>⏱ เวลาเหลือ</small><b id="hudTime">—</b></div><div class="statHud"><small>⭐ คะแนน</small><b id="hudScore" class="gold">0</b></div><div class="statusHud"><span>🎮 <b>'+label+'</b></span><span id="hudRound">รอบ —</span><span id="hudState">กำลังเล่น</span></div>';
   body.insertBefore(hud,body.firstChild);
   syncPrimeHud(id);
+  clearInterval(hudSyncTimer); hudSyncTimer=setInterval(()=>syncPrimeHud(id),200);
 }
 function syncPrimeHud(id){
   const body=$("#gameBody"); if(!body)return;
@@ -314,7 +315,7 @@ function pausePrimeGame(){
   const o=document.createElement("div");o.className="pauseOverlay";o.innerHTML='<div><h3>⏸ พักเกม</h3><p>เกมหยุดชั่วคราว</p><button class="actionBtn" type="button" onclick="pausePrimeGame()">▶ เล่นต่อ</button></div>';b.appendChild(o);
 }
 function replayGame(id){closeGame();setTimeout(()=>openGame(id),180)}
-function clearGame(){if(gameTimer)clearInterval(gameTimer);if(gameLoop)cancelAnimationFrame(gameLoop);gameTimer=null;gameLoop=null}
+function clearGame(){clearInterval(hudSyncTimer);hudSyncTimer=null;if(gameTimer)clearInterval(gameTimer);if(gameLoop)cancelAnimationFrame(gameLoop);gameTimer=null;gameLoop=null}
 async function finish(title,metric=0){clearGame();const finishedGame=currentGameId;const d=await finishSession(metric);if(!d)return;$("#gameTitle").textContent=title;const earned=Number(d.score||0),available=Number(d.available_points ?? points),totalPlays=Number(d.plays||plays);$("#gameBody").innerHTML='<div class="result"><div>🎉 จบเกม!</div><strong>+'+earned.toLocaleString()+' คะแนน</strong><div class="game-stat-row"><div class="game-stat"><b>'+earned.toLocaleString()+'</b><span>คะแนนที่ได้</span></div><div class="game-stat"><b>'+available.toLocaleString()+'</b><span>คะแนนใช้ได้</span></div><div class="game-stat"><b>'+totalPlays.toLocaleString()+'</b><span>เล่นทั้งหมด</span></div></div><p>1,000 คะแนน = 1 เครดิต · ขั้นต่ำ 10,000 คะแนน</p><button class="actionBtn" onclick="replayGame(\''+finishedGame+'\')">↻ เล่นอีกครั้ง</button><button class="finishBtn" onclick="closeGame()">⌂ กลับหน้าเกม</button></div>'}
 
 async function shoot(){if(!await requireAuth()||!await startSession("shoot"))return;$("#gameModal").classList.add("show");$("#gameTitle").textContent="🎯 ยิงเป้า";let t=25,score=0;const area=()=>{if(t<=0)return;let a=document.createElement("div");a.className="target";a.style.left=(Math.random()*88+4)+"%";a.style.top=(Math.random()*78+4)+"%";a.onclick=()=>{score++;$("#score").textContent=score;a.remove();area()};$("#targetArea").appendChild(a)};$("#gameBody").innerHTML='<div class="hud"><span>⏱️ <b id="time">'+t+'</b> วิ</span><span>🎯 เป้าที่โดน <b id="score">0</b></span></div><div class="target-area" id="targetArea"></div>';area();gameTimer=setInterval(()=>{$("#time").textContent=--t;if(t<=0)finish("ยิงเป้า",score)},1000)}
