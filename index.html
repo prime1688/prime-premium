@@ -3572,6 +3572,10 @@ async function loadMember(){
 }
 async function loadOrders(){
   const s=await getSession(); if(!s)return [];
+  try{
+    const sync=await supabaseClient.functions.invoke("sync-bee-th-orders",{body:{}});
+    if(sync.error) console.warn("syncBeeOrders:",sync.error);
+  }catch(e){console.warn("syncBeeOrders:",e);}
   const {data,error}=await supabaseClient.rpc("my_orders");
   if(error){console.error("loadOrders:",error);return [];} return data||[];
 }
