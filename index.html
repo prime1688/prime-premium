@@ -3222,6 +3222,18 @@ document.addEventListener("DOMContentLoaded",initPrimeTouchCardSelection);
   .prime-user-box .prime-login{padding:7px 8px!important;font-size:10px!important}
 }
 </style>
+<style id="prime-notify-modal-touch-fix">
+#primeNotifyBackdrop{
+  position:fixed!important;inset:0!important;z-index:10990!important;
+  background:rgba(7,3,12,.34)!important;
+  backdrop-filter:blur(1.5px)!important;
+  -webkit-backdrop-filter:blur(1.5px)!important;
+  touch-action:none!important;
+}
+body.prime-notify-open{overflow:hidden!important;touch-action:none!important}
+.prime-notify-panel{z-index:11000!important;pointer-events:auto!important;touch-action:auto!important}
+.prime-notify-panel *{pointer-events:auto}
+</style>
 </head>
 
 <body>
@@ -6097,9 +6109,12 @@ padding:9px 10px !important}}
   window.openNotifications=async function(){
     const p=document.getElementById("primeNotifyPanel"),b=document.getElementById("primeNotifyBtn");if(!p)return;
     if(p.parentElement!==document.body) document.body.appendChild(p);
+    let bd=document.getElementById("primeNotifyBackdrop");
+    if(!bd){bd=document.createElement("div");bd.id="primeNotifyBackdrop";bd.setAttribute("aria-hidden","true");bd.addEventListener("click",()=>window.closeNotifications());document.body.appendChild(bd);}
+    document.body.classList.add("prime-notify-open");
     p.classList.add("show");p.setAttribute("aria-hidden","false");b?.setAttribute("aria-expanded","true");await load();
   };
-  window.closeNotifications=function(){const p=document.getElementById("primeNotifyPanel"),b=document.getElementById("primeNotifyBtn");p?.classList.remove("show");p?.setAttribute("aria-hidden","true");b?.setAttribute("aria-expanded","false")};
+  window.closeNotifications=function(){const p=document.getElementById("primeNotifyPanel"),b=document.getElementById("primeNotifyBtn"),bd=document.getElementById("primeNotifyBackdrop");p?.classList.remove("show");p?.setAttribute("aria-hidden","true");b?.setAttribute("aria-expanded","false");bd?.remove();document.body.classList.remove("prime-notify-open")};
   window.markNotificationsRead=function(){saveRead(notifyItems.map(x=>x.id));render();const b=document.getElementById("primeNotifyCount");if(b)b.style.display="none"};
   document.addEventListener("click",e=>{
     const tab=e.target.closest("[data-notify-tab]");if(tab){notifyTab=tab.dataset.notifyTab;document.querySelectorAll("[data-notify-tab]").forEach(x=>x.classList.toggle("active",x===tab));render();return}
