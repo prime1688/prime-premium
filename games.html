@@ -264,7 +264,38 @@ radial-gradient(circle at 50% 45%,hsla(var(--sceneHue),90%,60%,.13),transparent 
  #gameBody .mockHud{background:linear-gradient(180deg,rgba(7,3,18,1) 78%,transparent);box-shadow:0 7px 18px rgba(0,0,0,.22)}
  #gameBody .controls{background:linear-gradient(180deg,transparent,rgba(7,2,20,1) 42%);padding-top:14px}
 }
-</style>
+/* MOBILE QA V7 — HUD/control contrast + safe-area */
+#gameBody{padding-left:max(12px,env(safe-area-inset-left));padding-right:max(12px,env(safe-area-inset-right));padding-bottom:calc(18px + env(safe-area-inset-bottom));}
+#gameBody .mockHud{left:0;right:0;margin-left:0;margin-right:0;padding:4px max(2px,env(safe-area-inset-left)) 10px max(2px,env(safe-area-inset-right));isolation:isolate}
+#gameBody .mockHud:before{content:"";position:absolute;inset:0 0 8px;z-index:-1;background:linear-gradient(180deg,rgba(5,2,15,.99),rgba(8,3,20,.96) 72%,rgba(8,3,20,.02));border-bottom:1px solid rgba(202,133,255,.18);box-shadow:0 8px 24px rgba(0,0,0,.42)}
+#gameBody .mockHud .statHud,#gameBody .mockHud .pauseHud{position:relative;z-index:2}
+#gameBody .mockHud .statHud{color:#fff;text-shadow:0 1px 4px rgba(0,0,0,.8)}
+#gameBody .mockHud .statHud small{color:#eee5fa;font-weight:900;text-shadow:0 1px 3px #000}
+#gameBody .mockHud .statHud b{color:#fff;text-shadow:0 1px 5px #000,0 0 10px rgba(189,105,255,.35)}
+#gameBody .mockHud .statHud b.gold{color:#ffe06a;text-shadow:0 1px 5px #000,0 0 12px rgba(255,210,50,.3)}
+#gameBody .mockHud .statusHud{position:relative;z-index:2}
+#gameBody .mockHud .statusHud span{background:rgba(11,5,27,.92);color:#fff;border-color:rgba(209,140,255,.34);text-shadow:0 1px 3px #000}
+#gameBody .controls{position:sticky;bottom:0;left:0;right:0;margin-left:calc(-1 * max(0px,env(safe-area-inset-left)));margin-right:calc(-1 * max(0px,env(safe-area-inset-right)));padding-left:max(12px,env(safe-area-inset-left));padding-right:max(12px,env(safe-area-inset-right));padding-bottom:max(10px,env(safe-area-inset-bottom));isolation:isolate}
+#gameBody .controls:before{content:"";position:absolute;z-index:-1;left:0;right:0;top:0;bottom:0;background:linear-gradient(180deg,rgba(7,2,20,.03),rgba(7,2,20,.96) 42%,rgba(7,2,20,.99));box-shadow:0 -12px 28px rgba(0,0,0,.28)}
+#gameBody .controls button{position:relative;z-index:2;flex:0 1 74px;min-width:64px;min-height:58px;color:#fff;text-shadow:0 2px 5px #000;border:2px solid rgba(220,159,255,.68);box-shadow:0 7px 20px rgba(0,0,0,.45),0 0 15px rgba(135,47,235,.2),inset 0 1px rgba(255,255,255,.22)}
+#gameBody .actionBtn,#gameBody .finishBtn,#gameBody .primary{position:relative;z-index:3;text-shadow:0 2px 5px rgba(0,0,0,.65);box-shadow:0 8px 22px rgba(0,0,0,.38),0 0 16px rgba(130,45,230,.18)}
+#gameBody .result,#gameBody .quiz-q,#gameBody .answers,#gameBody input{position:relative;z-index:3}
+@media(max-width:430px){
+ #gameBody{padding-left:max(10px,env(safe-area-inset-left));padding-right:max(10px,env(safe-area-inset-right));padding-bottom:calc(16px + env(safe-area-inset-bottom))}
+ #gameBody .mockHud{grid-template-columns:42px minmax(0,1fr) minmax(0,1fr);padding-top:3px;padding-bottom:9px}
+ #gameBody .mockHud .statusHud span{min-height:28px;display:flex;align-items:center;justify-content:center}
+ #gameBody .controls{gap:10px;padding-top:15px;padding-bottom:max(10px,env(safe-area-inset-bottom))}
+ #gameBody .controls button{min-width:62px;width:68px;height:58px;flex-basis:68px}
+ #gameBody .actionBtn,#gameBody .finishBtn,#gameBody .primary{min-height:52px}
+}
+@media(max-width:360px){
+ #gameBody{padding-left:8px;padding-right:8px}
+ #gameBody .mockHud .statHud small{font-size:8px}
+ #gameBody .mockHud .statHud b{font-size:15px}
+ #gameBody .mockHud .statusHud span{font-size:8px}
+ #gameBody .controls{gap:7px}
+ #gameBody .controls button{min-width:58px;width:62px;flex-basis:62px}
+}</style>
 </head>
 <body>
 <header class="header"><div class="nav"><a class="brand" href="./index.html">PRIME<span>.</span></a><a class="back" href="./index.html">← กลับ PRIME</a></div></header>
