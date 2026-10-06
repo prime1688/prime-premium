@@ -3009,6 +3009,25 @@ html,body{
       }
     }
 
+  
+    /* SOCIAL LOGO CLEANUP — remove white image boxes behind logos */
+    .prime-product-icon img{
+      background:transparent !important;
+      mix-blend-mode:multiply;
+      border:0 !important;
+      box-shadow:none !important;
+    }
+    .prime-product-icon{
+      background:linear-gradient(145deg,#ffffff 0%,#faf6ff 65%,#f0e2ff 100%) !important;
+    }
+    .prime-product-icon img[src*="simpleicons.org/instagram"],
+    .prime-product-icon img[src*="simpleicons.org/facebook"],
+    .prime-product-icon img[src*="simpleicons.org/tiktok"],
+    .prime-product-icon img[src*="simpleicons.org/youtube"],
+    .prime-product-icon img[src*="simpleicons.org/x"]{
+      mix-blend-mode:multiply;
+    }
+
   </style>
 <style>.admin-members-box{margin:14px 0 18px;padding:14px;border:1px solid rgba(157,78,221,.25);border-radius:16px;background:rgba(255,255,255,.45)}.admin-section-title{font-size:18px;font-weight:900;margin-bottom:10px}.admin-section-title small{font-size:12px;color:#8b6b9e;font-weight:700}.admin-members-head,.admin-member-row{display:grid;grid-template-columns:1.2fr .8fr 1.1fr;gap:8px;align-items:center;padding:10px;border-bottom:1px solid rgba(157,78,221,.14)}.admin-members-head{font-size:12px;color:#80668f}.admin-member-row strong:nth-child(2){color:#6f20c9}.admin-member-row span{font-size:12px;color:#80668f}@media(max-width:600px){.admin-members-head,.admin-member-row{grid-template-columns:1fr 1fr}.admin-members-head span:last-child,.admin-member-row span:last-child{grid-column:1/-1}}
 /* Selection clarity: only .selected gets the strong purple border */
