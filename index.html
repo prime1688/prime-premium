@@ -2798,7 +2798,7 @@ html,body{
       <button class="prime-select-btn" type="button" data-action="showSocial" data-name="Instagram">เลือกแพ็กเกจ →</button>
     </article>
     <article class="prime-product-card" data-platform="TikTok" data-tags="popular">
-      <span class="prime-badge gold">★ แนะนำ</span><div class="prime-product-icon"><img src="https://cdn.simpleicons.org/tiktok" alt="TikTok"></div><h4>TikTok Views</h4><p class="prime-product-desc">เพิ่มยอดวิว TikTok</p><div class="prime-rating">★ 4.8 <span>(2.1K)</span></div><div class="prime-price"><small>เริ่มต้น </small>฿15</div>
+      <span class="prime-badge gold">★ แนะนำ</span><div class="prime-product-icon"><img src="https://cdn.simpleicons.org/tiktok" alt="TikTok"></div><h4>TikTok</h4><p class="prime-product-desc">รวมบริการ TikTok เลือกแพ็กเกจที่ต้องการ</p><div class="prime-rating">★ 4.8 <span>(2.1K)</span></div><div class="prime-price"><small>บริการเริ่มต้น </small>฿10</div>
       <button class="prime-select-btn" type="button" data-action="showSocial" data-name="TikTok">เลือกแพ็กเกจ →</button>
     </article>
     <article class="prime-product-card" data-platform="Facebook" data-tags="popular">
@@ -2812,10 +2812,7 @@ html,body{
   </div>
 
   <div class="prime-mini-grid">
-      <div class="prime-mini-card" data-platform="TikTok"><span class="mini-status">● พร้อมให้บริการ</span><h5><img class="mini-logo" src="https://cdn.simpleicons.org/tiktok" alt="TikTok">TikTok Likes</h5><p>เพิ่มยอดไลค์ TikTok</p><strong>เริ่มต้น ฿10</strong><button type="button" data-action="showSocial" data-name="TikTok">เลือกแพ็กเกจ →</button></div>
-      <div class="prime-mini-card" data-platform="TikTok"><span class="mini-status">● พร้อมให้บริการ</span><h5><img class="mini-logo" src="https://cdn.simpleicons.org/tiktok" alt="TikTok">TikTok Views</h5><p>เพิ่มยอดวิว TikTok</p><strong>เริ่มต้น ฿15</strong><button type="button" data-action="showSocial" data-name="TikTok">เลือกแพ็กเกจ →</button></div>
-      <div class="prime-mini-card" data-platform="TikTok"><span class="mini-status">● พร้อมให้บริการ</span><h5><img class="mini-logo" src="https://cdn.simpleicons.org/tiktok" alt="TikTok">TikTok Followers</h5><p>เพิ่มผู้ติดตาม TikTok</p><strong>เริ่มต้น ฿25</strong><button type="button" data-action="showSocial" data-name="TikTok">เลือกแพ็กเกจ →</button></div>
-      <div class="prime-mini-card" data-platform="TikTok"><span class="mini-status">● พร้อมให้บริการ</span><h5><img class="mini-logo" src="https://cdn.simpleicons.org/tiktok" alt="TikTok">TikTok Shares</h5><p>เพิ่มยอดแชร์ TikTok</p><strong>เริ่มต้น ฿20</strong><button type="button" data-action="showSocial" data-name="TikTok">เลือกแพ็กเกจ →</button></div>      <div class="prime-mini-card" data-platform="X"><span class="mini-status">● พร้อมให้บริการ</span><h5><img class="mini-logo" src="https://cdn.simpleicons.org/x" alt="X">X Likes</h5><p>เพิ่มยอดไลค์ X</p><strong>เริ่มต้น ฿60</strong><button type="button" data-action="showSocial" data-name="X">เลือกแพ็กเกจ →</button></div>
+      <div class="prime-mini-card" data-platform="X"><span class="mini-status">● พร้อมให้บริการ</span><h5><img class="mini-logo" src="https://cdn.simpleicons.org/x" alt="X">X Likes</h5><p>เพิ่มยอดไลค์ X</p><strong>เริ่มต้น ฿60</strong><button type="button" data-action="showSocial" data-name="X">เลือกแพ็กเกจ →</button></div>
       <div class="prime-mini-card" data-platform="X"><span class="mini-status">● พร้อมให้บริการ</span><h5><img class="mini-logo" src="https://cdn.simpleicons.org/x" alt="X">X Views</h5><p>เพิ่มยอดวิว X</p><strong>เริ่มต้น ฿150</strong><button type="button" data-action="showSocial" data-name="X">เลือกแพ็กเกจ →</button></div>
       <div class="prime-mini-card" data-platform="X"><span class="mini-status">● พร้อมให้บริการ</span><h5><img class="mini-logo" src="https://cdn.simpleicons.org/x" alt="X">X Followers</h5><p>เพิ่มผู้ติดตาม X</p><strong>เริ่มต้น ฿250</strong><button type="button" data-action="showSocial" data-name="X">เลือกแพ็กเกจ →</button></div>
       <div class="prime-mini-card" data-platform="X"><span class="mini-status">● ปิดปรับปรุง</span><h5><img class="mini-logo" src="https://cdn.simpleicons.org/x" alt="X">X Shares</h5><p>เพิ่มยอดแชร์ X</p><strong>ปิดปรับปรุง</strong><button type="button" disabled>ปิดปรับปรุง</button></div>
@@ -3622,17 +3619,19 @@ function renderSocialServices(){
   const wanted=
     platformKey==="facebook"||platformKey==="instagram"||platformKey==="youtube"
       ? ["likes","comments","shares","followers","views"]
-      : platformKey==="tiktok"
-        ? ["likes","followers","views"]
-        : platformKey==="x"
-          ? ["likes","followers","views","shares"]
-          : ["likes","comments","shares","followers","views","other"];
+      : platformKey==="x"
+        ? ["likes","followers","views","shares"]
+        : null;
   const visibleServices=[];
-  wanted.forEach(type=>{
-    const match=deduped.find(x=>socialServiceType(x)===type);
-    if(match)visibleServices.push(match);
-  });
-  deduped.forEach(x=>{if(visibleServices.length<8&&!visibleServices.includes(x))visibleServices.push(x);});
+  if(wanted){
+    wanted.forEach(type=>{
+      const match=deduped.find(x=>socialServiceType(x)===type);
+      if(match)visibleServices.push(match);
+    });
+    deduped.forEach(x=>{if(visibleServices.length<8&&!visibleServices.includes(x))visibleServices.push(x);});
+  }else{
+    deduped.slice(0,12).forEach(x=>visibleServices.push(x));
+  }
   el.innerHTML=visibleServices.map(x=>{
     const r=x.rule||{},selected=selectedSocialService?.id===x.id;
     const active=x.active!==false,maintenance=x.maintenance===true;
