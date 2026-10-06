@@ -6096,6 +6096,10 @@ padding:9px 10px !important}}
   document.addEventListener("DOMContentLoaded",async()=>{
     const wrap=document.getElementById("primeNotifyWrap");if(wrap)wrap.style.display="block";
     setTimeout(()=>load(),900);
+    setInterval(()=>{
+      const p=document.getElementById("primeNotifyPanel");
+      if(document.visibilityState==="visible" && (p?.classList.contains("show") || document.body.classList.contains("logged-in"))) load();
+    },30000);
   });
 })();
 </script>
