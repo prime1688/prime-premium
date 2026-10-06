@@ -164,7 +164,7 @@ async function finishSession(metric=0){
 }
 function openModal(){lockedScrollY=window.scrollY||window.pageYOffset||0;document.body.classList.add("modal-open");document.body.style.top="-"+lockedScrollY+"px";$("#gameModal").classList.add("show")}
 function closeModal(){document.body.classList.remove("modal-open");document.body.style.top="";window.scrollTo(0,lockedScrollY)}
-function openGame(id){clearGame();({maze,shoot,runner,cards,quiz,racing}[id])()}
+function openGame(id){clearGame();const games={maze,shoot,runner,cards,quiz,racing,reaction,math_rush,color_match,memory_number,emoji_count,tap_10,timing,guess_number,sequence,word_match,coin_catcher,lane_dodge,higher_lower,fast_tap};if(typeof games[id]!=="function"){console.error("Unknown game:",id);return}games[id]()}
 function closeGame(){clearGame();currentSession=null;$("#gameModal").classList.remove("show");closeModal()}
 function clearGame(){if(gameTimer)clearInterval(gameTimer);if(gameLoop)cancelAnimationFrame(gameLoop);gameTimer=null;gameLoop=null}
 async function finish(title,metric=0){clearGame();const d=await finishSession(metric);if(!d)return;$("#gameTitle").textContent=title;$("#gameBody").innerHTML='<div class="result"><div>🎉 จบเกม!</div><strong>+'+Number(d.score).toLocaleString()+' คะแนน</strong><p>คะแนนที่ใช้ได้เดือนนี้ '+Number(d.available_points ?? points).toLocaleString()+'</p><button class="primary" onclick="closeGame()">กลับหน้าเกม</button></div>'}
