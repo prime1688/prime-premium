@@ -5066,3 +5066,17 @@ document.addEventListener("click",(event)=>{
   </div>
 </body>
 </html>
+/* MOBILE TOUCH FIX: never keep hover styling on multiple cards after tapping.
+   Purple emphasis is reserved for the currently active/selected control. */
+@media (hover:none) and (pointer:coarse){
+  .prime-product-card:hover,
+  .prime-mini-card:hover{
+    border-color:#d7b5f4 !important;
+    box-shadow:0 9px 24px rgba(82,31,130,.12),0 0 14px rgba(177,104,245,.13),inset 0 1px 0 #fff !important;
+    transform:none !important;
+  }
+  .prime-product-card:active,
+  .prime-mini-card:active{
+    transform:none !important;
+  }
+}
