@@ -2831,7 +2831,7 @@ html,body{
     </article>
     <article class="prime-product-card" data-platform="X" data-tags="popular">
       <span class="prime-badge purple">● พร้อมให้บริการ</span>
-      <div class="prime-product-icon"><img src="https://cdn.simpleicons.org/x" alt="X" style="width:48px !important;height:48px !important;max-width:48px !important;max-height:48px !important;object-fit:contain !important;transform:translateY(14px) !important;"></div>
+      <div class="prime-product-icon"><img src="https://cdn.simpleicons.org/x" alt="X"></div>
       <h4>X</h4>
       <p class="prime-product-desc">รวมบริการ X เลือกแพ็กเกจที่ต้องการ</p>
       <div class="prime-rating">● พร้อมให้บริการ</div>
@@ -5132,17 +5132,21 @@ document.addEventListener("DOMContentLoaded",initPrimeTouchCardSelection);
   background:#fff !important;
   background-image:none !important;
 }
-/* X card: use the same card/icon sizing as the other social cards */
+/* X card: center logo like the other social cards without overlapping the status badge */
 .prime-product-card[data-platform="X"] .prime-badge{
   position:absolute !important;
   top:10px !important;
   left:11px !important;
-  z-index:2 !important;
+  z-index:3 !important;
 }
 .prime-product-card[data-platform="X"] .prime-product-icon{
-  margin-top:0 !important;
+  margin-top:24px !important;
 }
 .prime-product-card[data-platform="X"] .prime-product-icon img{
   width:48px !important;
   height:48px !important;
+  max-width:48px !important;
+  max-height:48px !important;
+  object-fit:contain !important;
+  transform:none !important;
 }
