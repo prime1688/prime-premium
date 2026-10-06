@@ -3601,11 +3601,16 @@ function socialPlatformLogo(platform){
   return '<span>•</span>';
 }
 function socialFeatureChips(x){
-  const n=String(x.name||"").toLowerCase(),chips=[];
-  if(/like|likes|follower|follow|view|วิว|comment|คอมเมนต์|save|bookmark|share|แชร์/.test(n)) chips.push("⚡ เริ่มเร็ว");
-  if(/real|บัญชีจริง|quality|hq|คุณภาพ/.test(n)) chips.push("👤 บัญชีจริง");
-  if(x.refill===true) chips.push("♻️ รับประกัน");
-  
+  const n=(String(x?.name||"")+" "+String(x?.category||"")).toLowerCase();
+  const chips=[];
+  if(/เริ่มทันที|เริ่มเร็ว|เริ่มไว|start|instant|0[-– ]?[0-9]+\\s*(min|minute|hour|hr)|ภายใน\\s*[0-9]+\\s*(นาที|ชั่วโมง)/.test(n))
+    chips.push("⚡ เริ่มเร็ว");
+  if(/real|บัญชีจริง|โปรไฟล์จริง|hq|high quality|คุณภาพสูง/.test(n))
+    chips.push("👤 บัญชีจริง");
+  if(x?.refill===true || /รับประกัน|refill|guarantee|ประกัน/.test(n))
+    chips.push("♻️ รับประกัน");
+  if(chips.length===0)
+    chips.push("✨ คุณภาพมาตรฐาน");
   return chips.slice(0,3);
 }
 function renderSocialServices(){
