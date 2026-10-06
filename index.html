@@ -3210,6 +3210,18 @@ document.addEventListener("DOMContentLoaded",initPrimeTouchCardSelection);
  .prime-notify-count{right:-4px;top:-5px}
 }
 </style>
+<style id="prime-notify-mobile-fix">
+.prime-user-box .prime-notify-wrap{display:none;position:relative;flex:0 0 auto}
+.prime-user-box .prime-notify-wrap.auth-visible{display:flex!important}
+.prime-user-box .prime-notify-btn{width:40px;height:40px;flex:0 0 40px}
+@media(max-width:600px){
+  .prime-user-box{gap:5px!important;padding:4px!important;right:6px!important;top:6px!important;transform:none!important}
+  .prime-user-box .prime-notify-btn{width:34px;height:34px;flex-basis:34px;font-size:16px;border-radius:10px}
+  .prime-user-box .prime-notify-count{min-width:16px;height:16px;font-size:9px;right:-4px;top:-5px}
+  .prime-user-box .prime-line{width:34px;height:34px;font-size:8px}
+  .prime-user-box .prime-login{padding:7px 8px!important;font-size:10px!important}
+}
+</style>
 </head>
 
 <body>
@@ -3225,31 +3237,30 @@ document.addEventListener("DOMContentLoaded",initPrimeTouchCardSelection);
         <div class="prime-menu-item prime-credit-top" id="headerCreditMenu" aria-label="ยอดเครดิต" style="display:none"><span>฿</span><strong id="headerCredit">฿0.00</strong></div>
       </nav>
  
-<div class="prime-notify-wrap auth-only-menu" id="primeNotifyWrap">
-  <button class="prime-notify-btn" id="primeNotifyBtn" type="button" data-action="openNotifications" aria-label="แจ้งเตือน" aria-expanded="false">
-    🔔<span class="prime-notify-count" id="primeNotifyCount">0</span>
-  </button>
-</div>
-<div class="prime-notify-panel" id="primeNotifyPanel" aria-hidden="true">
-  <div class="prime-notify-head">
-    <div><h3 id="primeNotifyTitle">🔔 แจ้งเตือนของฉัน</h3><small id="primeNotifySubtitle">อัปเดตล่าสุดจาก PRIME</small></div>
-    <button class="prime-notify-close" type="button" data-action="closeNotifications" aria-label="ปิด">×</button>
-  </div>
-  <div class="prime-notify-tabs">
-    <button class="prime-notify-tab active" type="button" data-notify-tab="all">ทั้งหมด</button>
-    <button class="prime-notify-tab" type="button" data-notify-tab="unread">ยังไม่อ่าน</button>
-    <button class="prime-notify-tab" type="button" data-notify-tab="important">สำคัญ</button>
-  </div>
-  <div class="prime-notify-list" id="primeNotifyList"></div>
-  <div class="prime-notify-footer"><button class="prime-notify-all" type="button" data-action="markNotificationsRead">ทำเครื่องหมายว่าอ่านทั้งหมด</button></div>
-</div>
+
       <div class="prime-user-box">
+        <div class="prime-notify-wrap auth-only-menu" id="primeNotifyWrap">
+          <button class="prime-notify-btn" id="primeNotifyBtn" type="button" data-action="openNotifications" aria-label="แจ้งเตือน" aria-expanded="false">🔔<span class="prime-notify-count" id="primeNotifyCount">0</span></button>
+        </div>
         <a class="prime-line" href="https://lin.ee/nfDBcH07" target="_blank" rel="noopener noreferrer" aria-label="LINE">LINE</a>
         <div class="prime-avatar">●</div>
         <button class="nav-btn prime-login" type="button" data-action="login">เข้าสู่ระบบ</button>
       </div>
     </div>
   </header>
+  <div class="prime-notify-panel" id="primeNotifyPanel" aria-hidden="true">
+    <div class="prime-notify-head">
+      <div><h3 id="primeNotifyTitle">🔔 แจ้งเตือนของฉัน</h3><small id="primeNotifySubtitle">อัปเดตล่าสุดจาก PRIME</small></div>
+      <button class="prime-notify-close" type="button" data-action="closeNotifications" aria-label="ปิด">×</button>
+    </div>
+    <div class="prime-notify-tabs">
+      <button class="prime-notify-tab active" type="button" data-notify-tab="all">ทั้งหมด</button>
+      <button class="prime-notify-tab" type="button" data-notify-tab="unread">ยังไม่อ่าน</button>
+      <button class="prime-notify-tab" type="button" data-notify-tab="important">สำคัญ</button>
+    </div>
+    <div class="prime-notify-list" id="primeNotifyList"></div>
+    <div class="prime-notify-footer"><button class="prime-notify-all" type="button" data-action="markNotificationsRead">ทำเครื่องหมายว่าอ่านทั้งหมด</button></div>
+  </div>
   <div class="account-bar prime-account" id="accountBar">
     <div class="account-box">สมาชิก: <strong id="accountPhone">-</strong></div>
     <button class="topup-highlight" type="button" data-action="openTopup">เติมเงิน</button>
@@ -6085,6 +6096,7 @@ padding:9px 10px !important}}
   }
   window.openNotifications=async function(){
     const p=document.getElementById("primeNotifyPanel"),b=document.getElementById("primeNotifyBtn");if(!p)return;
+    if(p.parentElement!==document.body) document.body.appendChild(p);
     p.classList.add("show");p.setAttribute("aria-hidden","false");b?.setAttribute("aria-expanded","true");await load();
   };
   window.closeNotifications=function(){const p=document.getElementById("primeNotifyPanel"),b=document.getElementById("primeNotifyBtn");p?.classList.remove("show");p?.setAttribute("aria-hidden","true");b?.setAttribute("aria-expanded","false")};
