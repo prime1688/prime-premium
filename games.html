@@ -148,7 +148,9 @@ async function finishSession(metric=0){
   if(error){console.error(error);showPopup("บันทึกคะแนนไม่สำเร็จ",error.message);return null}
   points=Number(data.available_points ?? data.total_points ?? points);plays=Number(data.plays||plays);renderSummary({points,plays});return data;
 }
-function openModal(){lockedScrollY=window.scrollY||window.pageYOffset||0;document.body.classList.add("modal-open");document.body.style.top="-"+lockedScrollY+"px";$("#gameModal").classList.add("show")}\nfunction closeModal(){document.body.classList.remove("modal-open");document.body.style.top="";window.scrollTo(0,lockedScrollY)}\nfunction openGame(id){clearGame();({maze,shoot,runner,cards,quiz,racing}[id])()}
+function openModal(){lockedScrollY=window.scrollY||window.pageYOffset||0;document.body.classList.add("modal-open");document.body.style.top="-"+lockedScrollY+"px";$("#gameModal").classList.add("show")}
+function closeModal(){document.body.classList.remove("modal-open");document.body.style.top="";window.scrollTo(0,lockedScrollY)}
+function openGame(id){clearGame();({maze,shoot,runner,cards,quiz,racing}[id])()}
 function closeGame(){clearGame();currentSession=null;$("#gameModal").classList.remove("show");closeModal()}
 function clearGame(){if(gameTimer)clearInterval(gameTimer);if(gameLoop)cancelAnimationFrame(gameLoop);gameTimer=null;gameLoop=null}
 async function finish(title,metric=0){clearGame();const d=await finishSession(metric);if(!d)return;$("#gameTitle").textContent=title;$("#gameBody").innerHTML='<div class="result"><div>🎉 จบเกม!</div><strong>+'+Number(d.score).toLocaleString()+' คะแนน</strong><p>คะแนนที่ใช้ได้เดือนนี้ '+Number(d.available_points ?? points).toLocaleString()+'</p><button class="primary" onclick="closeGame()">กลับหน้าเกม</button></div>'}
@@ -161,7 +163,8 @@ async function quiz(){if(!await requireAuth()||!await startSession("quiz"))retur
 async function racing(){if(!await requireAuth()||!await startSession("racing"))return;$("#gameModal").classList.add("show");$("#gameTitle").textContent="🏎️ Mini Racing";let lane=1,alive=true;$("#gameBody").innerHTML='<div class="hud"><span>ขับให้นานที่สุด · สูงสุด 30 วินาที</span></div><div class="race-area"><div class="road"></div><div class="race-lane l1"></div><div class="race-lane l2"></div><div class="race-lane l3"></div><div class="car" id="raceCar"></div></div><div class="controls"><button onclick="raceMove(-1)">←</button><button onclick="raceMove(1)">→</button></div>';const car=$("#raceCar"),set=()=>car.style.left=(8+lane*28)+"%";window.raceMove=d=>{lane=Math.max(0,Math.min(2,lane+d));set()};set();let start=performance.now(),last=0,obs=[];const tick=ts=>{if(ts-start>30000)return finish("Mini Racing",Math.floor((ts-start)/1000));if(ts-last>700){last=ts;let o=document.createElement("div");o.className="ob";o.style.left=(8+Math.floor(Math.random()*3)*28)+"%";o.style.top="-55px";$("#gameBody .race-area").appendChild(o);obs.push(o)}obs.forEach((o,i)=>{o.style.top=(parseFloat(o.style.top)+5)+"px";let ol=parseFloat(o.style.left),ot=parseFloat(o.style.top);if(ot>245&&ot<330&&Math.abs(ol-(8+lane*28))<8){alive=false;finish("Mini Racing",Math.floor((ts-start)/1000));return}if(ot>350){o.remove();obs.splice(i,1)}});if(alive)gameLoop=requestAnimationFrame(tick)};gameLoop=requestAnimationFrame(tick)}
 
 document.addEventListener("keydown",e=>{if(!$("#gameModal").classList.contains("show"))return;if(["ArrowLeft","ArrowRight","ArrowUp","ArrowDown"," "].includes(e.key))e.preventDefault();if(e.key==="Escape")closeGame();});
-$("#gameModal").addEventListener("click",e=>{if(e.target.id==="gameModal")closeGame()});\n$("#gameModal").addEventListener("touchmove",e=>{if(e.target.closest(".panel"))return;e.preventDefault()},{passive:false});
+$("#gameModal").addEventListener("click",e=>{if(e.target.id==="gameModal")closeGame()});
+$("#gameModal").addEventListener("touchmove",e=>{if(e.target.closest(".panel"))return;e.preventDefault()},{passive:false});
 (async()=>{if(await session()){await loadSummary();await loadLeaderboard()}})();
 </script>
 </body></html>
