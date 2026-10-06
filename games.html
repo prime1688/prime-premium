@@ -91,7 +91,7 @@ async function loadSummary(){
   if(!await requireAuth())return false;
   const {data,error}=await supabaseClient.rpc("get_game_summary");
   if(error){console.error(error);showPopup("โหลดคะแนนไม่สำเร็จ",error.message);return false}
-  points=Number(data?.points||0);plays=Number(data?.plays||0);
+  points=Number(data?.available_points ?? data?.points ?? 0);plays=Number(data?.plays||0);
   renderSummary(data);return true;
 }
 function renderSummary(d){
@@ -127,9 +127,9 @@ async function redeem(){
   const n=Math.floor(Number($("#redeemPoints").value)||0);
   if(n<1){showPopup("แลกคะแนนไม่ได้","ขั้นต่ำในการแลกคือ 1 คะแนน");return}
   if(n>points){showPopup("คะแนนไม่พอ","คุณมี "+points.toLocaleString()+" คะแนน");return}
-  const {data,error}=await supabaseClient.rpc("redeem_game_points",{p_points:n});
+  const idempotencyKey=crypto.randomUUID();\n  const {data,error}=await supabaseClient.rpc("redeem_game_points",{p_points:n,p_idempotency_key:idempotencyKey});
   if(error){showPopup("แลกคะแนนไม่สำเร็จ",error.message);return}
-  points=Number(data.remaining_points||0);
+  points=Number(data.available_points ?? Math.max(0,points-n));
   renderSummary({points,plays});
   $("#gameTitle").textContent="🎉 แลกสำเร็จ";
   $("#gameBody").innerHTML='<div class="result"><div>หักคะแนน</div><strong>-'+n.toLocaleString()+' คะแนน</strong><p>ได้รับ <b>'+Number(data.credit_added).toFixed(2)+' เครดิต</b></p><p>คงเหลือ '+points.toLocaleString()+' คะแนน</p><button class="primary" onclick="closeGame()">เรียบร้อย</button></div>';
@@ -145,12 +145,12 @@ async function finishSession(metric=0){
   const sid=currentSession.session_id;currentSession=null;
   const {data,error}=await supabaseClient.rpc("finish_game_session",{p_session_id:sid,p_client_metric:Math.max(0,Math.floor(metric||0))});
   if(error){console.error(error);showPopup("บันทึกคะแนนไม่สำเร็จ",error.message);return null}
-  points=Number(data.total_points||points);plays=Number(data.plays||plays);renderSummary({points,plays});return data;
+  points=Number(data.available_points ?? data.total_points ?? points);plays=Number(data.plays||plays);renderSummary({points,plays});return data;
 }
 function openGame(id){clearGame();({maze,shoot,runner,cards,quiz,racing}[id])()}
 function closeGame(){clearGame();currentSession=null;$("#gameModal").classList.remove("show")}
 function clearGame(){if(gameTimer)clearInterval(gameTimer);if(gameLoop)cancelAnimationFrame(gameLoop);gameTimer=null;gameLoop=null}
-async function finish(title,metric=0){clearGame();const d=await finishSession(metric);if(!d)return;$("#gameTitle").textContent=title;$("#gameBody").innerHTML='<div class="result"><div>🎉 จบเกม!</div><strong>+'+Number(d.score).toLocaleString()+' คะแนน</strong><p>คะแนนเดือนนี้ '+Number(d.total_points).toLocaleString()+'</p><button class="primary" onclick="closeGame()">กลับหน้าเกม</button></div>'}
+async function finish(title,metric=0){clearGame();const d=await finishSession(metric);if(!d)return;$("#gameTitle").textContent=title;$("#gameBody").innerHTML='<div class="result"><div>🎉 จบเกม!</div><strong>+'+Number(d.score).toLocaleString()+' คะแนน</strong><p>คะแนนที่ใช้ได้เดือนนี้ '+Number(d.available_points ?? points).toLocaleString()+'</p><button class="primary" onclick="closeGame()">กลับหน้าเกม</button></div>'}
 
 async function maze(){if(!await requireAuth()||!await startSession("maze"))return;$("#gameModal").classList.add("show");$("#gameTitle").textContent="🌀 เขาวงกต";let W=8,H=10,pos={x:0,y:0},goal={x:7,y:9},coins=new Set(["2,1","5,2","1,6","6,7","3,8"]),walls=new Set(["1,0","1,1","3,1","4,1","6,1","2,2","6,2","0,3","2,3","4,3","5,3","2,4","3,4","6,4","0,5","4,5","5,5","7,5","1,6","3,6","5,6","1,7","6,7","2,8","4,8","5,8","2,9"]);const draw=()=>{let s="";for(let y=0;y<H;y++)for(let x=0;x<W;x++){let k=x+","+y,c=walls.has(k)?"wall":x===pos.x&&y===pos.y?"player":x===goal.x&&y===goal.y?"goal":coins.has(k)?"coin":"";s+='<div class="cell '+c+'">'+(c==="player"?"🙂":c==="goal"?"🏁":c==="coin"?"⭐":"")+"</div>"}$("#gameBody").innerHTML='<div class="hud"><span>⭐ เหรียญเหลือ '+coins.size+'</span><span>🏁 ไปให้ถึงประตู</span></div><div class="maze">'+s+'</div><div class="controls"><button class="empty"></button><button onclick="move(0,-1)">↑</button><button class="empty"></button><button onclick="move(-1,0)">←</button><button onclick="move(0,1)">↓</button><button onclick="move(1,0)">→</button></div>';};window.move=(dx,dy)=>{let nx=pos.x+dx,ny=pos.y+dy,k=nx+","+ny;if(nx<0||ny<0||nx>=W||ny>=H||walls.has(k))return;pos={x:nx,y:ny};if(coins.has(k))coins.delete(k);draw();if(nx===goal.x&&ny===goal.y)finish("เขาวงกต",1)};draw()}
 async function shoot(){if(!await requireAuth()||!await startSession("shoot"))return;$("#gameModal").classList.add("show");$("#gameTitle").textContent="🎯 ยิงเป้า";let t=25,score=0;const area=()=>{if(t<=0)return;let a=document.createElement("div");a.className="target";a.style.left=(Math.random()*88+4)+"%";a.style.top=(Math.random()*78+4)+"%";a.onclick=()=>{score++;$("#score").textContent=score;a.remove();area()};$("#targetArea").appendChild(a)};$("#gameBody").innerHTML='<div class="hud"><span>⏱️ <b id="time">'+t+'</b> วิ</span><span>🎯 เป้าที่โดน <b id="score">0</b></span></div><div class="target-area" id="targetArea"></div>';area();gameTimer=setInterval(()=>{$("#time").textContent=--t;if(t<=0)finish("ยิงเป้า",score)},1000)}
