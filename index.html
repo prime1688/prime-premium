@@ -2545,6 +2545,17 @@ html,body{
 .prime-extra-count{margin-top:4px;color:#7020d4;font-size:13px;font-weight:900}
 .prime-extra-desc{margin-top:7px;color:#765b92;font-size:11px;line-height:1.5;min-height:33px}
 .prime-extra-card .prime-new-btn{margin-top:auto}
+.prime-new-card,.prime-extra-card{transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease}
+.prime-new-card .prime-new-btn,.prime-extra-card .prime-new-btn{position:relative;z-index:3;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+.prime-new-card.is-selected,.prime-extra-card.is-selected{
+  border-color:#a957f5!important;
+  box-shadow:0 0 0 2px rgba(143,53,240,.18),0 10px 28px rgba(101,18,197,.14),inset 0 1px 0 #fff!important;
+}
+.prime-new-card .prime-new-btn:focus-visible,.prime-extra-card .prime-new-btn:focus-visible{
+  outline:none!important;
+  border-color:#8f35f0!important;
+  box-shadow:0 0 0 3px rgba(143,53,240,.20)!important;
+}
 .prime-extra-note{margin-top:12px;color:#8a769d;font-size:10px;text-align:center}
 .prime-extra-modal{width:min(760px,100%)!important;max-width:760px!important}
 .prime-extra-options{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px;margin-top:15px}
@@ -3427,6 +3438,24 @@ function beeThFeatureMatch(row,platform,serviceName){
   const tokens=s.split(/\s*\/\s*|\s*\+\s*|\s+/).map(x=>x.trim()).filter(x=>x.length>=3);
   return !tokens.length||tokens.some(token=>t.includes(token));
 }
+function initNewCardSelectionState(){
+  if(window.__primeNewCardSelectionBound)return;
+  window.__primeNewCardSelectionBound=true;
+  document.addEventListener("click",function(event){
+    const btn=event.target&&event.target.closest?event.target.closest(".prime-new-card .prime-new-btn,.prime-extra-card .prime-new-btn"):null;
+    if(!btn||btn.disabled)return;
+    const card=btn.closest(".prime-new-card,.prime-extra-card");
+    if(!card)return;
+    const grid=card.parentElement;
+    if(grid){
+      grid.querySelectorAll(".prime-new-card.is-selected,.prime-extra-card.is-selected").forEach(function(x){
+        if(x!==card)x.classList.remove("is-selected");
+      });
+    }
+    card.classList.add("is-selected");
+  });
+}
+document.addEventListener("DOMContentLoaded",initNewCardSelectionState);
 async function refreshNewServiceStatuses(){
   if(!supabaseClient)return;
   try{
