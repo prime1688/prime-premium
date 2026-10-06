@@ -229,6 +229,41 @@ radial-gradient(circle at 50% 45%,hsla(var(--sceneHue),90%,60%,.13),transparent 
  #gameBody .scene-hero .scene-icon{font-size:64px}
  #gameBody .scene-props span{width:50px;height:50px;border-radius:15px;font-size:23px}
 }
+/* SCENE V6 — per-game intensity, HUD/control safe zones */
+#gameBody{--fog:.11;--focus:.20;--grid:.055;--shadow:.42}
+#gameBody:before{opacity:var(--fog);filter:blur(7px)}
+#gameBody:after{opacity:var(--grid);mask-image:linear-gradient(to top,black 0%,rgba(0,0,0,.7) 34%,transparent 76%)}
+#gameBody .scene-hero:before{opacity:var(--focus)}
+#gameBody .scene-hero:after{opacity:.55}
+#gameBody .mockHud{position:sticky;top:0;z-index:20;background:linear-gradient(180deg,rgba(7,3,18,.98) 72%,transparent);box-shadow:0 8px 22px rgba(0,0,0,.18)}
+#gameBody .controls{z-index:25;background:linear-gradient(180deg,transparent,rgba(7,2,20,.97) 34%);text-shadow:0 2px 8px rgba(0,0,0,.8)}
+#gameBody[data-game="shoot"]{--fog:.09;--focus:.16;--grid:.035;--shadow:.48}
+#gameBody[data-game="runner"]{--fog:.12;--focus:.18;--grid:.07;--shadow:.48}
+#gameBody[data-game="cards"]{--fog:.16;--focus:.25;--grid:.025;--shadow:.38}
+#gameBody[data-game="quiz"]{--fog:.10;--focus:.20;--grid:.025;--shadow:.4}
+#gameBody[data-game="racing"]{--fog:.13;--focus:.22;--grid:.075;--shadow:.52}
+#gameBody[data-game="reaction"]{--fog:.18;--focus:.30;--grid:.045;--shadow:.4}
+#gameBody[data-game="math_rush"]{--fog:.12;--focus:.23;--grid:.04;--shadow:.42}
+#gameBody[data-game="color_match"]{--fog:.08;--focus:.19;--grid:.02;--shadow:.35}
+#gameBody[data-game="memory_number"]{--fog:.15;--focus:.24;--grid:.025;--shadow:.44}
+#gameBody[data-game="emoji_count"]{--fog:.10;--focus:.22;--grid:.035;--shadow:.38}
+#gameBody[data-game="tap_10"]{--fog:.18;--focus:.28;--grid:.04;--shadow:.42}
+#gameBody[data-game="timing"]{--fog:.17;--focus:.27;--grid:.035;--shadow:.42}
+#gameBody[data-game="guess_number"]{--fog:.13;--focus:.22;--grid:.025;--shadow:.45}
+#gameBody[data-game="sequence"]{--fog:.15;--focus:.24;--grid:.025;--shadow:.4}
+#gameBody[data-game="word_match"]{--fog:.10;--focus:.20;--grid:.025;--shadow:.4}
+#gameBody[data-game="coin_catcher"]{--fog:.11;--focus:.23;--grid:.045;--shadow:.43}
+#gameBody[data-game="lane_dodge"]{--fog:.10;--focus:.17;--grid:.08;--shadow:.55}
+#gameBody[data-game="higher_lower"]{--fog:.12;--focus:.21;--grid:.03;--shadow:.42}
+#gameBody[data-game="fast_tap"]{--fog:.16;--focus:.29;--grid:.045;--shadow:.45}
+#gameBody .target-area,#gameBody .runner-area,#gameBody .race-area{filter:drop-shadow(0 12px 24px rgba(0,0,0,var(--shadow)))}
+@media(max-width:430px){
+ #gameBody:before{filter:blur(8px)}
+ #gameBody .scene-hero:before{opacity:calc(var(--focus) * .82)}
+ #gameBody .scene-hero:after{opacity:.42}
+ #gameBody .mockHud{background:linear-gradient(180deg,rgba(7,3,18,1) 78%,transparent);box-shadow:0 7px 18px rgba(0,0,0,.22)}
+ #gameBody .controls{background:linear-gradient(180deg,transparent,rgba(7,2,20,1) 42%);padding-top:14px}
+}
 </style>
 </head>
 <body>
