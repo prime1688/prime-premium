@@ -133,13 +133,13 @@ function openRules(){
 async function openRedeem(){
   if(!await requireAuth())return;
   $("#gameTitle").textContent="💳 แลกคะแนนเป็นเครดิต";
-  $("#gameBody").innerHTML='<div class="notice">อัตราแลก <b>100 คะแนน = 1 เครดิต</b><br>ขั้นต่ำ <b>1 คะแนน</b> · แลกได้เฉพาะเครดิตในเกม · ถอนเงินสดไม่ได้</div><div class="hud"><span>⭐ มี '+points.toLocaleString()+' คะแนน</span></div><input id="redeemPoints" type="number" min="1" step="1" placeholder="จำนวนคะแนนที่ต้องการแลก" style="width:100%;padding:13px;border:1px solid #d7b8ff;border-radius:12px;font-size:16px"><p id="redeemPreview" class="muted">กรอกคะแนนเพื่อดูเครดิตที่จะได้รับ</p><button class="primary" onclick="redeem()">ยืนยันการแลกคะแนน</button><hr style="border:0;border-top:1px solid #eee;margin:15px 0"><table class="exchangeTable"><tr><td>100 คะแนน</td><td>1 เครดิต</td></tr><tr><td>500 คะแนน</td><td>5 เครดิต</td></tr><tr><td>1,000 คะแนน</td><td>10 เครดิต</td></tr><tr><td>5,000 คะแนน</td><td>50 เครดิต</td></tr><tr><td>10,000 คะแนน</td><td>100 เครดิต</td></tr></table>';
+  $("#gameBody").innerHTML='<div class="notice">อัตราแลก <b>100 คะแนน = 1 เครดิต</b><br>ขั้นต่ำ <b>10,000 คะแนน = 10 เครดิต</b> · แลกได้เฉพาะเครดิตในเกม · ถอนเงินสดไม่ได้</div><div class="hud"><span>⭐ มี '+points.toLocaleString()+' คะแนน</span></div><input id="redeemPoints" type="number" min="1" step="1" placeholder="จำนวนคะแนนที่ต้องการแลก" style="width:100%;padding:13px;border:1px solid #d7b8ff;border-radius:12px;font-size:16px"><p id="redeemPreview" class="muted">กรอกคะแนนเพื่อดูเครดิตที่จะได้รับ</p><button class="primary" onclick="redeem()">ยืนยันการแลกคะแนน</button><hr style="border:0;border-top:1px solid #eee;margin:15px 0"><table class="exchangeTable"><tr><td>10,000 คะแนน</td><td>10 เครดิต</td></tr><tr><td>20,000 คะแนน</td><td>20 เครดิต</td></tr><tr><td>50,000 คะแนน</td><td>50 เครดิต</td></tr><tr><td>100,000 คะแนน</td><td>100 เครดิต</td></tr><tr><td>10,000 คะแนน</td><td>100 เครดิต</td></tr></table>';
   $("#redeemPoints").oninput=()=>{const n=Math.max(0,Math.floor(Number($("#redeemPoints").value)||0));$("#redeemPreview").textContent=n?("จะได้รับ "+(n/100).toFixed(2)+" เครดิต"):"กรอกคะแนนเพื่อดูเครดิตที่จะได้รับ"};
   $("#gameModal").classList.add("show");
 }
 async function redeem(){
   const n=Math.floor(Number($("#redeemPoints").value)||0);
-  if(n<1){showPopup("แลกคะแนนไม่ได้","ขั้นต่ำในการแลกคือ 1 คะแนน");return}
+  if(n<10000){showPopup("แลกคะแนนไม่ได้","ขั้นต่ำในการแลกคือ 10,000 คะแนน (10 เครดิต)");return}
   if(n>points){showPopup("คะแนนไม่พอ","คุณมี "+points.toLocaleString()+" คะแนน");return}
   const idempotencyKey=crypto.randomUUID();
   const {data,error}=await supabaseClient.rpc("redeem_game_points",{p_points:n,p_idempotency_key:idempotencyKey});
