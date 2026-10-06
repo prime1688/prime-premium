@@ -3402,17 +3402,20 @@ function beeThPlatformMatch(row,platform){
   if(p==="x")return /twitter|(^|\W)x(\W|$)/.test(t);
   return t.includes(p);
 }
+function beeThIsLiveViewer(row){
+  const t=beeThText(row);
+  const isLive=/live|ไลฟ์|ถ่ายทอดสด/.test(t);
+  const isViewer=/viewer|viewers|ผู้ชม|คนดู|คนเข้าชม|เข้าชมไลฟ์|ยอดวิวไลฟ์/.test(t);
+  const isOther=/comment|comments|คอมเมนต์|like|likes|ไลค์|ถูกใจ|share|shares|แชร์/.test(t);
+  return isLive&&isViewer&&!isOther;
+}
 function beeThFeatureMatch(row,platform,serviceName){
   if(!beeThPlatformMatch(row,platform))return false;
   const t=beeThText(row),s=String(serviceName||"").toLowerCase();
-  if(!s)return true;
-
-  // BEE-TH uses several Thai/English names for live-viewer services.
-  // Treat these as the same feature, while excluding live comments/likes.
   if(/live\s*(viewer|viewers)|ผู้ชมไลฟ์|คนดูไลฟ์|คนเข้าชมไลฟ์|เข้าชมไลฟ์|ดูไลฟ์|ไลฟ์สด/.test(s)){
-    return /live\s*(viewer|viewers|stream)|ผู้ชม.*ไลฟ์|ผู้ชมไลฟ์|คนดู.*ไลฟ์|คนเข้าชม.*ไลฟ์|เข้าชม.*ไลฟ์|ดู.*ไลฟ์|ไลฟ์สด.*(ผู้ชม|คนดู|เข้าชม)/.test(t);
+    return beeThIsLiveViewer(row);
   }
-
+  if(!s)return true;
   const tokens=s.split(/\s*\/\s*|\s*\+\s*|\s+/).map(x=>x.trim()).filter(x=>x.length>=3);
   return !tokens.length||tokens.some(token=>t.includes(token));
 }
