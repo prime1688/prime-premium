@@ -3028,6 +3028,27 @@ html,body{
       mix-blend-mode:multiply;
     }
 
+  
+    /* X PRODUCT CARD — match CTA width/position with neighboring cards */
+    .prime-product-card[data-platform="X"] .prime-select-btn{
+      width:100% !important;
+      margin-left:0 !important;
+      margin-right:0 !important;
+      align-self:stretch !important;
+      box-sizing:border-box !important;
+      min-height:50px !important;
+      height:50px !important;
+      flex:0 0 50px !important;
+    }
+    @media(max-width:600px){
+      .prime-product-card[data-platform="X"] .prime-select-btn{
+        width:100% !important;
+        min-height:50px !important;
+        height:50px !important;
+        flex-basis:50px !important;
+      }
+    }
+
   </style>
 <style>.admin-members-box{margin:14px 0 18px;padding:14px;border:1px solid rgba(157,78,221,.25);border-radius:16px;background:rgba(255,255,255,.45)}.admin-section-title{font-size:18px;font-weight:900;margin-bottom:10px}.admin-section-title small{font-size:12px;color:#8b6b9e;font-weight:700}.admin-members-head,.admin-member-row{display:grid;grid-template-columns:1.2fr .8fr 1.1fr;gap:8px;align-items:center;padding:10px;border-bottom:1px solid rgba(157,78,221,.14)}.admin-members-head{font-size:12px;color:#80668f}.admin-member-row strong:nth-child(2){color:#6f20c9}.admin-member-row span{font-size:12px;color:#80668f}@media(max-width:600px){.admin-members-head,.admin-member-row{grid-template-columns:1fr 1fr}.admin-members-head span:last-child,.admin-member-row span:last-child{grid-column:1/-1}}
 /* Selection clarity: only .selected gets the strong purple border */
