@@ -22,20 +22,50 @@
 .result{text-align:center;padding:15px;background:linear-gradient(180deg,#f6edff,#fff);border:1px solid #dfc8ff;border-radius:16px;margin-top:12px}.result strong{font-size:35px;color:#6c20d1;display:block}.rank{margin-top:16px;background:#fff;border:1px solid #dfc8ff;border-radius:16px;padding:13px}.rank h3{margin:0 0 9px}.rankrow{display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid #f0e8f7}.rankrow:last-child{border:0}
 @media(max-width:760px){.grid{grid-template-columns:repeat(2,1fr)}.wrap{padding:14px 10px 45px}.game{min-height:190px;padding:14px}.target-area,.runner-area,.race-area{height:300px}}
 @media(max-width:430px){.grid{grid-template-columns:1fr}.game{min-height:155px}.cards{gap:6px}.panel{padding:14px}}
+
+.heroActions{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:13px}.heroBtn{border:1px solid rgba(255,255,255,.45);background:rgba(255,255,255,.14);color:#fff;padding:9px 12px;border-radius:11px;font-weight:900;cursor:pointer}.heroBtn:active,.exchangeBtn:active,.play:active{transform:scale(.98)}
+.exchangeBox{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:12px;padding:13px;border-radius:14px;background:#faf6ff;border:1px solid #e3ceff}.exchangeBtn{border:0;background:linear-gradient(135deg,#8d3dff,#5d19bd);color:#fff;padding:10px 14px;border-radius:11px;font-weight:950;cursor:pointer}
+.level{margin:10px 0}.bar{height:12px;background:#eee5f8;border-radius:999px;overflow:hidden}.bar i{display:block;height:100%;background:linear-gradient(90deg,#b86cff,#6d20d4);border-radius:999px}.small{font-size:12px;color:#806c92}
+.lbrow{display:grid;grid-template-columns:42px 1fr auto;gap:8px;align-items:center;padding:9px 0;border-bottom:1px solid #f0e8f7}.lbrow:last-child{border:0}.medal{font-size:20px}.me{font-weight:950;color:#6d20d4}
+.rulegrid{display:grid;gap:9px}.rule{padding:11px;border-radius:12px;background:#faf7ff;border:1px solid #eadcff}.rule b{display:block;margin-bottom:3px}
+.exchangeTable{width:100%;border-collapse:collapse;margin:10px 0}.exchangeTable td{padding:8px;border-bottom:1px solid #eee}.notice{padding:11px;border-radius:12px;background:#fff7df;border:1px solid #f0d88b;font-size:13px;line-height:1.55}
+@media(max-width:430px){.heroActions{display:grid;grid-template-columns:1fr 1fr 1fr}.heroBtn{padding:8px 5px;font-size:12px}.exchangeBox{align-items:stretch;flex-direction:column}.exchangeBtn{width:100%}}
 </style>
 </head>
 <body>
 <header class="header"><div class="nav"><a class="brand" href="./index.html">PRIME<span>.</span></a><a class="back" href="./index.html">← กลับ PRIME</a></div></header>
 <main class="wrap">
-<section class="hero"><h1>🎮 PRIME GAMES</h1><p>เล่นเกมสั้น ๆ สะสมคะแนนเกม และแข่งขันอันดับกับเพื่อนสมาชิก</p><div class="points">⭐ คะแนนเกม <b id="totalPoints">0</b></div></section>
+<section class="hero">
+  <h1>🎮 PRIME GAMES</h1>
+  <p>เล่นเกมสะสมคะแนน แลกเป็นเครดิต PRIME ได้</p>
+  <div class="points">⭐ คะแนนเดือนนี้ <b id="totalPoints">0</b></div>
+  <div class="heroActions">
+    <button class="heroBtn" onclick="openRedeem()">💳 แลกคะแนนเป็นเครดิต</button>
+    <button class="heroBtn" onclick="openRules()">📖 กติกา</button>
+    <button class="heroBtn" onclick="openLeaderboard()">🏆 อันดับ</button>
+  </div>
+</section>
 <section class="grid">
 <article class="game"><div class="ico">🌀</div><h3>เขาวงกต</h3><p>หาทางออก เก็บเหรียญ และหลบดัก</p><button class="play" onclick="openGame('maze')">เริ่มเล่น</button></article><article class="game"><div class="ico">🎯</div><h3>ยิงเป้า</h3><p>ยิงเป้าให้ได้มากที่สุดภายในเวลาที่กำหนด</p><button class="play" onclick="openGame('shoot')">เริ่มเล่น</button></article><article class="game"><div class="ico">🏃</div><h3>หลบสิ่งกีดขวาง</h3><p>วิ่ง เก็บเหรียญ และหลบสิ่งกีดขวาง</p><button class="play" onclick="openGame('runner')">เริ่มเล่น</button></article><article class="game"><div class="ico">🃏</div><h3>จับคู่ไพ่</h3><p>เปิดไพ่หาคู่ให้ครบภายในเวลาที่กำหนด</p><button class="play" onclick="openGame('cards')">เริ่มเล่น</button></article><article class="game"><div class="ico">🧠</div><h3>Quiz</h3><p>ตอบคำถาม Social Media รับคะแนน</p><button class="play" onclick="openGame('quiz')">เริ่มเล่น</button></article><article class="game"><div class="ico">🏎️</div><h3>Mini Racing</h3><p>ควบคุมรถ เก็บเหรียญ และทำคะแนนให้สูงที่สุด</p><button class="play" onclick="openGame('racing')">เริ่มเล่น</button></article>
 </section>
-<section class="rank"><h3>🏆 คะแนนเกมของคุณ</h3><div id="localRank"></div><p class="muted">รอบนี้เก็บคะแนนไว้ในอุปกรณ์ก่อน ยังไม่เชื่อมเครดิตเงินจริงของ PRIME</p></section>
+<section class="rank">
+  <h3>⭐ คะแนนเกมของคุณ</h3>
+  <div id="scoreSummary"></div>
+  <div class="exchangeBox">
+    <div><b>อัตราแลก</b><br><span>100 คะแนน = 1 เครดิต</span></div>
+    <button class="exchangeBtn" onclick="openRedeem()">แลกคะแนน</button>
+  </div>
+</section>
+<section class="rank">
+  <h3>🏆 อันดับประจำเดือน</h3>
+  <p class="muted">แสดง 10 อันดับแรก และอันดับที่เหลือเรียงต่อด้านล่าง</p>
+  <div id="leaderboard"></div>
+</section>
 </main>
 
 <div class="modal" id="gameModal"><div class="panel"><div class="head"><h2 id="gameTitle">เกม</h2><button class="close" onclick="closeGame()">×</button></div><div id="gameBody"></div></div></div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 const SUPABASE_URL="https://uxatabaoxbmgswcqrptq.supabase.co";
 const SUPABASE_KEY="sb_publishable_WIFz-7unS6IQFspqOSoj_Q_BST2Hr4o";
@@ -43,44 +73,94 @@ const supabaseClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 const $=s=>document.querySelector(s);
 let points=0,plays=0,gameTimer=null,gameLoop=null,currentSession=null;
 
-async function requireAuth(){
+async function session(){
   const {data:{session}}=await supabaseClient.auth.getSession();
-  if(!session){alert("กรุณาเข้าสู่ระบบ PRIME ก่อนเล่นเกม");return false}
+  return session;
+}
+async function requireAuth(){
+  const s=await session();
+  if(!s){showPopup("เข้าสู่ระบบก่อน","กรุณาเข้าสู่ระบบ PRIME ก่อนเล่นเกมหรือแลกคะแนน");return false}
   return true;
 }
-async function loadScore(){
-  if(!await requireAuth()) return false;
-  const {data,error}=await supabaseClient.from("game_scores").select("game_key,total_points,plays,best_score").eq("user_id",(await supabaseClient.auth.getUser()).data.user.id);
-  if(error){console.error(error);alert("โหลดคะแนนไม่สำเร็จ");return false}
-  points=(data||[]).reduce((n,x)=>n+Number(x.total_points||0),0);
-  plays=(data||[]).reduce((n,x)=>n+Number(x.plays||0),0);
-  renderPoints();return true;
+function showPopup(title,msg){
+  $("#gameTitle").textContent=title;
+  $("#gameBody").innerHTML='<div class="result"><strong style="font-size:24px">'+title+'</strong><p>'+msg+'</p><button class="primary" onclick="closeGame()">ปิด</button></div>';
+  $("#gameModal").classList.add("show");
 }
+async function loadSummary(){
+  if(!await requireAuth())return false;
+  const {data,error}=await supabaseClient.rpc("get_game_summary");
+  if(error){console.error(error);showPopup("โหลดคะแนนไม่สำเร็จ",error.message);return false}
+  points=Number(data?.points||0);plays=Number(data?.plays||0);
+  renderSummary(data);return true;
+}
+function renderSummary(d){
+  const next=Number(points)<30?30:Number(points)<70?70:Number(points)<120?120:Number(points)<200?200:500;
+  const level=points<30?"🥉 เริ่มต้น":points<70?"🥉 Bronze":points<120?"🥈 Silver":points<200?"🥇 Gold":points<500?"💎 Diamond":"👑 PRIME";
+  const prev=next===30?0:next===70?30:next===120?70:next===200?120:500;
+  const pct=next===500?Math.min(100,(points/500)*100):Math.min(100,((points-prev)/(next-prev))*100);
+  const remain=Math.max(0,next-points);
+  $("#totalPoints").textContent=points.toLocaleString();
+  $("#scoreSummary").innerHTML='<div class="rankrow"><span>⭐ คะแนนสะสมเดือนนี้</span><b>'+points.toLocaleString()+'</b></div><div class="rankrow"><span>🎮 เล่นแล้ว</span><b>'+plays.toLocaleString()+' รอบ</b></div><div class="level"><div><b>'+level+'</b> · เป้าหมายถัดไป '+next.toLocaleString()+'</div><div class="bar"><i style="width:'+pct+'%"></i></div><div class="small">'+(remain? 'เหลือ '+remain.toLocaleString()+' คะแนนเพื่อเลื่อนระดับ':'ถึงระดับสูงสุดแล้ว')+' · รีเซ็ตวันที่ 1 ของทุกเดือน</div></div>';
+}
+async function loadLeaderboard(){
+  if(!await requireAuth())return;
+  const {data,error}=await supabaseClient.rpc("get_game_leaderboard");
+  if(error){console.error(error);$("#leaderboard").innerHTML='<p class="muted">โหลดอันดับไม่สำเร็จ</p>';return}
+  if(!data?.length){$("#leaderboard").innerHTML='<p class="muted">ยังไม่มีคะแนนในเดือนนี้</p>';return}
+  $("#leaderboard").innerHTML=data.map((r,i)=>'<div class="lbrow"><span class="medal">'+(i===0?'🥇':i===1?'🥈':i===2?'🥉':r.rank_no)+'</span><span>'+r.phone_masked+'</span><b>'+Number(r.points).toLocaleString()+' คะแนน</b></div>').join("");
+}
+function openLeaderboard(){loadLeaderboard();$("#gameTitle").textContent="🏆 อันดับประจำเดือน";$("#gameBody").innerHTML='<div id="leaderModal" class="rank"><div class="muted">กำลังโหลดอันดับ...</div></div>';$("#gameModal").classList.add("show");loadLeaderboard().then(()=>{$("#leaderModal").innerHTML=$("#leaderboard").innerHTML||'<p>ยังไม่มีคะแนน</p>'})}
+function openRules(){
+  $("#gameTitle").textContent="📖 กติกา PRIME GAMES";
+  $("#gameBody").innerHTML='<div class="rulegrid"><div class="rule"><b>🎮 1. การเล่น</b>สมาชิกที่เข้าสู่ระบบเท่านั้นจึงเล่นได้ คะแนนคำนวณและบันทึกจากเซิร์ฟเวอร์</div><div class="rule"><b>⭐ 2. คะแนน</b>คะแนนเป็นคะแนนเกม ไม่ใช่เงิน คะแนนใช้แลกเครดิตในเกมเท่านั้น</div><div class="rule"><b>💳 3. การแลก</b>100 คะแนน = 1 เครดิต และขั้นต่ำแลกได้ 1 คะแนน ระบบหักคะแนนและเพิ่มเครดิตในธุรกรรมเดียว</div><div class="rule"><b>📅 4. รอบเดือน</b>คะแนนและอันดับเป็นรายเดือน และเริ่มรอบใหม่ทุกวันที่ 1 เวลาไทย 00:00 คะแนนเก่าจะไม่ถูกนำมารวมในเดือนใหม่</div><div class="rule"><b>🏆 5. อันดับ</b>เรียงตามคะแนนเดือนปัจจุบัน แสดงอันดับต่อเนื่อง โดยระบบแสดงเบอร์แบบปกปิดเพื่อความปลอดภัย</div><div class="rule"><b>🛡️ 6. ป้องกันโกง</b>ห้ามแก้คะแนนจากหน้าเว็บ ห้ามส่งผลคะแนนซ้ำ ห้ามสร้างเซสชันซ้อนหรือเร่งการเล่นผิดปกติ ระบบตรวจ session, เวลา, สิทธิ์ผู้ใช้ และจำกัดคะแนนสูงสุดของแต่ละเกม</div><div class="notice">เครดิตที่ได้จากเกมใช้ใน PRIME ได้ตามเงื่อนไขของระบบ แต่ <b>ไม่สามารถถอนเป็นเงินสด</b> และไม่ใช่ยอดเงินฝาก</div></div><button class="primary" style="margin-top:12px" onclick="closeGame()">เข้าใจแล้ว</button>';
+  $("#gameModal").classList.add("show");
+}
+async function openRedeem(){
+  if(!await requireAuth())return;
+  $("#gameTitle").textContent="💳 แลกคะแนนเป็นเครดิต";
+  $("#gameBody").innerHTML='<div class="notice">อัตราแลก <b>100 คะแนน = 1 เครดิต</b><br>ขั้นต่ำ <b>1 คะแนน</b> · แลกได้เฉพาะเครดิตในเกม · ถอนเงินสดไม่ได้</div><div class="hud"><span>⭐ มี '+points.toLocaleString()+' คะแนน</span></div><input id="redeemPoints" type="number" min="1" step="1" placeholder="จำนวนคะแนนที่ต้องการแลก" style="width:100%;padding:13px;border:1px solid #d7b8ff;border-radius:12px;font-size:16px"><p id="redeemPreview" class="muted">กรอกคะแนนเพื่อดูเครดิตที่จะได้รับ</p><button class="primary" onclick="redeem()">ยืนยันการแลกคะแนน</button><hr style="border:0;border-top:1px solid #eee;margin:15px 0"><table class="exchangeTable"><tr><td>100 คะแนน</td><td>1 เครดิต</td></tr><tr><td>500 คะแนน</td><td>5 เครดิต</td></tr><tr><td>1,000 คะแนน</td><td>10 เครดิต</td></tr><tr><td>5,000 คะแนน</td><td>50 เครดิต</td></tr><tr><td>10,000 คะแนน</td><td>100 เครดิต</td></tr></table>';
+  $("#redeemPoints").oninput=()=>{const n=Math.max(0,Math.floor(Number($("#redeemPoints").value)||0));$("#redeemPreview").textContent=n?("จะได้รับ "+(n/100).toFixed(2)+" เครดิต"):"กรอกคะแนนเพื่อดูเครดิตที่จะได้รับ"};
+  $("#gameModal").classList.add("show");
+}
+async function redeem(){
+  const n=Math.floor(Number($("#redeemPoints").value)||0);
+  if(n<1){showPopup("แลกคะแนนไม่ได้","ขั้นต่ำในการแลกคือ 1 คะแนน");return}
+  if(n>points){showPopup("คะแนนไม่พอ","คุณมี "+points.toLocaleString()+" คะแนน");return}
+  const {data,error}=await supabaseClient.rpc("redeem_game_points",{p_points:n});
+  if(error){showPopup("แลกคะแนนไม่สำเร็จ",error.message);return}
+  points=Number(data.remaining_points||0);
+  renderSummary({points,plays});
+  $("#gameTitle").textContent="🎉 แลกสำเร็จ";
+  $("#gameBody").innerHTML='<div class="result"><div>หักคะแนน</div><strong>-'+n.toLocaleString()+' คะแนน</strong><p>ได้รับ <b>'+Number(data.credit_added).toFixed(2)+' เครดิต</b></p><p>คงเหลือ '+points.toLocaleString()+' คะแนน</p><button class="primary" onclick="closeGame()">เรียบร้อย</button></div>';
+}
+
 async function startSession(game){
   const {data,error}=await supabaseClient.rpc("start_game_session",{p_game_key:game});
-  if(error){console.error(error);alert("เริ่มเกมไม่สำเร็จ: "+error.message);return false}
+  if(error){console.error(error);showPopup("เริ่มเกมไม่สำเร็จ",error.message);return false}
   currentSession=data;return true;
 }
 async function finishSession(metric=0){
-  if(!currentSession?.session_id)return;
+  if(!currentSession?.session_id)return null;
   const sid=currentSession.session_id;currentSession=null;
   const {data,error}=await supabaseClient.rpc("finish_game_session",{p_session_id:sid,p_client_metric:Math.max(0,Math.floor(metric||0))});
-  if(error){console.error(error);alert("บันทึกคะแนนไม่สำเร็จ: "+error.message);return}
-  points=Number(data.total_points||points);plays=Number(data.plays||plays);renderPoints();
-  return data;
+  if(error){console.error(error);showPopup("บันทึกคะแนนไม่สำเร็จ",error.message);return null}
+  points=Number(data.total_points||points);plays=Number(data.plays||plays);renderSummary({points,plays});return data;
 }
-function renderPoints(){$("#totalPoints").textContent=points.toLocaleString();$("#localRank").innerHTML='<div class="rankrow"><span>⭐ คะแนนสะสม</span><b>'+points.toLocaleString()+'</b></div><div class="rankrow"><span>🎮 จำนวนรอบที่เล่น</span><b>'+plays.toLocaleString()+'</b></div>'}
-function openGame(id){clearGame();if(!requireAuth())return;({maze:maze,shoot:shoot,runner:runner,cards:cards,quiz:quiz,racing:racing}[id])()}
+function openGame(id){clearGame();({maze,shoot,runner,cards,quiz,racing}[id])()}
 function closeGame(){clearGame();currentSession=null;$("#gameModal").classList.remove("show")}
 function clearGame(){if(gameTimer)clearInterval(gameTimer);if(gameLoop)cancelAnimationFrame(gameLoop);gameTimer=null;gameLoop=null}
-async function begin(game,fn){if(!await startSession(game))return;$("#gameModal").classList.add("show");fn()}
-async function finish(title,metric=0){clearGame();const d=await finishSession(metric);if(!d)return;$("#gameTitle").textContent=title;$("#gameBody").innerHTML='<div class="result"><div>🎉 จบเกม!</div><strong>+'+Number(d.score).toLocaleString()+' คะแนน</strong><p>คะแนนสะสมของคุณ '+Number(d.total_points).toLocaleString()+' คะแนน</p><button class="primary" onclick="closeGame()">กลับหน้าเกม</button></div>'}
-async function maze(){if(!(await startSession("maze")))return;$("#gameTitle").textContent="🌀 เขาวงกต";let W=8,H=10,pos={x:0,y:0},goal={x:7,y:9},coins=new Set(["2,1","5,2","1,6","6,7","3,8"]),walls=new Set(["1,0","1,1","3,1","4,1","6,1","2,2","6,2","0,3","2,3","4,3","5,3","2,4","3,4","6,4","0,5","4,5","5,5","7,5","1,6","3,6","5,6","1,7","6,7","2,8","4,8","5,8","2,9"]);const draw=()=>{let s="";for(let y=0;y<H;y++)for(let x=0;x<W;x++){let k=x+","+y,c=walls.has(k)?"wall":x===pos.x&&y===pos.y?"player":x===goal.x&&y===goal.y?"goal":coins.has(k)?"coin":"";s+='<div class="cell '+c+'">'+(c==="player"?"🙂":c==="goal"?"🏁":c==="coin"?"⭐":"")+"</div>"}$("#gameBody").innerHTML='<div class="hud"><span>⭐ เหรียญเหลือ '+coins.size+'</span><span>🏁 ไปให้ถึงประตู</span></div><div class="maze">'+s+'</div><div class="controls"><button class="empty"></button><button onclick="move(0,-1)">↑</button><button class="empty"></button><button onclick="move(-1,0)">←</button><button onclick="move(0,1)">↓</button><button onclick="move(1,0)">→</button></div>'};window.move=(dx,dy)=>{let nx=pos.x+dx,ny=pos.y+dy,k=nx+","+ny;if(nx<0||ny<0||nx>=W||ny>=H||walls.has(k))return;pos={x:nx,y:ny};if(coins.has(k))coins.delete(k);draw();if(nx===goal.x&&ny===goal.y)finish("เขาวงกต",1)};draw()}
-async function shoot(){if(!(await startSession("shoot")))return;$("#gameTitle").textContent="🎯 ยิงเป้า";let t=25,score=0;const area=()=>{if(t<=0)return finish("ยิงเป้า",score);let a=document.createElement("div");a.className="target";a.style.left=(Math.random()*88+4)+"%";a.style.top=(Math.random()*78+4)+"%";a.onclick=()=>{score++;$("#score").textContent=score;a.remove();area()};$("#targetArea").appendChild(a)};$("#gameBody").innerHTML='<div class="hud"><span>⏱️ <b id="time">'+t+'</b> วิ</span><span>🎯 เป้าที่โดน <b id="score">0</b></span></div><div class="target-area" id="targetArea"></div>';area();gameTimer=setInterval(()=>{$("#time").textContent=--t;if(t<=0)finish("ยิงเป้า",score)},1000)}
-async function runner(){if(!(await startSession("runner")))return;$("#gameTitle").textContent="🏃 หลบสิ่งกีดขวาง";let lane=1,alive=true;$("#gameBody").innerHTML='<div class="hud"><span>วิ่งให้นานที่สุด</span></div><div class="runner-area"><div class="road"></div><div class="car" id="runnerCar"></div></div><div class="controls"><button onclick="laneMove(-1)">←</button><button onclick="laneMove(1)">→</button></div>';const car=$("#runnerCar");const set=()=>car.style.left=(12+lane*28)+"%";window.laneMove=d=>{lane=Math.max(0,Math.min(2,lane+d));set()};set();let obs=[],start=performance.now(),last=0;const tick=ts=>{if(ts-last>650){last=ts;let o=document.createElement("div");o.className="ob";o.style.left=(12+Math.floor(Math.random()*3)*28)+"%";o.style.top="-55px";$("#gameBody .runner-area").appendChild(o);obs.push(o)}obs.forEach((o,i)=>{o.style.top=(parseFloat(o.style.top)+4)+"px";let ol=parseFloat(o.style.left),ot=parseFloat(o.style.top);if(ot>250&&ot<330&&Math.abs(ol-(12+lane*28))<8){finish("หลบสิ่งกีดขวาง",Math.floor((ts-start)/1000));return}if(ot>350){o.remove();obs.splice(i,1)}});gameLoop=requestAnimationFrame(tick)};gameLoop=requestAnimationFrame(tick)}
-async function cards(){if(!(await startSession("cards")))return;$("#gameTitle").textContent="🃏 จับคู่ไพ่";let vals=["⭐","⭐","🎵","🎵","▶️","▶️","📸","📸","👍","👍","✦","✦","♛","♛","💎","💎"].sort(()=>Math.random()-.5),open=[],done=0;$("#gameBody").innerHTML='<div class="hud"><span>จับคู่ <b id="pairs">0</b>/8</span></div><div class="cards">'+vals.map((_,i)=>'<button class="cardx" data-i="'+i+'">?</button>').join("")+'</div>';document.querySelectorAll(".cardx").forEach(b=>b.onclick=()=>{let i=+b.dataset.i;if(b.classList.contains("open")||b.classList.contains("done")||open.length===2)return;b.textContent=vals[i];b.classList.add("open");open.push(i);if(open.length===2){let[a,z]=open;if(vals[a]===vals[z]){document.querySelectorAll(".cardx")[a].classList.add("done");document.querySelectorAll(".cardx")[z].classList.add("done");done++;$("#pairs").textContent=done;open=[];if(done===8)setTimeout(()=>finish("จับคู่ไพ่",8),300)}else setTimeout(()=>{[a,z].forEach(j=>{let q=document.querySelectorAll(".cardx")[j];q.textContent="?";q.classList.remove("open")});open=[]},550)}})}
-async function quiz(){if(!(await startSession("quiz")))return;$("#gameTitle").textContent="🧠 Quiz";let qs=[["แพลตฟอร์มใดเด่นด้านวิดีโอสั้น?","TikTok",["Facebook","TikTok","X","Telegram"]],["YouTube ใช้บริการหลักด้านใด?","วิดีโอ",["เพลงอย่างเดียว","วิดีโอ","แชต","ช้อปปิ้ง"]],["Instagram มีฟีเจอร์วิดีโอสั้นชื่ออะไร?","Reels",["Stories","Reels","Spaces","Shorts"]],["X เดิมใช้ชื่อว่าอะไร?","Twitter",["Vine","Twitter","Periscope","Threads"]],["Facebook เป็นแพลตฟอร์มประเภทใด?","Social Network",["Search Engine","Social Network","Music App","Maps"]]];let n=0,score=0;const draw=()=>{if(n>=qs.length)return finish("Quiz",score/20);let[q,a,opts]=qs[n];$("#gameBody").innerHTML='<div class="hud"><span>ข้อ '+(n+1)+'/'+qs.length+'</span></div><div class="quiz-q">'+q+'</div><div class="answers">'+opts.map(o=>'<button>'+o+'</button>').join("")+'</div>';document.querySelectorAll(".answers button").forEach(b=>b.onclick=()=>{let ok=b.textContent===a;b.classList.add(ok?"correct":"wrong");if(ok)score+=20;n++;setTimeout(draw,350)})};draw()}
-async function racing(){if(!(await startSession("racing")))return;$("#gameTitle").textContent="🏎️ Mini Racing";let lane=1,alive=true;$("#gameBody").innerHTML='<div class="hud"><span>ขับให้นานที่สุด</span></div><div class="race-area"><div class="road"></div><div class="race-lane l1"></div><div class="race-lane l2"></div><div class="race-lane l3"></div><div class="car" id="raceCar"></div></div><div class="controls"><button onclick="raceMove(-1)">←</button><button onclick="raceMove(1)">→</button></div>';const car=$("#raceCar");const set=()=>car.style.left=(8+lane*28)+"%";window.raceMove=d=>{lane=Math.max(0,Math.min(2,lane+d));set()};set();let start=performance.now(),last=0,obs=[];const tick=ts=>{if(ts-start>30000)return finish("Mini Racing",Math.floor((ts-start)/1000));if(ts-last>700){last=ts;let o=document.createElement("div");o.className="ob";o.style.left=(8+Math.floor(Math.random()*3)*28)+"%";o.style.top="-55px";$("#gameBody .race-area").appendChild(o);obs.push(o)}obs.forEach((o,i)=>{o.style.top=(parseFloat(o.style.top)+5)+"px";let ol=parseFloat(o.style.left),ot=parseFloat(o.style.top);if(ot>245&&ot<330&&Math.abs(ol-(8+lane*28))<8){alive=false;finish("Mini Racing",Math.floor((ts-start)/1000));return}if(ot>350){o.remove();obs.splice(i,1)}});if(alive)gameLoop=requestAnimationFrame(tick)};gameLoop=requestAnimationFrame(tick)}
-(async()=>{await loadScore()})();
+async function finish(title,metric=0){clearGame();const d=await finishSession(metric);if(!d)return;$("#gameTitle").textContent=title;$("#gameBody").innerHTML='<div class="result"><div>🎉 จบเกม!</div><strong>+'+Number(d.score).toLocaleString()+' คะแนน</strong><p>คะแนนเดือนนี้ '+Number(d.total_points).toLocaleString()+'</p><button class="primary" onclick="closeGame()">กลับหน้าเกม</button></div>'}
+
+async function maze(){if(!await requireAuth()||!await startSession("maze"))return;$("#gameModal").classList.add("show");$("#gameTitle").textContent="🌀 เขาวงกต";let W=8,H=10,pos={x:0,y:0},goal={x:7,y:9},coins=new Set(["2,1","5,2","1,6","6,7","3,8"]),walls=new Set(["1,0","1,1","3,1","4,1","6,1","2,2","6,2","0,3","2,3","4,3","5,3","2,4","3,4","6,4","0,5","4,5","5,5","7,5","1,6","3,6","5,6","1,7","6,7","2,8","4,8","5,8","2,9"]);const draw=()=>{let s="";for(let y=0;y<H;y++)for(let x=0;x<W;x++){let k=x+","+y,c=walls.has(k)?"wall":x===pos.x&&y===pos.y?"player":x===goal.x&&y===goal.y?"goal":coins.has(k)?"coin":"";s+='<div class="cell '+c+'">'+(c==="player"?"🙂":c==="goal"?"🏁":c==="coin"?"⭐":"")+"</div>"}$("#gameBody").innerHTML='<div class="hud"><span>⭐ เหรียญเหลือ '+coins.size+'</span><span>🏁 ไปให้ถึงประตู</span></div><div class="maze">'+s+'</div><div class="controls"><button class="empty"></button><button onclick="move(0,-1)">↑</button><button class="empty"></button><button onclick="move(-1,0)">←</button><button onclick="move(0,1)">↓</button><button onclick="move(1,0)">→</button></div>';};window.move=(dx,dy)=>{let nx=pos.x+dx,ny=pos.y+dy,k=nx+","+ny;if(nx<0||ny<0||nx>=W||ny>=H||walls.has(k))return;pos={x:nx,y:ny};if(coins.has(k))coins.delete(k);draw();if(nx===goal.x&&ny===goal.y)finish("เขาวงกต",1)};draw()}
+async function shoot(){if(!await requireAuth()||!await startSession("shoot"))return;$("#gameModal").classList.add("show");$("#gameTitle").textContent="🎯 ยิงเป้า";let t=25,score=0;const area=()=>{if(t<=0)return;let a=document.createElement("div");a.className="target";a.style.left=(Math.random()*88+4)+"%";a.style.top=(Math.random()*78+4)+"%";a.onclick=()=>{score++;$("#score").textContent=score;a.remove();area()};$("#targetArea").appendChild(a)};$("#gameBody").innerHTML='<div class="hud"><span>⏱️ <b id="time">'+t+'</b> วิ</span><span>🎯 เป้าที่โดน <b id="score">0</b></span></div><div class="target-area" id="targetArea"></div>';area();gameTimer=setInterval(()=>{$("#time").textContent=--t;if(t<=0)finish("ยิงเป้า",score)},1000)}
+async function runner(){if(!await requireAuth()||!await startSession("runner"))return;$("#gameModal").classList.add("show");$("#gameTitle").textContent="🏃 หลบสิ่งกีดขวาง";let lane=1;$("#gameBody").innerHTML='<div class="hud"><span>วิ่งให้นานที่สุด</span></div><div class="runner-area"><div class="road"></div><div class="car" id="runnerCar"></div></div><div class="controls"><button onclick="laneMove(-1)">←</button><button onclick="laneMove(1)">→</button></div>';const car=$("#runnerCar"),set=()=>car.style.left=(12+lane*28)+"%";window.laneMove=d=>{lane=Math.max(0,Math.min(2,lane+d));set()};set();let obs=[],start=performance.now(),last=0;const tick=ts=>{if(ts-last>650){last=ts;let o=document.createElement("div");o.className="ob";o.style.left=(12+Math.floor(Math.random()*3)*28)+"%";o.style.top="-55px";$("#gameBody .runner-area").appendChild(o);obs.push(o)}obs.forEach((o,i)=>{o.style.top=(parseFloat(o.style.top)+4)+"px";let ol=parseFloat(o.style.left),ot=parseFloat(o.style.top);if(ot>250&&ot<330&&Math.abs(ol-(12+lane*28))<8){finish("หลบสิ่งกีดขวาง",Math.floor((ts-start)/1000));return}if(ot>350){o.remove();obs.splice(i,1)}});gameLoop=requestAnimationFrame(tick)};gameLoop=requestAnimationFrame(tick)}
+async function cards(){if(!await requireAuth()||!await startSession("cards"))return;$("#gameModal").classList.add("show");$("#gameTitle").textContent="🃏 จับคู่ไพ่";let vals=["⭐","⭐","🎵","🎵","▶️","▶️","📸","📸","👍","👍","✦","✦","♛","♛","💎","💎"].sort(()=>Math.random()-.5),open=[],done=0;$("#gameBody").innerHTML='<div class="hud"><span>จับคู่ <b id="pairs">0</b>/8</span></div><div class="cards">'+vals.map((_,i)=>'<button class="cardx" data-i="'+i+'">?</button>').join("")+'</div>';document.querySelectorAll(".cardx").forEach(b=>b.onclick=()=>{let i=+b.dataset.i;if(b.classList.contains("open")||b.classList.contains("done")||open.length===2)return;b.textContent=vals[i];b.classList.add("open");open.push(i);if(open.length===2){let[a,z]=open;if(vals[a]===vals[z]){document.querySelectorAll(".cardx")[a].classList.add("done");document.querySelectorAll(".cardx")[z].classList.add("done");done++;$("#pairs").textContent=done;open=[];if(done===8)setTimeout(()=>finish("จับคู่ไพ่",8),300)}else setTimeout(()=>{[a,z].forEach(j=>{let q=document.querySelectorAll(".cardx")[j];q.textContent="?";q.classList.remove("open")});open=[]},550)}})}
+async function quiz(){if(!await requireAuth()||!await startSession("quiz"))return;$("#gameModal").classList.add("show");$("#gameTitle").textContent="🧠 Quiz";let qs=[["แพลตฟอร์มใดเด่นด้านวิดีโอสั้น?","TikTok",["Facebook","TikTok","X","Telegram"]],["YouTube ใช้บริการหลักด้านใด?","วิดีโอ",["เพลงอย่างเดียว","วิดีโอ","แชต","ช้อปปิ้ง"]],["Instagram มีฟีเจอร์วิดีโอสั้นชื่ออะไร?","Reels",["Stories","Reels","Spaces","Shorts"]],["X เดิมใช้ชื่อว่าอะไร?","Twitter",["Vine","Twitter","Periscope","Threads"]],["Facebook เป็นแพลตฟอร์มประเภทใด?","Social Network",["Search Engine","Social Network","Music App","Maps"]]];let n=0,score=0;const draw=()=>{if(n>=qs.length)return finish("Quiz",score/20);let[q,a,opts]=qs[n];$("#gameBody").innerHTML='<div class="hud"><span>ข้อ '+(n+1)+'/'+qs.length+'</span></div><div class="quiz-q">'+q+'</div><div class="answers">'+opts.map(o=>'<button>'+o+'</button>').join("")+'</div>';document.querySelectorAll(".answers button").forEach(b=>b.onclick=()=>{if(n>=qs.length)return;let ok=b.textContent===a;b.classList.add(ok?"correct":"wrong");if(ok)score+=20;n++;setTimeout(draw,350)})};draw()}
+async function racing(){if(!await requireAuth()||!await startSession("racing"))return;$("#gameModal").classList.add("show");$("#gameTitle").textContent="🏎️ Mini Racing";let lane=1,alive=true;$("#gameBody").innerHTML='<div class="hud"><span>ขับให้นานที่สุด · สูงสุด 30 วินาที</span></div><div class="race-area"><div class="road"></div><div class="race-lane l1"></div><div class="race-lane l2"></div><div class="race-lane l3"></div><div class="car" id="raceCar"></div></div><div class="controls"><button onclick="raceMove(-1)">←</button><button onclick="raceMove(1)">→</button></div>';const car=$("#raceCar"),set=()=>car.style.left=(8+lane*28)+"%";window.raceMove=d=>{lane=Math.max(0,Math.min(2,lane+d));set()};set();let start=performance.now(),last=0,obs=[];const tick=ts=>{if(ts-start>30000)return finish("Mini Racing",Math.floor((ts-start)/1000));if(ts-last>700){last=ts;let o=document.createElement("div");o.className="ob";o.style.left=(8+Math.floor(Math.random()*3)*28)+"%";o.style.top="-55px";$("#gameBody .race-area").appendChild(o);obs.push(o)}obs.forEach((o,i)=>{o.style.top=(parseFloat(o.style.top)+5)+"px";let ol=parseFloat(o.style.left),ot=parseFloat(o.style.top);if(ot>245&&ot<330&&Math.abs(ol-(8+lane*28))<8){alive=false;finish("Mini Racing",Math.floor((ts-start)/1000));return}if(ot>350){o.remove();obs.splice(i,1)}});if(alive)gameLoop=requestAnimationFrame(tick)};gameLoop=requestAnimationFrame(tick)}
+
+document.addEventListener("keydown",e=>{if(!$("#gameModal").classList.contains("show"))return;if(["ArrowLeft","ArrowRight","ArrowUp","ArrowDown"," "].includes(e.key))e.preventDefault();if(e.key==="Escape")closeGame();});
+$("#gameModal").addEventListener("click",e=>{if(e.target.id==="gameModal")closeGame()});
+(async()=>{if(await session()){await loadSummary();await loadLeaderboard()}})();
 </script>
 </body></html>
