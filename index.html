@@ -3487,7 +3487,7 @@ async function openNewService(key){
       if(key==="LiveViewers"){
         const liveRows=await getBeeThLiveViewerServices();
         const picked=liveRows.find(r=>String(r.provider_service_id)===String(btn.dataset.providerId));
-        if(picked){await openSocialOrder(platform,picked.name);return;}
+        if(picked){await openBeeThServiceOrder(platform,picked);return;}
       }
       await openSocialOrder(platform,serviceName);
     }));
@@ -3795,10 +3795,41 @@ function updateSocialSummary(){
   document.getElementById("socialPlus").disabled=!!r.max&&safe+r.min>r.max;
 }
 function changeSocialQuantity(direction){if(!selectedSocialService)return;const r=selectedSocialService.rule,q=Number(document.getElementById("socialQuantity").value)||r.min;document.getElementById("socialQuantity").value=Math.max(r.min,q+direction*r.min);updateSocialSummary()}
+function mapBeeThRowToSocialService(row,platform){
+  const min=Number(row.min_quantity||1),max=Number(row.max_quantity||0);
+  const rate=Number(row.rate||0),price=Number(row.selling_price||0);
+  return {
+    ...row,
+    id:Number(row.provider_service_id||row.id),
+    platform,
+    rule:{
+      min,max,providerMin:min,providerMax:max,price,rate,
+      refill:row.refill===true,cancel:row.cancel===true,maintenance:row.maintenance===true,
+      label:String(row.name||"บริการ BEE-TH"),unit:socialUnitForService(row.name)
+    }
+  };
+}
+async function openBeeThServiceOrder(platform,row){
+  const s=await getSession();if(!s){alert("กรุณาเข้าสู่ระบบก่อนสั่งซื้อ");return false;}
+  if(!row||row.active!==true||row.maintenance===true)return false;
+  socialPlatformCurrent=platform;
+  const mapped=mapBeeThRowToSocialService(row,platform);
+  socialServices=[mapped];
+  selectedSocialService=mapped;
+  const platformEl=document.getElementById("socialPlatform");if(platformEl)platformEl.textContent=platform;
+  const urlEl=document.getElementById("socialTargetUrl");if(urlEl)urlEl.value="";
+  const q=document.getElementById("socialQuantity");
+  if(q){q.disabled=false;q.min=mapped.rule.min;q.max=mapped.rule.max||"";q.step=mapped.rule.min;q.value=mapped.rule.min;}
+  renderSocialServices();
+  updateSocialSummary();
+  const modal=document.getElementById("socialOrderModal");
+  if(modal)modal.classList.add("show");
+  return true;
+}
 async function openSocialOrder(platform,requestedService){
   const s=await getSession();if(!s){alert("กรุณาเข้าสู่ระบบก่อนสั่งซื้อ");return}
   socialPlatformCurrent=platform;
-  socialServices=platform==="TikTok"||platform==="Facebook"||platform==="YouTube" ? await loadSocialServices(platform) : await loadSocialServices(platform);
+  socialServices=await loadSocialServices(platform);
   if(!socialServices.length){
     alert("ยังไม่มีบริการ "+(requestedService||"")+" สำหรับ "+platform+" ในระบบ");
     return;
