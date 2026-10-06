@@ -3623,7 +3623,7 @@ function renderSocialServices(){
     platformKey==="facebook"||platformKey==="instagram"||platformKey==="youtube"
       ? ["likes","comments","shares","followers","views"]
       : platformKey==="tiktok"||platformKey==="x"
-        ? ["likes","followers","views"]
+        ? ["likes","followers","views","shares"]
         : ["likes","comments","shares","followers","views","other"];
   const visibleServices=[];
   wanted.forEach(type=>{
@@ -3635,8 +3635,9 @@ function renderSocialServices(){
     const r=x.rule||{},selected=selectedSocialService?.id===x.id;
     const active=x.active!==false,maintenance=x.maintenance===true;
     const isOpen=active&&!maintenance&&Number(x.provider_service_id||x.id||0)>0;
-    const status=maintenance?"🔴 ปิดปรับปรุง":(!active?"🟡 หมดชั่วคราว":"🟢 พร้อมใช้งาน");
-    const button=isOpen?"🛒 เลือกบริการ":(maintenance?"ปิดปรับปรุง":"ยังไม่พร้อมสั่งซื้อ");
+    const isXShareMaintenance=platformKey==="x" && socialServiceType(x)==="shares" && !isOpen;
+    const status=(maintenance||isXShareMaintenance)?"🔴 ปิดปรับปรุงชั่วคราว":(!active?"🟡 หมดชั่วคราว":"🟢 พร้อมใช้งาน");
+    const button=isOpen?"🛒 เลือกบริการ":((maintenance||isXShareMaintenance)?"ปิดปรับปรุงชั่วคราว":"ยังไม่พร้อมสั่งซื้อ");
     const chips=socialFeatureChips(x).map(c=>"<span>"+c+"</span>").join("");
     return '<div role="button" tabindex="'+(isOpen?"0":"-1")+'" class="social-service-card '+(selected?"selected ":"")+(isOpen?"":"service-closed")+'" data-service-id="'+String(x.id)+'" data-service-open="'+isOpen+'">'+
       '<div class="ssc-top"><span class="ssc-icon">'+socialPlatformLogo(document.getElementById("socialPlatform")?.textContent||"")+'</span><strong class="ssc-title">'+socialShortName(x.name)+'</strong></div>'+
