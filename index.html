@@ -3619,9 +3619,12 @@ function renderSocialServices(){
     return true;
   });
   const platformKey=String(socialPlatformCurrent||"").toLowerCase();
-  const wanted=platformKey==="facebook"||platformKey==="instagram"||platformKey==="youtube"
-    ? ["likes","comments","shares","followers","views"]
-    : ["likes","comments","shares","followers","views","other"];
+  const wanted=
+    platformKey==="facebook"||platformKey==="instagram"||platformKey==="youtube"
+      ? ["likes","comments","shares","followers","views"]
+      : platformKey==="tiktok"||platformKey==="x"
+        ? ["likes","followers","views"]
+        : ["likes","comments","shares","followers","views","other"];
   const visibleServices=[];
   wanted.forEach(type=>{
     const match=deduped.find(x=>socialServiceType(x)===type);
