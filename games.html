@@ -446,6 +446,38 @@ html,body{width:100%;max-width:100%;overflow-x:hidden}
   .game .play{height:44px;min-height:44px;margin-top:7px;font-size:12px;border-radius:11px;padding:7px 3px}
   .game .play:before{width:20px;height:20px;margin-right:3px;font-size:9px}
 }
+/* MOBILE READABILITY V11 — fix white-on-white panels and clipped modal headers */
+.rank,.rank h3,.rank p,.rank .muted,.rankrow,.exchangeBox,.exchangeBox b,.exchangeBox span,.exchangeTable,.exchangeTable td,.small{color:#2b1748}
+.rank h3{font-weight:950}.rank .muted,.rankrow span,.small{color:#6d5a7f}
+.exchangeBox{background:#faf6ff}.exchangeBox b{color:#4d198f}.exchangeBox span{color:#5f4b73}
+.exchangeBtn{color:#fff!important}
+.modal .panel{color:#2b1748}
+.modal .panel .head{position:relative;min-height:64px;padding:8px 54px 8px 54px;box-sizing:border-box;display:flex;align-items:center;justify-content:center}
+.modal .panel .head h2{position:relative;z-index:2;display:block;width:100%;max-width:100%;margin:0;text-align:center;color:#fff!important;font-size:20px;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-shadow:0 2px 10px rgba(0,0,0,.55)}
+.modal .panel .head:before{display:none}
+.modal .panel .close{position:absolute;left:12px;top:50%;transform:translateY(-50%);z-index:4}
+.modal .panel #gameBody{color:#2b1748}
+.modal .panel #gameBody .notice{color:#4b3a57;background:#fff7df}
+.modal .panel #gameBody .notice b{color:#3b176d}
+.modal .panel #gameBody .hud{color:#2b1748}
+.modal .panel #gameBody .hud span{color:#4a2c61;background:#f4ebff}
+.modal .panel #gameBody input{box-sizing:border-box;color:#2b1748;background:#fff}
+.modal .panel #gameBody input::placeholder{color:#8c8095;opacity:1}
+.modal .panel #gameBody .muted{color:#74617f}
+.modal .panel #gameBody .exchangeTable{color:#2b1748}
+.modal .panel #gameBody .exchangeTable td{color:#2b1748;border-bottom-color:#e5dceb}
+.modal .panel #gameBody .rule{color:#4b3a57}
+.modal .panel #gameBody .rule b{color:#4d198f}
+.modal .panel #gameBody .lbrow{color:#3c2450}
+.modal .panel #gameBody .lbrow span{color:#4b3a57}
+.modal .panel #gameBody .lbrow b{color:#6d20d4}
+@media(max-width:430px){
+ .modal .panel .head{min-height:58px;padding-left:52px;padding-right:14px}
+ .modal .panel .head h2{font-size:18px}
+ .modal .panel #gameBody{padding:10px 12px calc(20px + env(safe-area-inset-bottom));box-sizing:border-box;overflow-x:hidden}
+ .modal .panel #gameBody .notice{font-size:13px;line-height:1.55;overflow-wrap:anywhere}
+ .modal .panel #gameBody .exchangeTable td{padding:9px 5px;font-size:14px}
+}
 </style>
 </head>
 <body>
