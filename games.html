@@ -30,6 +30,58 @@
 .rulegrid{display:grid;gap:9px}.rule{padding:11px;border-radius:12px;background:#faf7ff;border:1px solid #eadcff}.rule b{display:block;margin-bottom:3px}
 .exchangeTable{width:100%;border-collapse:collapse;margin:10px 0}.exchangeTable td{padding:8px;border-bottom:1px solid #eee}.notice{padding:11px;border-radius:12px;background:#fff7df;border:1px solid #f0d88b;font-size:13px;line-height:1.55}
 @media(max-width:430px){.heroActions{display:grid;grid-template-columns:1fr 1fr 1fr}.heroBtn{padding:8px 5px;font-size:12px}.exchangeBox{align-items:stretch;flex-direction:column}.exchangeBtn{width:100%}}
+
+/* PRIME FULL-SCREEN MOBILE GAME UI */
+body{background:#09051a;color:#fff}
+.header{background:rgba(9,5,26,.92);border-bottom:1px solid rgba(184,108,255,.28)}
+.brand{color:#fff;text-shadow:0 0 18px rgba(160,75,255,.6)}
+.back{background:rgba(255,255,255,.08);color:#fff;border-color:rgba(184,108,255,.45)}
+.wrap{max-width:1180px}
+.hero{background:radial-gradient(circle at 50% -20%,#8d43ff 0,#42128f 38%,#110524 100%);border:1px solid rgba(184,108,255,.35);box-shadow:0 18px 55px rgba(74,20,160,.35)}
+.points,.balanceBtn{background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.3)}
+.game{background:linear-gradient(180deg,#1b0d3c,#100820);border:1px solid rgba(177,103,255,.35);box-shadow:0 12px 30px rgba(0,0,0,.3);color:#fff}
+.game p{color:#c9b8df}
+.game h3{color:#fff}
+.game .ico{filter:drop-shadow(0 0 10px rgba(184,108,255,.45))}
+.gameBtn,.play{min-height:54px;border-radius:17px;background:linear-gradient(135deg,#9b3cff,#5b18e6);box-shadow:0 0 0 1px rgba(255,255,255,.18),0 8px 25px rgba(104,31,225,.4),0 0 22px rgba(139,55,255,.28)}
+.modal{padding:0;background:linear-gradient(180deg,rgba(4,2,14,.96),rgba(10,4,29,.98))}
+.modal.show{display:flex}
+.panel{width:100%;height:100dvh;max-width:none;max-height:none;border:0;border-radius:0;padding:0;background:linear-gradient(180deg,#0b061d 0%,#13072d 55%,#080413 100%);box-shadow:none;overflow:hidden;display:flex;flex-direction:column}
+.head{min-height:64px;padding:10px 14px;background:linear-gradient(180deg,rgba(38,13,76,.98),rgba(16,6,34,.96));border-bottom:1px solid rgba(184,108,255,.3);flex:none}
+.head h2{color:#fff;font-size:20px;text-shadow:0 0 15px rgba(184,108,255,.6)}
+.close{width:42px;height:42px;background:rgba(255,255,255,.08);border-color:rgba(214,177,255,.5);color:#fff}
+#gameBody{flex:1;min-height:0;overflow:auto;overflow-x:hidden;padding:12px 12px calc(18px + env(safe-area-inset-bottom));color:#fff}
+#gameBody .hud{position:sticky;top:0;z-index:4;justify-content:space-between;background:rgba(10,4,27,.78);backdrop-filter:blur(12px);padding:8px;border-radius:14px;border:1px solid rgba(184,108,255,.22)}
+#gameBody .hud span{background:linear-gradient(180deg,#25105a,#160a35);color:#fff;border-color:rgba(184,108,255,.35);box-shadow:0 5px 18px rgba(0,0,0,.25)}
+.primary,.actionBtn{min-height:54px;border-radius:17px;background:linear-gradient(135deg,#9b3cff,#5b18e6);box-shadow:0 8px 25px rgba(104,31,225,.4),0 0 18px rgba(139,55,255,.25)}
+.finishBtn{min-height:54px;border-radius:17px;background:linear-gradient(135deg,#20c879,#087c4b);box-shadow:0 8px 22px rgba(11,153,91,.28)}
+.result{background:linear-gradient(180deg,#211052,#100722);border-color:rgba(184,108,255,.35);color:#fff;box-shadow:0 12px 35px rgba(0,0,0,.25)}
+.result strong{color:#fff;text-shadow:0 0 20px rgba(184,108,255,.65)}
+.quiz-q{color:#fff}
+.answers button{background:#1b0d3c;color:#fff;border-color:rgba(184,108,255,.35)}
+.answers button.correct{background:#0d5d3d;color:#fff}.answers button.wrong{background:#652039;color:#fff}
+.target-area,.runner-area,.race-area{height:calc(100dvh - 150px);min-height:330px;max-height:none;border:1px solid rgba(184,108,255,.3);box-shadow:inset 0 0 60px rgba(90,20,180,.2)}
+.cards{max-width:520px}
+.cardx{background:linear-gradient(135deg,#4810a5,#9b3cff);box-shadow:0 5px 18px rgba(111,37,220,.35)}
+.cardx.open,.cardx.done{background:#fff;color:#42148a;border-color:#b47aff}
+.controls button{background:linear-gradient(135deg,#38106e,#1c0a3c);color:#fff;border-color:#a66cff;box-shadow:0 0 15px rgba(139,55,255,.25)}
+@media(max-width:600px){
+  .header{display:none}
+  .wrap{padding:10px 10px 30px}
+  .hero{border-radius:0 0 24px 24px;padding:22px 14px}
+  .grid{grid-template-columns:repeat(2,1fr);gap:9px}
+  .game{min-height:190px;padding:12px;border-radius:16px}
+  .game h3{font-size:16px}.game p{font-size:12px}
+  .play,.gameBtn{min-height:50px;font-size:14px;padding:10px 8px}
+  .panel{height:100dvh}
+  #gameBody{padding:10px 10px calc(18px + env(safe-area-inset-bottom))}
+  .head{min-height:60px}
+  .target-area,.runner-area,.race-area{height:calc(100dvh - 145px);min-height:360px}
+}
+@media(max-width:390px){
+  .grid{grid-template-columns:1fr}
+  .game{min-height:165px}
+}
 </style>
 </head>
 <body>
@@ -127,7 +179,7 @@ async function loadLeaderboard(){
 function openLeaderboard(){loadLeaderboard();$("#gameTitle").textContent="🏆 อันดับประจำเดือน";$("#gameBody").innerHTML='<div id="leaderModal" class="rank"><div class="muted">กำลังโหลดอันดับ...</div></div>';$("#gameModal").classList.add("show");loadLeaderboard().then(()=>{$("#leaderModal").innerHTML=$("#leaderboard").innerHTML||'<p>ยังไม่มีคะแนน</p>'})}
 function openRules(){
   $("#gameTitle").textContent="📖 กติกา PRIME GAMES";
-  $("#gameBody").innerHTML='<div class="rulegrid"><div class="rule"><b>🎮 1. การเล่น</b>สมาชิกที่เข้าสู่ระบบเท่านั้นจึงเล่นได้ คะแนนคำนวณและบันทึกจากเซิร์ฟเวอร์</div><div class="rule"><b>⭐ 2. คะแนน</b>คะแนนเป็นคะแนนเกม ไม่ใช่เงิน คะแนนใช้แลกเครดิตในเกมเท่านั้น</div><div class="rule"><b>💳 3. การแลก</b>100 คะแนน = 1 เครดิต และขั้นต่ำแลกได้ 1 คะแนน ระบบหักคะแนนและเพิ่มเครดิตในธุรกรรมเดียว</div><div class="rule"><b>📅 4. รอบเดือน</b>คะแนนและอันดับเป็นรายเดือน และเริ่มรอบใหม่ทุกวันที่ 1 เวลาไทย 00:00 คะแนนเก่าจะไม่ถูกนำมารวมในเดือนใหม่</div><div class="rule"><b>🏆 5. อันดับ</b>เรียงตามคะแนนเดือนปัจจุบัน แสดงอันดับต่อเนื่อง โดยระบบแสดงเบอร์แบบปกปิดเพื่อความปลอดภัย</div><div class="rule"><b>🛡️ 6. ป้องกันโกง</b>ห้ามแก้คะแนนจากหน้าเว็บ ห้ามส่งผลคะแนนซ้ำ ห้ามสร้างเซสชันซ้อนหรือเร่งการเล่นผิดปกติ ระบบตรวจ session, เวลา, สิทธิ์ผู้ใช้ และจำกัดคะแนนสูงสุดของแต่ละเกม</div><div class="notice">เครดิตที่ได้จากเกมใช้ใน PRIME ได้ตามเงื่อนไขของระบบ แต่ <b>ไม่สามารถถอนเป็นเงินสด</b> และไม่ใช่ยอดเงินฝาก</div></div><button class="actionBtn" style="margin-top:12px" onclick="closeGame()">เข้าใจแล้ว</button>';
+  $("#gameBody").innerHTML='<div class="rulegrid"><div class="rule"><b>🎮 1. การเล่น</b>สมาชิกที่เข้าสู่ระบบเท่านั้นจึงเล่นได้ คะแนนคำนวณและบันทึกจากเซิร์ฟเวอร์</div><div class="rule"><b>⭐ 2. คะแนน</b>คะแนนเป็นคะแนนเกม ไม่ใช่เงิน คะแนนใช้แลกเครดิตในเกมเท่านั้น</div><div class="rule"><b>💳 3. การแลก</b>1,000 คะแนน = 1 เครดิต และขั้นต่ำแลกได้ 10,000 คะแนน ระบบหักคะแนนและเพิ่มเครดิตในธุรกรรมเดียว</div><div class="rule"><b>📅 4. รอบเดือน</b>คะแนนและอันดับเป็นรายเดือน และเริ่มรอบใหม่ทุกวันที่ 1 เวลาไทย 00:00 คะแนนเก่าจะไม่ถูกนำมารวมในเดือนใหม่</div><div class="rule"><b>🏆 5. อันดับ</b>เรียงตามคะแนนเดือนปัจจุบัน แสดงอันดับต่อเนื่อง โดยระบบแสดงเบอร์แบบปกปิดเพื่อความปลอดภัย</div><div class="rule"><b>🛡️ 6. ป้องกันโกง</b>ห้ามแก้คะแนนจากหน้าเว็บ ห้ามส่งผลคะแนนซ้ำ ห้ามสร้างเซสชันซ้อนหรือเร่งการเล่นผิดปกติ ระบบตรวจ session, เวลา, สิทธิ์ผู้ใช้ และจำกัดคะแนนสูงสุดของแต่ละเกม</div><div class="notice">เครดิตที่ได้จากเกมใช้ใน PRIME ได้ตามเงื่อนไขของระบบ แต่ <b>ไม่สามารถถอนเป็นเงินสด</b> และไม่ใช่ยอดเงินฝาก</div></div><button class="actionBtn" style="margin-top:12px" onclick="closeGame()">เข้าใจแล้ว</button>';
   $("#gameModal").classList.add("show");
 }
 async function openRedeem(){
