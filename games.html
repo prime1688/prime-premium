@@ -46,7 +46,7 @@
   </div>
 </section>
 <section class="grid">
-<article class="game"><div class="ico">🌀</div><h3>เขาวงกต</h3><p>หาทางออก เก็บเหรียญ และหลบดัก</p><button class="play" onclick="openGame('maze')">เริ่มเล่น</button></article><article class="game"><div class="ico">🎯</div><h3>ยิงเป้า</h3><p>ยิงเป้าให้ได้มากที่สุดภายในเวลาที่กำหนด</p><button class="play" onclick="openGame('shoot')">เริ่มเล่น</button></article><article class="game"><div class="ico">🏃</div><h3>หลบสิ่งกีดขวาง</h3><p>วิ่ง เก็บเหรียญ และหลบสิ่งกีดขวาง</p><button class="play" onclick="openGame('runner')">เริ่มเล่น</button></article><article class="game"><div class="ico">🃏</div><h3>จับคู่ไพ่</h3><p>เปิดไพ่หาคู่ให้ครบภายในเวลาที่กำหนด</p><button class="play" onclick="openGame('cards')">เริ่มเล่น</button></article><article class="game"><div class="ico">🧠</div><h3>Quiz</h3><p>ตอบคำถาม Social Media รับคะแนน</p><button class="play" onclick="openGame('quiz')">เริ่มเล่น</button></article><article class="game"><div class="ico">🏎️</div><h3>Mini Racing</h3><p>ควบคุมรถ เก็บเหรียญ และทำคะแนนให้สูงที่สุด</p><button class="play" onclick="openGame('racing')">เริ่มเล่น</button></article>
+<article class="game"><div class="ico">🎯</div><h3>ยิงเป้า</h3><p>ยิงเป้าให้ได้มากที่สุดภายในเวลาที่กำหนด</p><button class="play" onclick="openGame('shoot')">เริ่มเล่น</button></article><article class="game"><div class="ico">🏃</div><h3>หลบสิ่งกีดขวาง</h3><p>วิ่ง เก็บเหรียญ และหลบสิ่งกีดขวาง</p><button class="play" onclick="openGame('runner')">เริ่มเล่น</button></article><article class="game"><div class="ico">🃏</div><h3>จับคู่ไพ่</h3><p>เปิดไพ่หาคู่ให้ครบภายในเวลาที่กำหนด</p><button class="play" onclick="openGame('cards')">เริ่มเล่น</button></article><article class="game"><div class="ico">🧠</div><h3>Quiz</h3><p>ตอบคำถาม Social Media รับคะแนน</p><button class="play" onclick="openGame('quiz')">เริ่มเล่น</button></article><article class="game"><div class="ico">🏎️</div><h3>Mini Racing</h3><p>ควบคุมรถ เก็บเหรียญ และทำคะแนนให้สูงที่สุด</p><button class="play" onclick="openGame('racing')">เริ่มเล่น</button></article>
 <article class="game"><div class="ico">⚡</div><h3>Reaction</h3><p>แตะทันทีเมื่อปุ่มเปลี่ยนเป็นสีเขียว</p><button class="play" onclick="openGame('reaction')">เริ่มเล่น</button></article>
 <article class="game"><div class="ico">➗</div><h3>Math Rush</h3><p>ตอบโจทย์คณิตให้ได้มากที่สุด</p><button class="play" onclick="openGame('math_rush')">เริ่มเล่น</button></article>
 <article class="game"><div class="ico">🎨</div><h3>Color Match</h3><p>เลือกสีให้ตรงกับคำสั่ง</p><button class="play" onclick="openGame('color_match')">เริ่มเล่น</button></article>
@@ -166,7 +166,7 @@ function openModal(){lockedScrollY=window.scrollY||window.pageYOffset||0;documen
 function closeModal(){document.body.classList.remove("modal-open");document.body.style.top="";window.scrollTo(0,lockedScrollY)}
 async function openGame(id){
   if(gameStarting||$("#gameModal").classList.contains("show"))return;
-  const games={maze,shoot,runner,cards,quiz,racing,reaction,math_rush,color_match,memory_number,emoji_count,tap_10,timing,guess_number,sequence,word_match,coin_catcher,lane_dodge,higher_lower,fast_tap};
+  const games={shoot,runner,cards,quiz,racing,reaction,math_rush,color_match,memory_number,emoji_count,tap_10,timing,guess_number,sequence,word_match,coin_catcher,lane_dodge,higher_lower,fast_tap};
   if(typeof games[id]!=="function"){console.error("Unknown game:",id);return}
   gameStarting=true;
   clearGame();
@@ -176,47 +176,6 @@ function closeGame(){clearGame();currentSession=null;gameStarting=false;$("#game
 function clearGame(){if(gameTimer)clearInterval(gameTimer);if(gameLoop)cancelAnimationFrame(gameLoop);gameTimer=null;gameLoop=null}
 async function finish(title,metric=0){clearGame();const d=await finishSession(metric);if(!d)return;$("#gameTitle").textContent=title;$("#gameBody").innerHTML='<div class="result"><div>🎉 จบเกม!</div><strong>+'+Number(d.score).toLocaleString()+' คะแนน</strong><p>คะแนนที่ใช้ได้เดือนนี้ '+Number(d.available_points ?? points).toLocaleString()+'</p><button class="primary" onclick="closeGame()">กลับหน้าเกม</button></div>'}
 
-async function maze(){
-  if(!await requireAuth()||!await startSession("maze"))return;
-  openModal();
-  $("#gameTitle").textContent="🌀 เขาวงกต";
-  let W=8,H=10,pos={x:0,y:0},goal={x:7,y:9};
-  let coins=new Set(["2,1","5,2","1,6","6,7","3,8"]);
-  const walls=new Set(["1,0","1,1","3,1","4,1","6,1","2,2","6,2","0,3","2,3","4,3","5,3","2,4","3,4","6,4","0,5","4,5","5,5","7,5","1,6","3,6","5,6","1,7","6,7","2,8","4,8","5,8","2,9"]);
-  const draw=()=>{
-    let s="";
-    for(let y=0;y<H;y++){
-      for(let x=0;x<W;x++){
-        const k=x+","+y;
-        const cls=walls.has(k)?"wall":x===pos.x&&y===pos.y?"player":x===goal.x&&y===goal.y?"goal":coins.has(k)?"coin":"";
-        s+='<div class="cell '+cls+'">'+(cls==="player"?"🙂":cls==="goal"?"🏁":cls==="coin"?"⭐":"")+"</div>";
-      }
-    }
-    $("#gameBody").innerHTML='<div class="hud"><span>⭐ เหรียญเหลือ <b id="mazeCoins">'+coins.size+'</b></span><span>🏁 ไปให้ถึงประตู</span></div><div class="maze">'+s+'</div><div class="controls"><button type="button" id="mazeUp">↑</button><button type="button" id="mazeLeft">←</button><button type="button" id="mazeDown">↓</button><button type="button" id="mazeRight">→</button></div>';
-    $("#mazeUp").onclick=()=>move(0,-1);
-    $("#mazeLeft").onclick=()=>move(-1,0);
-    $("#mazeDown").onclick=()=>move(0,1);
-    $("#mazeRight").onclick=()=>move(1,0);
-  };
-  const move=(dx,dy)=>{
-    if(!currentSession)return;
-    const nx=pos.x+dx,ny=pos.y+dy,k=nx+","+ny;
-    if(nx<0||ny<0||nx>=W||ny>=H||walls.has(k))return;
-    pos={x:nx,y:ny};
-    if(coins.has(k))coins.delete(k);
-    draw();
-    if(nx===goal.x&&ny===goal.y)finish("เขาวงกต",1);
-  };
-  const keyHandler=e=>{
-    if(!$("#gameModal").classList.contains("show"))return;
-    const map={ArrowUp:[0,-1],ArrowLeft:[-1,0],ArrowDown:[0,1],ArrowRight:[1,0]};
-    if(!map[e.key])return;
-    e.preventDefault();
-    move(...map[e.key]);
-  };
-  window.addEventListener("keydown",keyHandler,{once:false});
-  draw();
-}
 async function shoot(){if(!await requireAuth()||!await startSession("shoot"))return;$("#gameModal").classList.add("show");$("#gameTitle").textContent="🎯 ยิงเป้า";let t=25,score=0;const area=()=>{if(t<=0)return;let a=document.createElement("div");a.className="target";a.style.left=(Math.random()*88+4)+"%";a.style.top=(Math.random()*78+4)+"%";a.onclick=()=>{score++;$("#score").textContent=score;a.remove();area()};$("#targetArea").appendChild(a)};$("#gameBody").innerHTML='<div class="hud"><span>⏱️ <b id="time">'+t+'</b> วิ</span><span>🎯 เป้าที่โดน <b id="score">0</b></span></div><div class="target-area" id="targetArea"></div>';area();gameTimer=setInterval(()=>{$("#time").textContent=--t;if(t<=0)finish("ยิงเป้า",score)},1000)}
 async function runner(){if(!await requireAuth()||!await startSession("runner"))return;$("#gameModal").classList.add("show");$("#gameTitle").textContent="🏃 หลบสิ่งกีดขวาง";let lane=1;$("#gameBody").innerHTML='<div class="hud"><span>วิ่งให้นานที่สุด</span></div><div class="runner-area"><div class="road"></div><div class="car" id="runnerCar"></div></div><div class="controls"><button onclick="laneMove(-1)">←</button><button onclick="laneMove(1)">→</button></div>';const car=$("#runnerCar"),set=()=>car.style.left=(12+lane*28)+"%";window.laneMove=d=>{lane=Math.max(0,Math.min(2,lane+d));set()};set();let obs=[],start=performance.now(),last=0;const tick=ts=>{if(ts-last>650){last=ts;let o=document.createElement("div");o.className="ob";o.style.left=(12+Math.floor(Math.random()*3)*28)+"%";o.style.top="-55px";$("#gameBody .runner-area").appendChild(o);obs.push(o)}obs.forEach((o,i)=>{o.style.top=(parseFloat(o.style.top)+4)+"px";let ol=parseFloat(o.style.left),ot=parseFloat(o.style.top);if(ot>250&&ot<330&&Math.abs(ol-(12+lane*28))<8){finish("หลบสิ่งกีดขวาง",Math.floor((ts-start)/1000));return}if(ot>350){o.remove();obs.splice(i,1)}});gameLoop=requestAnimationFrame(tick)};gameLoop=requestAnimationFrame(tick)}
 async function cards(){if(!await requireAuth()||!await startSession("cards"))return;$("#gameModal").classList.add("show");$("#gameTitle").textContent="🃏 จับคู่ไพ่";let vals=["⭐","⭐","🎵","🎵","▶️","▶️","📸","📸","👍","👍","✦","✦","♛","♛","💎","💎"].sort(()=>Math.random()-.5),open=[],done=0;$("#gameBody").innerHTML='<div class="hud"><span>จับคู่ <b id="pairs">0</b>/8</span></div><div class="cards">'+vals.map((_,i)=>'<button class="cardx" data-i="'+i+'">?</button>').join("")+'</div>';document.querySelectorAll(".cardx").forEach(b=>b.onclick=()=>{let i=+b.dataset.i;if(b.classList.contains("open")||b.classList.contains("done")||open.length===2)return;b.textContent=vals[i];b.classList.add("open");open.push(i);if(open.length===2){let[a,z]=open;if(vals[a]===vals[z]){document.querySelectorAll(".cardx")[a].classList.add("done");document.querySelectorAll(".cardx")[z].classList.add("done");done++;$("#pairs").textContent=done;open=[];if(done===8)setTimeout(()=>finish("จับคู่ไพ่",8),300)}else setTimeout(()=>{[a,z].forEach(j=>{let q=document.querySelectorAll(".cardx")[j];q.textContent="?";q.classList.remove("open")});open=[]},550)}})}
