@@ -5080,3 +5080,33 @@ document.addEventListener("click",(event)=>{
     transform:none !important;
   }
 }
+/* MOBILE: a tap may not leave multiple product cards in Safari's hover state. */
+@media (hover:none) and (pointer:coarse){
+  .prime-product-card:hover,
+  .prime-mini-card:hover{
+    transform:none!important;
+    border-color:#d7b5f4!important;
+    box-shadow:0 9px 24px rgba(82,31,130,.12),0 0 14px rgba(177,104,245,.13),inset 0 1px 0 #fff!important;
+  }
+  .prime-product-card.prime-touch-selected,
+  .prime-mini-card.prime-touch-selected{
+    border:2px solid #a957f5!important;
+    box-shadow:0 0 0 3px rgba(143,53,240,.14),0 12px 30px rgba(101,18,197,.16),inset 0 1px 0 #fff!important;
+    transform:none!important;
+  }
+}
+
+function initPrimeTouchCardSelection(){
+  if(window.__primeTouchCardSelectionBound)return;
+  window.__primeTouchCardSelectionBound=true;
+  document.addEventListener("pointerdown",function(event){
+    if(!event.isPrimary || event.pointerType!=="touch")return;
+    const card=event.target?.closest?.(".prime-product-card,.prime-mini-card");
+    if(!card)return;
+    document.querySelectorAll(".prime-product-card.prime-touch-selected,.prime-mini-card.prime-touch-selected").forEach(function(x){
+      if(x!==card)x.classList.remove("prime-touch-selected");
+    });
+    card.classList.add("prime-touch-selected");
+  },{passive:true});
+}
+document.addEventListener("DOMContentLoaded",initPrimeTouchCardSelection);
