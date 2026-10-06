@@ -127,7 +127,8 @@ async function redeem(){
   const n=Math.floor(Number($("#redeemPoints").value)||0);
   if(n<1){showPopup("แลกคะแนนไม่ได้","ขั้นต่ำในการแลกคือ 1 คะแนน");return}
   if(n>points){showPopup("คะแนนไม่พอ","คุณมี "+points.toLocaleString()+" คะแนน");return}
-  const idempotencyKey=crypto.randomUUID();\n  const {data,error}=await supabaseClient.rpc("redeem_game_points",{p_points:n,p_idempotency_key:idempotencyKey});
+  const idempotencyKey=crypto.randomUUID();
+  const {data,error}=await supabaseClient.rpc("redeem_game_points",{p_points:n,p_idempotency_key:idempotencyKey});
   if(error){showPopup("แลกคะแนนไม่สำเร็จ",error.message);return}
   points=Number(data.available_points ?? Math.max(0,points-n));
   renderSummary({points,plays});
