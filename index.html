@@ -2837,8 +2837,8 @@ html,body{
         <h4>Live Viewers</h4>
         <p>เพิ่มจำนวนผู้ชมระหว่างการไลฟ์ เพื่อช่วยสร้างบรรยากาศและการมองเห็น</p>
         <span class="prime-new-platforms">TikTok • YouTube • Facebook</span>
-        <span class="prime-new-card-status">กำลังตรวจสอบ...</span>
-        <button class="prime-new-btn" type="button" data-action="openNewService" data-service="LiveViewers">กำลังตรวจสอบ...</button>
+        <span class="prime-new-card-status coming-soon">● สินค้าจะมีเร็วๆนี้</span>
+        <button class="prime-new-btn is-coming-soon" type="button" disabled aria-disabled="true">สินค้าจะมีเร็วๆนี้</button>
       </article>
       <article class="prime-new-card" data-new-card="ReachImpressions">
         <div class="prime-new-icon"><img src="https://cdn.simpleicons.org/instagram/E4405F" alt="Instagram"></div>
@@ -3431,7 +3431,13 @@ async function refreshNewServiceStatuses(){
     const cfgs=Object.entries(NEW_SERVICE_RULES);
     for(const [key,cfg] of cfgs){
       const card=document.querySelector('[data-new-card="'+key+'"]');if(!card)continue;
-      const source=key==="LiveViewers"?liveRows:rows;
+      if(key==="LiveViewers"){
+        const status=card.querySelector('.prime-new-card-status'),btn=card.querySelector('.prime-new-btn');
+        if(status){status.textContent='● สินค้าจะมีเร็วๆนี้';status.className='prime-new-card-status coming-soon';}
+        if(btn){btn.textContent='สินค้าจะมีเร็วๆนี้';btn.disabled=true;btn.setAttribute('aria-disabled','true');btn.classList.add('is-coming-soon');}
+        continue;
+      }
+      const source=rows;
       const ready=cfg.platforms.some((platform,i)=>source.some(r=>{
         if(r.active!==true||r.maintenance===true||Number(r.selling_price)<=0||Number(r.provider_service_id)<=0)return false;
         if(key==="LiveViewers")return beeThPlatformMatch(r,platform);
