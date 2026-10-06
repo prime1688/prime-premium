@@ -6055,7 +6055,7 @@ padding:9px 10px !important}}
     list.querySelectorAll("[data-notify-id]").forEach(el=>{el.addEventListener("click",e=>{if(e.target.closest("button"))markRead(el.dataset.notifyId)})});
   }
   async function load(){
-    const isAdmin=window.__primeIsAdmin===true;
+    const isAdmin=await isPrimeAdmin();
     const title=document.getElementById("primeNotifyTitle"),sub=document.getElementById("primeNotifySubtitle");
     if(title)title.textContent=isAdmin?"🔔 แจ้งเตือนแอดมิน":"🔔 แจ้งเตือนของฉัน";
     if(sub)sub.textContent=isAdmin?"งานเติมเงิน • Order • Refund • API":"เติมเงิน • สั่งซื้อ • สำเร็จ • ล้มเหลว • คืนเครดิต";
