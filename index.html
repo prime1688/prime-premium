@@ -3574,6 +3574,10 @@ function socialUnitForService(serviceName){
 }
 function socialShortName(serviceName){
   const n=String(serviceName||"").toLowerCase();
+  if(/live\s*(viewer|viewers)|live stream|ผู้ชมไลฟ์/.test(n)) return "🔴 เพิ่มผู้ชมไลฟ์";
+  if(/reach|impressions|การเข้าถึง|การแสดงผล/.test(n)) return "📣 เพิ่มการเข้าถึง";
+  if(/profile\s*visits|เข้าชมโปรไฟล์/.test(n)) return "👤 เพิ่มเข้าชมโปรไฟล์";
+  if(/group.*channel.*member|สมาชิก.*กลุ่ม|สมาชิก.*ช่อง/.test(n)) return "👥 เพิ่มสมาชิกกลุ่ม/ช่อง";
   if(/comment|คอมเมนต์/.test(n)) return "💬 เพิ่มคอมเมนต์";
   if(/save|bookmark|บันทึก/.test(n)) return "🔖 เพิ่มบันทึก";
   if(/follower|ผู้ติดตาม|follow/.test(n)) return "👥 เพิ่มผู้ติดตาม";
