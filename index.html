@@ -3622,9 +3622,11 @@ function renderSocialServices(){
   const wanted=
     platformKey==="facebook"||platformKey==="instagram"||platformKey==="youtube"
       ? ["likes","comments","shares","followers","views"]
-      : platformKey==="tiktok"||platformKey==="x"
-        ? ["likes","followers","views","shares"]
-        : ["likes","comments","shares","followers","views","other"];
+      : platformKey==="tiktok"
+        ? ["likes","followers","views"]
+        : platformKey==="x"
+          ? ["likes","followers","views","shares"]
+          : ["likes","comments","shares","followers","views","other"];
   const visibleServices=[];
   wanted.forEach(type=>{
     const match=deduped.find(x=>socialServiceType(x)===type);
