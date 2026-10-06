@@ -5915,5 +5915,34 @@ document.addEventListener("click",(event)=>{
   }
 }
 </style>
+<style id="prime-x-button-match-all-final">
+/* X CTA = EXACT same box model as every other product card */
+.prime-product-card[data-platform="X"] .prime-select-btn{
+  display:block !important;
+  position:relative !important;
+  width:100% !important;
+  height:auto !important;
+  min-height:42px !important;
+  max-height:none !important;
+  flex:0 0 auto !important;
+  align-self:stretch !important;
+  margin:8px 0 0 0 !important;
+  padding:9px 12px !important;
+  box-sizing:border-box !important;
+  border-radius:13px !important;
+  line-height:normal !important;
+  transform:none !important;
+}
+@media(max-width:600px){
+  .prime-product-card[data-platform="X"] .prime-select-btn{
+    width:100% !important;
+    min-height:42px !important;
+    height:auto !important;
+    margin:8px 0 0 0 !important;
+    padding:9px 12px !important;
+    flex:0 0 auto !important;
+  }
+}
+</style>
 </body>
 </html>
