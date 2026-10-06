@@ -2633,7 +2633,246 @@ html,body{
 .prime-footer-copy{margin-top:13px;color:#806d91;font-size:11px}
 @media(max-width:850px){.prime-why-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.prime-final-cta{display:block}.prime-final-actions{justify-content:flex-start;margin-top:15px}}
 @media(max-width:600px){.prime-why{padding:17px;margin-top:18px}.prime-why-head h3{font-size:21px}.prime-why-head p{font-size:11px}.prime-why-grid{grid-template-columns:1fr 1fr;gap:8px}.prime-why-card{padding:10px;gap:7px}.prime-why-card>span{width:33px;height:33px;flex-basis:33px;font-size:17px}.prime-why-card b{font-size:11px}.prime-why-card small{font-size:9px}.prime-final-cta{padding:20px 17px;border-radius:19px}.prime-final-cta h3{font-size:21px}.prime-final-cta p{font-size:11px}.prime-final-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}.prime-final-btn{width:100%;padding:10px 8px;font-size:11px}.prime-footer{padding:25px 14px 30px!important}.prime-footer-brand{font-size:19px}}
-</style>
+
+    /* PRIME SOCIAL ORDER POPUPS */
+    .prime-order-popup{
+      position:fixed;
+      inset:0;
+      z-index:12000;
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding:16px;
+      background:rgba(35,12,55,.56);
+      backdrop-filter:blur(10px);
+      -webkit-backdrop-filter:blur(10px);
+      animation:primePopupFade .18s ease-out;
+    }
+    .prime-order-popup.show{display:flex}
+    .prime-order-popup-card{
+      position:relative;
+      width:min(470px,100%);
+      max-height:calc(100dvh - 32px);
+      overflow:auto;
+      padding:24px;
+      border-radius:28px;
+      background:linear-gradient(180deg,#ffffff 0%,#faf7ff 100%);
+      color:#24134f;
+      border:2px solid #c084fc;
+      box-shadow:0 22px 80px rgba(40,10,65,.42),0 0 0 5px rgba(192,132,252,.14);
+      animation:primePopupIn .34s cubic-bezier(.2,.9,.3,1.15);
+    }
+    .prime-order-popup-close{
+      position:absolute;
+      right:14px;
+      top:14px;
+      width:40px;
+      height:40px;
+      border:0;
+      border-radius:50%;
+      background:#24103d;
+      color:#e9d5ff;
+      font-size:25px;
+      line-height:1;
+      cursor:pointer;
+      box-shadow:0 7px 20px rgba(45,15,70,.22);
+    }
+    .prime-order-popup-kicker{
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      padding:7px 13px;
+      border-radius:999px;
+      background:#f0e5ff;
+      color:#5b21b6;
+      font-size:13px;
+      font-weight:900;
+      letter-spacing:.2px;
+      margin-bottom:15px;
+    }
+    .prime-order-popup-title{
+      margin:0 0 7px;
+      color:#28104f;
+      font-size:30px;
+      line-height:1.12;
+      font-weight:950;
+    }
+    .prime-order-popup-subtitle{
+      margin:0 0 18px;
+      color:#75658b;
+      font-size:14px;
+      line-height:1.55;
+      font-weight:650;
+    }
+    .prime-order-service{
+      display:flex;
+      align-items:center;
+      gap:13px;
+      padding:14px;
+      border-radius:20px;
+      background:linear-gradient(135deg,#fbf9ff,#f1eaff);
+      border:1px solid #eadcff;
+      margin-bottom:12px;
+    }
+    .prime-order-service-icon{
+      flex:0 0 52px;
+      width:52px;
+      height:52px;
+      border-radius:15px;
+      display:grid;
+      place-items:center;
+      background:#090909;
+      color:#fff;
+      font-size:27px;
+      font-weight:950;
+      box-shadow:0 5px 16px rgba(0,0,0,.12);
+    }
+    .prime-order-service-name{
+      color:#24133f;
+      font-size:18px;
+      font-weight:950;
+      line-height:1.2;
+    }
+    .prime-order-service-tag{
+      display:inline-flex;
+      margin-top:6px;
+      padding:5px 10px;
+      border-radius:999px;
+      background:#eadcff;
+      color:#6d28d9;
+      font-size:12px;
+      font-weight:850;
+    }
+    .prime-order-info{
+      border:1px solid #eadcff;
+      border-radius:20px;
+      background:#fff;
+      overflow:hidden;
+      margin-bottom:12px;
+    }
+    .prime-order-info-row{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:14px;
+      padding:13px 15px;
+      border-bottom:1px solid #eee7f6;
+    }
+    .prime-order-info-row:last-child{border-bottom:0}
+    .prime-order-info-label{
+      display:flex;
+      align-items:center;
+      gap:9px;
+      color:#66577a;
+      font-size:14px;
+      font-weight:750;
+    }
+    .prime-order-info-value{
+      color:#5b21b6;
+      font-size:16px;
+      font-weight:950;
+      text-align:right;
+    }
+    .prime-order-note{
+      display:flex;
+      align-items:flex-start;
+      gap:10px;
+      padding:12px 14px;
+      margin-bottom:16px;
+      border-radius:17px;
+      background:#f4ecff;
+      color:#5d4b70;
+      font-size:13px;
+      line-height:1.5;
+      font-weight:650;
+    }
+    .prime-order-note-icon{
+      width:25px;
+      height:25px;
+      flex:0 0 25px;
+      display:grid;
+      place-items:center;
+      border-radius:50%;
+      background:#8b5cf6;
+      color:#fff;
+      font-weight:950;
+    }
+    .prime-order-actions{display:flex;gap:10px}
+    .prime-order-actions button{
+      flex:1;
+      min-height:54px;
+      border-radius:16px;
+      font-size:15px;
+      font-weight:950;
+      cursor:pointer;
+      transition:transform .15s ease,box-shadow .15s ease;
+    }
+    .prime-order-actions button:active{transform:scale(.98)}
+    .prime-order-cancel{
+      background:#fff;
+      color:#6d28d9;
+      border:2px solid #d8b4ff;
+    }
+    .prime-order-confirm{
+      border:0;
+      color:#fff;
+      background:linear-gradient(135deg,#9b4dff,#6417d7);
+      box-shadow:0 10px 28px rgba(111,42,214,.28);
+    }
+    .prime-order-success-icon{
+      width:100px;
+      height:100px;
+      margin:2px auto 14px;
+      border-radius:50%;
+      display:grid;
+      place-items:center;
+      background:linear-gradient(145deg,#a855f7,#7c3aed);
+      color:#fff;
+      font-size:53px;
+      font-weight:950;
+      border:8px solid #f0e5ff;
+      box-shadow:0 0 0 2px #c084fc,0 12px 35px rgba(124,58,237,.32);
+      position:relative;
+    }
+    .prime-order-success-icon:before,
+    .prime-order-success-icon:after{
+      content:"✦";
+      position:absolute;
+      color:#a855f7;
+      font-size:18px;
+      animation:primeSpark 1.4s ease-in-out infinite;
+    }
+    .prime-order-success-icon:before{left:-25px;top:2px}
+    .prime-order-success-icon:after{right:-22px;bottom:5px;animation-delay:.25s}
+    .prime-order-success-title{text-align:center}
+    .prime-order-success-sub{text-align:center}
+    .prime-order-success-service{margin-top:4px}
+    .prime-order-success-close{
+      width:100%;
+      min-height:54px;
+      border:0;
+      border-radius:16px;
+      background:linear-gradient(135deg,#9b4dff,#6417d7);
+      color:#fff;
+      font-size:16px;
+      font-weight:950;
+      cursor:pointer;
+      box-shadow:0 10px 28px rgba(111,42,214,.25);
+    }
+    @keyframes primePopupFade{from{opacity:0}to{opacity:1}}
+    @keyframes primePopupIn{from{opacity:0;transform:translateY(18px) scale(.94)}to{opacity:1;transform:none}}
+    @keyframes primeSpark{0%,100%{transform:scale(.75);opacity:.35}50%{transform:scale(1.25);opacity:1}}
+    @media(max-width:600px){
+      .prime-order-popup{padding:12px}
+      .prime-order-popup-card{padding:20px;border-radius:25px;max-height:calc(100dvh - 24px)}
+      .prime-order-popup-title{font-size:27px}
+      .prime-order-popup-subtitle{font-size:13px}
+      .prime-order-info-row{padding:12px}
+      .prime-order-actions button{min-height:52px;font-size:14px}
+      .prime-order-success-icon{width:88px;height:88px;font-size:46px}
+    }
+
+  </style>
 <style>.admin-members-box{margin:14px 0 18px;padding:14px;border:1px solid rgba(157,78,221,.25);border-radius:16px;background:rgba(255,255,255,.45)}.admin-section-title{font-size:18px;font-weight:900;margin-bottom:10px}.admin-section-title small{font-size:12px;color:#8b6b9e;font-weight:700}.admin-members-head,.admin-member-row{display:grid;grid-template-columns:1.2fr .8fr 1.1fr;gap:8px;align-items:center;padding:10px;border-bottom:1px solid rgba(157,78,221,.14)}.admin-members-head{font-size:12px;color:#80668f}.admin-member-row strong:nth-child(2){color:#6f20c9}.admin-member-row span{font-size:12px;color:#80668f}@media(max-width:600px){.admin-members-head,.admin-member-row{grid-template-columns:1fr 1fr}.admin-members-head span:last-child,.admin-member-row span:last-child{grid-column:1/-1}}
 /* Selection clarity: only .selected gets the strong purple border */
 #socialServiceCards .social-service-card:focus,
@@ -4009,25 +4248,58 @@ window.PRIME_ORDER_DEBUG={
 };
 
 let primeSocialOrderConfirmBusy=false;
-function confirmSocialOrder(){
-  if(primeSocialOrderConfirmBusy)return false;
-  if(!selectedSocialService)return false;
+function socialPopupIcon(platform){
+  const p=String(platform||"").toLowerCase();
+  if(p.includes("tiktok"))return "♪";
+  if(p.includes("instagram"))return "◎";
+  if(p.includes("facebook"))return "f";
+  if(p.includes("youtube"))return "▶";
+  if(p.includes("x"))return "𝕏";
+  return "✦";
+}
+function openSocialConfirm(){
+  if(primeSocialOrderConfirmBusy||!selectedSocialService)return false;
   const r=selectedSocialService.rule||{};
   const q=Number(document.getElementById("socialQuantity")?.value)||r.min||1;
   const total=Number((q*Number(r.price||0)/1000).toFixed(2));
   const name=socialShortName(selectedSocialService.name);
-  const ok=window.confirm("ยืนยันการสั่งซื้อ?\n\n"+name+"\nจำนวน "+formatNumber(q)+" "+(r.unit||"หน่วย")+"\nราคา ฿"+formatNumber(total)+"\n\nกด OK เพื่อยืนยันการสั่งซื้อ");
-  if(!ok)return false;
+  const platform=socialPlatformCurrent||"บริการ";
+  const icon=socialPopupIcon(platform);
+  document.getElementById("socialConfirmIcon").textContent=icon;
+  document.getElementById("socialConfirmServiceName").textContent=platform+" – "+name;
+  document.getElementById("socialConfirmServiceTag").textContent=(r.label||name);
+  document.getElementById("socialConfirmQuantity").textContent=formatNumber(q)+" "+(r.unit||"หน่วย");
+  document.getElementById("socialConfirmPrice").textContent="฿"+formatNumber(total);
+  const popup=document.getElementById("socialOrderConfirmPopup");
+  if(!popup)return false;
+  popup.classList.add("show");
+  popup.setAttribute("aria-hidden","false");
+  document.body.classList.add("modal-open");
+  return true;
+}
+function closeSocialConfirm(){
+  const popup=document.getElementById("socialOrderConfirmPopup");
+  if(popup){popup.classList.remove("show");popup.setAttribute("aria-hidden","true");}
+  if(!document.getElementById("socialOrderSuccessPopup")?.classList.contains("show")){
+    document.body.classList.remove("modal-open");
+  }
+}
+function submitSocialConfirm(){
+  if(primeSocialOrderConfirmBusy||!selectedSocialService)return false;
   primeSocialOrderConfirmBusy=true;
-  const btn=document.querySelector('#socialCheckoutPopup [data-action="placeSocialOrder"]');
-  if(btn){btn.disabled=true;btn.dataset.confirmed="true";}
+  const confirmBtn=document.getElementById("socialConfirmSubmit");
+  if(confirmBtn)confirmBtn.disabled=true;
+  closeSocialConfirm();
   Promise.resolve(placeSocialOrder()).finally(()=>{
     setTimeout(()=>{
       primeSocialOrderConfirmBusy=false;
-      if(btn){btn.disabled=false;delete btn.dataset.confirmed;}
+      if(confirmBtn)confirmBtn.disabled=false;
     },700);
   });
   return true;
+}
+function confirmSocialOrder(){
+  return openSocialConfirm();
 }
 async function placeSocialOrder(){
   primeOrderLog("1. ORDER BUTTON CLICK");
@@ -4236,10 +4508,10 @@ async function placeSocialOrder(){
     });
 
     closeModal("socialOrderModal");
+    closeSocialCheckout();
     recordLiveActivity("ordered","สั่งซื้อบริการ "+r.label+" จำนวน "+formatNumber(qty)+" "+r.unit);
     await updateLoginButton();
-
-    alert("สั่งซื้อสำเร็จ\n"+r.label+" "+formatNumber(qty)+" "+r.unit+"\nยอดที่หัก ฿"+formatNumber(Number(data.total??expectedTotal))+"\nเครดิตคงเหลือ ฿"+formatNumber(Number(data.credit??0))+"\nBEE-TH Order ID: "+(data.provider_order_id||"-"));
+    showSocialSuccess(data,r,qty);
   }catch(e){
     primeOrderLog("12. ORDER FAILED UNEXPECTED",{
       reason:"UNEXPECTED_EXCEPTION",
@@ -4257,6 +4529,31 @@ async function placeSocialOrder(){
       last_trace_count:PRIME_ORDER_TRACE.length
     });
   }
+}
+
+
+function showSocialSuccess(data,r,qty){
+  const platform=socialPlatformCurrent||"บริการ";
+  const name=socialShortName(selectedSocialService?.name||r.label||"บริการ");
+  const icon=socialPopupIcon(platform);
+  document.getElementById("socialSuccessIcon").textContent=icon;
+  document.getElementById("socialSuccessServiceName").textContent=platform+" – "+name;
+  document.getElementById("socialSuccessServiceTag").textContent=r.label||name;
+  document.getElementById("socialSuccessQuantity").textContent=formatNumber(qty)+" "+(r.unit||"หน่วย");
+  document.getElementById("socialSuccessTotal").textContent="฿"+formatNumber(Number(data.total??0));
+  document.getElementById("socialSuccessCredit").textContent="฿"+formatNumber(Number(data.credit??0));
+  document.getElementById("socialSuccessOrderId").textContent=data.provider_order_id||"-";
+  const popup=document.getElementById("socialOrderSuccessPopup");
+  if(popup){
+    popup.classList.add("show");
+    popup.setAttribute("aria-hidden","false");
+    document.body.classList.add("modal-open");
+  }
+}
+function closeSocialSuccess(){
+  const popup=document.getElementById("socialOrderSuccessPopup");
+  if(popup){popup.classList.remove("show");popup.setAttribute("aria-hidden","true");}
+  document.body.classList.remove("modal-open");
 }
 
 let topupSubmitting=false;
@@ -5152,5 +5449,75 @@ document.addEventListener("click",(event)=>{
       </div>
     </div>
   </div>
+
+  <div class="prime-order-popup" id="socialOrderConfirmPopup" aria-hidden="true">
+    <div class="prime-order-popup-card" role="dialog" aria-modal="true" aria-labelledby="socialConfirmTitle">
+      <button class="prime-order-popup-close" type="button" onclick="closeSocialConfirm()" aria-label="ปิด">×</button>
+      <div class="prime-order-popup-kicker">PRIME ORDER</div>
+      <h2 class="prime-order-popup-title" id="socialConfirmTitle">ยืนยันการสั่งซื้อ?</h2>
+      <p class="prime-order-popup-subtitle">กรุณาตรวจสอบรายการก่อนยืนยัน เพื่อดำเนินการสั่งซื้อ</p>
+      <div class="prime-order-service">
+        <div class="prime-order-service-icon" id="socialConfirmIcon">♪</div>
+        <div>
+          <div class="prime-order-service-name" id="socialConfirmServiceName">บริการ</div>
+          <div class="prime-order-service-tag" id="socialConfirmServiceTag">เพิ่มบริการ</div>
+        </div>
+      </div>
+      <div class="prime-order-info">
+        <div class="prime-order-info-row">
+          <span class="prime-order-info-label">▱ จำนวน</span>
+          <strong class="prime-order-info-value" id="socialConfirmQuantity">-</strong>
+        </div>
+        <div class="prime-order-info-row">
+          <span class="prime-order-info-label">◉ ราคา</span>
+          <strong class="prime-order-info-value" id="socialConfirmPrice">฿0.00</strong>
+        </div>
+      </div>
+      <div class="prime-order-note">
+        <span class="prime-order-note-icon">i</span>
+        <span>กด <b>“ยืนยันการสั่งซื้อ”</b> เพื่อดำเนินการสั่งซื้อรายการนี้</span>
+      </div>
+      <div class="prime-order-actions">
+        <button class="prime-order-cancel" type="button" onclick="closeSocialConfirm()">ยกเลิก</button>
+        <button class="prime-order-confirm" type="button" id="socialConfirmSubmit" onclick="submitSocialConfirm()">ยืนยันการสั่งซื้อ</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="prime-order-popup" id="socialOrderSuccessPopup" aria-hidden="true">
+    <div class="prime-order-popup-card" role="dialog" aria-modal="true" aria-labelledby="socialSuccessTitle">
+      <button class="prime-order-popup-close" type="button" onclick="closeSocialSuccess()" aria-label="ปิด">×</button>
+      <div class="prime-order-success-icon">✓</div>
+      <h2 class="prime-order-popup-title prime-order-success-title" id="socialSuccessTitle">สั่งซื้อสำเร็จ</h2>
+      <p class="prime-order-popup-subtitle prime-order-success-sub">รายการถูกส่งไปยังผู้ให้บริการเรียบร้อยแล้ว</p>
+      <div class="prime-order-service prime-order-success-service">
+        <div class="prime-order-service-icon" id="socialSuccessIcon">♪</div>
+        <div>
+          <div class="prime-order-service-name" id="socialSuccessServiceName">บริการ</div>
+          <div class="prime-order-service-tag" id="socialSuccessServiceTag">บริการ PRIME</div>
+        </div>
+      </div>
+      <div class="prime-order-info">
+        <div class="prime-order-info-row">
+          <span class="prime-order-info-label">▱ จำนวน</span>
+          <strong class="prime-order-info-value" id="socialSuccessQuantity">-</strong>
+        </div>
+        <div class="prime-order-info-row">
+          <span class="prime-order-info-label">◉ ยอดที่หัก</span>
+          <strong class="prime-order-info-value" id="socialSuccessTotal">฿0.00</strong>
+        </div>
+        <div class="prime-order-info-row">
+          <span class="prime-order-info-label">▣ เครดิตคงเหลือ</span>
+          <strong class="prime-order-info-value" id="socialSuccessCredit">฿0.00</strong>
+        </div>
+        <div class="prime-order-info-row">
+          <span class="prime-order-info-label"># BEE-TH Order ID</span>
+          <strong class="prime-order-info-value" id="socialSuccessOrderId">-</strong>
+        </div>
+      </div>
+      <button class="prime-order-success-close" type="button" onclick="closeSocialSuccess()">ปิด</button>
+    </div>
+  </div>
+
 </body>
 </html>
