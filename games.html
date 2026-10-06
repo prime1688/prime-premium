@@ -115,7 +115,28 @@ radial-gradient(circle at 45% 55%,rgba(255,255,255,.05) 0 1px,transparent 2px);b
 .scene-label{max-width:700px;margin:0 auto 10px;padding:8px 14px;border-radius:999px;background:rgba(255,255,255,.08);border:1px solid rgba(196,125,255,.28);color:#e9ddf7;text-align:center;font-weight:850;font-size:12px;backdrop-filter:blur(10px)}
 .scene-label b{color:#ffd83d}
 @media(max-width:430px){#gameBody .hud span{min-height:44px;font-size:12px}#gameBody .hud b{font-size:16px}#gameBody .controls button{width:70px;height:58px}.scene-label{font-size:11px}.result{padding:20px 12px}.result strong{font-size:42px}}
-</style>
+/* HUD V3 — PRIME MOBILE MOCKUP */
+#gameBody .mockHud{position:sticky;top:0;z-index:12;display:grid;grid-template-columns:46px 1fr 1fr;gap:7px;align-items:stretch;margin:-2px 0 12px;padding:2px 0 8px;background:linear-gradient(180deg,rgba(8,3,22,.96) 65%,transparent);backdrop-filter:blur(8px)}
+.mockHud .pauseHud{width:46px;height:46px;padding:0;border-radius:14px;border:1px solid rgba(205,139,255,.6);background:linear-gradient(145deg,#7629e4,#2b105f);color:#fff;font-size:19px;font-weight:950;box-shadow:0 0 18px rgba(143,58,255,.3);touch-action:manipulation}
+.mockHud .statHud{min-width:0;min-height:46px;padding:5px 9px;border-radius:14px;background:linear-gradient(180deg,#28105b,#12072b);border:1px solid rgba(196,119,255,.4);box-shadow:0 7px 20px rgba(0,0,0,.28);text-align:center}
+.mockHud .statHud small{display:block;color:#d8c9ed;font-size:10px;line-height:13px;font-weight:800}
+.mockHud .statHud b{display:block;color:#fff;font-size:18px;line-height:21px;font-weight:950;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mockHud .statHud b.gold{color:#ffd83d;text-shadow:0 0 10px rgba(255,216,61,.28)}
+.mockHud .statusHud{grid-column:2 / 4;display:flex;gap:6px;margin-top:-2px;overflow:hidden}
+.mockHud .statusHud span{flex:1;min-width:0;padding:5px 7px;border-radius:10px;background:rgba(255,255,255,.06);border:1px solid rgba(196,119,255,.22);color:#e9ddf7;text-align:center;font-size:10px;font-weight:850;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mockHud .statusHud b{color:#ffd83d}
+#gameBody[data-game="cards"] .mockHud,#gameBody[data-game="sequence"] .mockHud{grid-template-columns:46px repeat(3,1fr)}
+#gameBody[data-game="cards"] .mockHud .statusHud,#gameBody[data-game="sequence"] .mockHud .statusHud{grid-column:2/5}
+@media(max-width:430px){
+ #gameBody .mockHud{grid-template-columns:42px 1fr 1fr;gap:5px;margin-bottom:8px}
+ .mockHud .pauseHud{width:42px;height:42px;border-radius:12px;font-size:17px}
+ .mockHud .statHud{min-height:42px;padding:4px 6px;border-radius:12px}
+ .mockHud .statHud small{font-size:9px;line-height:11px}
+ .mockHud .statHud b{font-size:16px;line-height:19px}
+ .mockHud .statusHud span{font-size:9px;padding:4px 5px}
+ #gameBody[data-game="cards"] .mockHud,#gameBody[data-game="sequence"] .mockHud{grid-template-columns:42px repeat(3,1fr)}
+}
+.pauseOverlay{position:absolute;inset:0;z-index:30;display:grid;place-items:center;background:rgba(5,2,16,.72);backdrop-filter:blur(9px)}.pauseOverlay>div{width:min(88%,360px);padding:24px;border-radius:24px;text-align:center;background:linear-gradient(180deg,#2a0d60,#12072b);border:1px solid rgba(206,137,255,.5);box-shadow:0 18px 50px rgba(0,0,0,.45)}.pauseOverlay h3{font-size:25px;margin:0 0 6px;color:#fff}.pauseOverlay p{color:#d8c9ed;margin:0 0 16px}</style>
 </head>
 <body>
 <header class="header"><div class="nav"><a class="brand" href="./index.html">PRIME<span>.</span></a><a class="back" href="./index.html">← กลับ PRIME</a></div></header>
@@ -263,11 +284,34 @@ function closeGame(){clearGame();currentSession=null;currentGameId=null;$("#game
 function enhanceGameScene(id){
   const body=$("#gameBody"); if(!body)return;
   body.dataset.game=id;
-  const labels={shoot:"🎯 สนามยิงเป้า · ยิงให้ได้มากที่สุดก่อนหมดเวลา",runner:"🏃 ถนนเมือง PRIME · หลบสิ่งกีดขวางและวิ่งต่อ",cards:"🃏 PRIME Memory · จับคู่ให้ครบ 8 คู่",quiz:"🧠 PRIME Challenge · ตอบให้ถูกเพื่อสะสมคะแนน",racing:"🏎️ PRIME Street Race · หลบรถและเก็บคะแนน",reaction:"⚡ Reaction Zone · รอสัญญาณแล้วแตะทันที",math_rush:"➗ Math Rush · คิดเลขให้เร็วที่สุด",color_match:"🎨 Color Lab · เลือกสีให้ถูก",memory_number:"🔢 Memory Vault · จำตัวเลขให้แม่น",emoji_count:"🍎 Emoji Garden · นับให้ถูกต้อง",tap_10:"👆 Tap Arena · แตะให้ครบ 10 ครั้ง",timing:"⏱️ Precision Zone · หยุดเวลาให้ใกล้ 5.00 วิ",guess_number:"🎲 Number Vault · ทายเลข 1–20",sequence:"🧩 Sequence Lab · จำลำดับให้ครบ",word_match:"🔤 Word Lab · จับคู่คำให้ถูก",coin_catcher:"🪙 Coin Rush · เก็บเหรียญให้มากที่สุด",lane_dodge:"🛣️ Neon Highway · เปลี่ยนเลนหลบสิ่งกีดขวาง",higher_lower:"⬆️ Higher / Lower · เดาทิศทางตัวเลข",fast_tap:"🚀 Fast Tap Arena · แตะเป้าให้เร็วที่สุด"};
-  const label=labels[id];
-  if(label && !body.querySelector(".scene-label")){
-    const el=document.createElement("div");el.className="scene-label";el.innerHTML=label+' <b>· PRIME GAME</b>';body.insertBefore(el,body.firstChild);
-  }
+  const labels={shoot:"🎯 ยิงเป้า",runner:"🏃 หลบสิ่งกีดขวาง",cards:"🃏 จับคู่ไพ่",quiz:"🧠 Quiz",racing:"🏎️ Mini Racing",reaction:"⚡ Reaction",math_rush:"➗ Math Rush",color_match:"🎨 Color Match",memory_number:"🔢 Memory Number",emoji_count:"🍎 Emoji Count",tap_10:"👆 Tap 10",timing:"⏱️ Timing",guess_number:"🎲 Guess Number",sequence:"🧩 Sequence",word_match:"🔤 Word Match",coin_catcher:"🪙 Coin Catcher",lane_dodge:"🛣️ Lane Dodge",higher_lower:"⬆️ Higher / Lower",fast_tap:"🚀 Fast Tap"};
+  const label=labels[id]||"PRIME GAME";
+  body.querySelector(".scene-label")?.remove();
+  const hud=document.createElement("div");
+  hud.className="mockHud";
+  hud.innerHTML='<button class="pauseHud" type="button" aria-label="หยุดเกม" onclick="pausePrimeGame()">Ⅱ</button><div class="statHud"><small>⏱ เวลาเหลือ</small><b id="hudTime">—</b></div><div class="statHud"><small>⭐ คะแนน</small><b id="hudScore" class="gold">0</b></div><div class="statusHud"><span>🎮 <b>'+label+'</b></span><span id="hudRound">รอบ —</span><span id="hudState">กำลังเล่น</span></div>';
+  body.insertBefore(hud,body.firstChild);
+  syncPrimeHud(id);
+}
+function syncPrimeHud(id){
+  const body=$("#gameBody"); if(!body)return;
+  const set=(id,v)=>{const e=$(id);if(e)e.textContent=v};
+  const time=$("#time")?.textContent || $("#ct")?.textContent || $("#ft")?.textContent || "—";
+  const score=$("#score")?.textContent || $("#cs")?.textContent || $("#fs")?.textContent || "0";
+  set("#hudTime",time==="—"?"—":time+" วิ");
+  set("#hudScore",score);
+  const roundMap={cards:()=>($("#pairs")?.textContent||"0")+"/8",quiz:()=>{const h=body.querySelector(".hud span");return h?.textContent?.match(/\d+\/\d+/)?.[0]||"—"},math_rush:()=>{const h=body.querySelector(".hud span");return h?.textContent?.match(/\d+\/\d+/)?.[0]||"—"},sequence:()=>(body.querySelector(".scene-label")?"จำลำดับ":"กำลังตอบ"),word_match:()=> "รอบ "+((typeof n!=="undefined")?n:"—")};
+  let round="กำลังเล่น";
+  if(roundMap[id]){try{round=roundMap[id]()}catch{}}
+  set("#hudRound",round);
+}
+function pausePrimeGame(){
+  if(!currentSession)return;
+  if(gameTimer){clearInterval(gameTimer);clearTimeout(gameTimer);gameTimer=null}
+  if(gameLoop){cancelAnimationFrame(gameLoop);gameLoop=null}
+  const b=$("#gameBody"); if(!b)return;
+  const old=b.querySelector(".pauseOverlay"); if(old){old.remove();return}
+  const o=document.createElement("div");o.className="pauseOverlay";o.innerHTML='<div><h3>⏸ พักเกม</h3><p>เกมหยุดชั่วคราว</p><button class="actionBtn" type="button" onclick="pausePrimeGame()">▶ เล่นต่อ</button></div>';b.appendChild(o);
 }
 function replayGame(id){closeGame();setTimeout(()=>openGame(id),180)}
 function clearGame(){if(gameTimer)clearInterval(gameTimer);if(gameLoop)cancelAnimationFrame(gameLoop);gameTimer=null;gameLoop=null}
