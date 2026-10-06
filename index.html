@@ -3180,6 +3180,36 @@ function initPrimeTouchCardSelection(){
 }
 document.addEventListener("DOMContentLoaded",initPrimeTouchCardSelection);
 </script>
+
+<style id="prime-notification-center">
+.prime-notify-wrap{position:relative;display:none}
+.prime-notify-wrap.show{display:block}
+.prime-notify-btn{position:relative;width:44px;height:44px;border:1px solid rgba(181,108,255,.42);border-radius:13px;background:linear-gradient(145deg,#20112d,#100a17);color:#fff;font-size:20px;cursor:pointer;display:grid;place-items:center;box-shadow:0 6px 18px rgba(65,20,95,.2)}
+.prime-notify-btn:hover{border-color:#c58aff;transform:translateY(-1px)}
+.prime-notify-count{position:absolute;right:-5px;top:-6px;min-width:19px;height:19px;padding:0 5px;border-radius:99px;background:#ef3340;color:#fff;border:2px solid #100a17;font-size:10px;font-weight:950;display:grid;place-items:center;box-sizing:border-box}
+.prime-notify-panel{position:fixed;right:18px;top:78px;width:min(420px,calc(100vw - 24px));max-height:min(680px,calc(100dvh - 96px));z-index:11000;display:none;overflow:hidden;border:1px solid rgba(181,108,255,.45);border-radius:22px;background:linear-gradient(180deg,#17101f,#0b080f);box-shadow:0 25px 80px rgba(0,0,0,.45),0 0 35px rgba(181,108,255,.12);color:#fff}
+.prime-notify-panel.show{display:flex;flex-direction:column;animation:primeNotifyIn .2s ease-out}
+.prime-notify-head{padding:16px 17px 12px;display:flex;align-items:center;justify-content:space-between;gap:10px;border-bottom:1px solid rgba(255,255,255,.08)}
+.prime-notify-head h3{margin:0;font-size:17px}.prime-notify-head small{display:block;color:#8e8395;margin-top:3px;font-size:11px}
+.prime-notify-close{border:0;background:transparent;color:#bca8c8;font-size:24px;cursor:pointer;padding:2px 5px}
+.prime-notify-tabs{display:flex;gap:6px;padding:10px 12px;border-bottom:1px solid rgba(255,255,255,.07)}
+.prime-notify-tab{flex:1;border:1px solid #34213f;background:#100b15;color:#a996b0;border-radius:10px;padding:8px 6px;font-size:11px;font-weight:850;cursor:pointer}
+.prime-notify-tab.active{border-color:#a94fff;background:linear-gradient(135deg,#2a1240,#180d24);color:#fff}
+.prime-notify-list{overflow:auto;padding:10px}
+.prime-notify-item{position:relative;display:grid;grid-template-columns:38px minmax(0,1fr);gap:10px;padding:12px;border:1px solid rgba(255,255,255,.08);border-radius:15px;background:rgba(255,255,255,.035);margin-bottom:8px}
+.prime-notify-item:last-child{margin-bottom:0}
+.prime-notify-icon{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;font-size:18px;background:#24152e}
+.prime-notify-item.success .prime-notify-icon{background:#073c27;color:#35d88b}.prime-notify-item.error .prime-notify-icon{background:#45121b;color:#ff6470}.prime-notify-item.warning .prime-notify-icon{background:#4a3010;color:#ffc44d}.prime-notify-item.info .prime-notify-icon{background:#102e55;color:#65aaff}.prime-notify-item.refund .prime-notify-icon{background:#162f4f;color:#5db2ff}
+.prime-notify-title{font-size:13px;font-weight:950;margin:0 0 3px}.prime-notify-time{float:right;color:#7d7183;font-size:10px;font-weight:700}.prime-notify-body{font-size:11px;line-height:1.5;color:#b9acbe}.prime-notify-meta{font-size:10px;color:#8d7e94;margin-top:4px}.prime-notify-action{margin-top:8px;border:1px solid #7040a0;background:#1a1023;color:#dcbcff;border-radius:8px;padding:6px 9px;font-size:10px;font-weight:900;cursor:pointer}
+.prime-notify-empty{text-align:center;padding:38px 18px;color:#8e8395;font-size:12px}.prime-notify-empty b{display:block;color:#d8cce0;font-size:14px;margin-bottom:5px}
+.prime-notify-footer{padding:10px 12px;border-top:1px solid rgba(255,255,255,.08)}.prime-notify-all{width:100%;border:1px solid #34213f;background:#120c17;color:#cbb5d5;border-radius:10px;padding:9px;font-weight:850;cursor:pointer}
+@keyframes primeNotifyIn{from{opacity:0;transform:translateY(-8px) scale(.98)}to{opacity:1;transform:none}}
+@media(max-width:600px){
+ .prime-notify-panel{right:8px;top:70px;width:calc(100vw - 16px);max-height:calc(100dvh - 82px);border-radius:19px}
+ .prime-notify-btn{width:40px;height:40px;border-radius:11px;font-size:18px}
+ .prime-notify-count{right:-4px;top:-5px}
+}
+</style>
 </head>
 
 <body>
@@ -3194,6 +3224,25 @@ document.addEventListener("DOMContentLoaded",initPrimeTouchCardSelection);
         <div class="prime-menu-item prime-stat-menu" id="headerCompletedMenu" style="display:none"><span>✓</span><b>สำเร็จ</b><strong id="headerCompletedCount">0</strong></div>
         <div class="prime-menu-item prime-credit-top" id="headerCreditMenu" aria-label="ยอดเครดิต" style="display:none"><span>฿</span><strong id="headerCredit">฿0.00</strong></div>
       </nav>
+ 
+<div class="prime-notify-wrap auth-only-menu" id="primeNotifyWrap">
+  <button class="prime-notify-btn" id="primeNotifyBtn" type="button" data-action="openNotifications" aria-label="แจ้งเตือน" aria-expanded="false">
+    🔔<span class="prime-notify-count" id="primeNotifyCount">0</span>
+  </button>
+</div>
+<div class="prime-notify-panel" id="primeNotifyPanel" aria-hidden="true">
+  <div class="prime-notify-head">
+    <div><h3 id="primeNotifyTitle">🔔 แจ้งเตือนของฉัน</h3><small id="primeNotifySubtitle">อัปเดตล่าสุดจาก PRIME</small></div>
+    <button class="prime-notify-close" type="button" data-action="closeNotifications" aria-label="ปิด">×</button>
+  </div>
+  <div class="prime-notify-tabs">
+    <button class="prime-notify-tab active" type="button" data-notify-tab="all">ทั้งหมด</button>
+    <button class="prime-notify-tab" type="button" data-notify-tab="unread">ยังไม่อ่าน</button>
+    <button class="prime-notify-tab" type="button" data-notify-tab="important">สำคัญ</button>
+  </div>
+  <div class="prime-notify-list" id="primeNotifyList"></div>
+  <div class="prime-notify-footer"><button class="prime-notify-all" type="button" data-action="markNotificationsRead">ทำเครื่องหมายว่าอ่านทั้งหมด</button></div>
+</div>
       <div class="prime-user-box">
         <a class="prime-line" href="https://lin.ee/nfDBcH07" target="_blank" rel="noopener noreferrer" aria-label="LINE">LINE</a>
         <div class="prime-avatar">●</div>
@@ -5139,7 +5188,7 @@ document.addEventListener("DOMContentLoaded",initModalScrollLock);
 document.addEventListener("click",(event)=>{
     const b=event.target.closest("[data-action]"); if(!b)return;
     const a=b.dataset.action;
-    if(a==="login") login(); else if(a==="loginContinue") performLogin(); else if(a==="logout") logout(); else if(a==="goProducts") goProducts(); else if(a==="openSignupPopup") document.getElementById("signupPopup")?.classList.add("show"); else if(a==="signupContinue"){performSignup();} else if(a==="signupSuccessDone"){closeSignupSuccess();} else if(a==="loginSuccessDone"){closeLoginSuccess();} else if(a==="openTopup") openTopup(); else if(a==="openTransactions") openTransactions(); else if(a==="openOrders") openOrders(); else if(a==="openFreeRewards") openFreeRewards(); else if(a==="openTerms") document.getElementById("termsModal")?.classList.add("show"); else if(a==="openCart") openCart(); else if(a==="openWithdrawNotice") openWithdrawNotice(); else if(a==="openPopularPlatforms"){document.getElementById("popularPlatformsModal")?.classList.add("show");} else if(a==="openNewService") openNewService(b.dataset.service); else if(a==="openFlashSale"){openFlashSale();} else if(a==="selectFlashPackage"){selectFlashPackage(b);} else if(a==="flashSaleContact"){flashSaleContact();} else if(a==="openPopularService"){openPopularService(b.dataset.platform,b.dataset.service);} else if(a==="popularPrev"){popularPlatformsMove(-1);} else if(a==="popularNext"){popularPlatformsMove(1);} else if(a==="openWithdraw") openWithdraw(); else if(a==="vipOnly") alert("ฟังก์ชันนี้สำหรับสมาชิก VIP เท่านั้น"); else if(a==="addToCart") addToCart(b.dataset.name,Number(b.dataset.price)); else if(a==="removeFromCart") removeFromCart(Number(b.dataset.index)); else if(a==="clearCart") clearCart(); else if(a==="showSocial") showSocial(b.dataset.name); else if(a==="closeModal") closeModal(b.dataset.modal); else if(a==="createTopup") createTopup(); else if(a==="topupSuccessHistory"){closeTopupSuccess();openTransactions();} else if(a==="topupSuccessDone"){closeTopupSuccess();window.scrollTo({top:0,behavior:"smooth"});} else if(a==="topupErrorDone"){closeTopupError();} else if(a==="checkout") checkout(); else if(a==="confirmSocialOrder") confirmSocialOrder(); else if(a==="openAdminPanel") openAdminPanel(); else if(a==="refreshAdminPanel") refreshAdminPanel(); else if(a==="syncSmmCatalog") syncSmmCatalog(); else if(a==="syncBeeServices") syncBeeServices();
+    if(a==="login") login(); else if(a==="loginContinue") performLogin(); else if(a==="logout") logout(); else if(a==="goProducts") goProducts(); else if(a==="openSignupPopup") document.getElementById("signupPopup")?.classList.add("show"); else if(a==="signupContinue"){performSignup();} else if(a==="signupSuccessDone"){closeSignupSuccess();} else if(a==="loginSuccessDone"){closeLoginSuccess();} else if(a==="openTopup") openTopup(); else if(a==="openTransactions") openTransactions(); else if(a==="openOrders") openOrders(); else if(a==="openFreeRewards") openFreeRewards(); else if(a==="openTerms") document.getElementById("termsModal")?.classList.add("show"); else if(a==="openCart") openCart(); else if(a==="openWithdrawNotice") openWithdrawNotice(); else if(a==="openPopularPlatforms"){document.getElementById("popularPlatformsModal")?.classList.add("show");} else if(a==="openNewService") openNewService(b.dataset.service); else if(a==="openFlashSale"){openFlashSale();} else if(a==="selectFlashPackage"){selectFlashPackage(b);} else if(a==="flashSaleContact"){flashSaleContact();} else if(a==="openPopularService"){openPopularService(b.dataset.platform,b.dataset.service);} else if(a==="popularPrev"){popularPlatformsMove(-1);} else if(a==="popularNext"){popularPlatformsMove(1);} else if(a==="openWithdraw") openWithdraw(); else if(a==="vipOnly") alert("ฟังก์ชันนี้สำหรับสมาชิก VIP เท่านั้น"); else if(a==="addToCart") addToCart(b.dataset.name,Number(b.dataset.price)); else if(a==="removeFromCart") removeFromCart(Number(b.dataset.index)); else if(a==="clearCart") clearCart(); else if(a==="showSocial") showSocial(b.dataset.name); else if(a==="closeModal") closeModal(b.dataset.modal); else if(a==="createTopup") createTopup(); else if(a==="topupSuccessHistory"){closeTopupSuccess();openTransactions();} else if(a==="topupSuccessDone"){closeTopupSuccess();window.scrollTo({top:0,behavior:"smooth"});} else if(a==="topupErrorDone"){closeTopupError();} else if(a==="checkout") checkout(); else if(a==="confirmSocialOrder") confirmSocialOrder(); else if(a==="openAdminPanel") openAdminPanel(); else if(a==="refreshAdminPanel") refreshAdminPanel(); else if(a==="syncSmmCatalog") syncSmmCatalog(); else if(a==="syncBeeServices") syncBeeServices(); else if(a==="openNotifications") openNotifications(); else if(a==="closeNotifications") closeNotifications(); else if(a==="markNotificationsRead") markNotificationsRead();
   });
 
 /* Social service buttons use a direct click handler.
@@ -5160,7 +5209,7 @@ document.addEventListener("click",(event)=>{
     "addToCart","removeFromCart","clearCart","showSocial",
     "closeModal","createTopup","topupSuccessHistory","topupSuccessDone","topupErrorDone",
     "checkout","placeSocialOrder","confirmSocialOrder","openAdminPanel","refreshAdminPanel",
-    "syncSmmCatalog","syncBeeServices"
+    "syncSmmCatalog","syncBeeServices","openNotifications","closeNotifications","markNotificationsRead"
   ]);
 
   const state={
@@ -5974,5 +6023,69 @@ padding:9px 10px !important}}
 }
 .prime-product-grid .prime-product-card[data-platform="X"]{padding-top:11px !important}
 }
-</style></body>
+</style>
+<script id="prime-notification-center-js">
+(function(){
+  const key="prime_notification_read_v1";
+  let notifyItems=[];
+  let notifyTab="all";
+  function readIds(){try{return JSON.parse(localStorage.getItem(key)||"[]")}catch{return[]}}
+  function saveRead(ids){try{localStorage.setItem(key,JSON.stringify(ids.slice(-100)))}catch{}}
+  function isRead(id){return readIds().includes(id)}
+  function markRead(id){const ids=readIds();if(!ids.includes(id)){ids.push(id);saveRead(ids)}}
+  function esc(v){return String(v??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]))}
+  function ago(ts){if(!ts)return "เมื่อสักครู่";const d=Math.max(0,Date.now()-new Date(ts).getTime());const m=Math.floor(d/60000);if(m<1)return "เมื่อสักครู่";if(m<60)return m+" นาทีที่แล้ว";const h=Math.floor(m/60);if(h<24)return h+" ชั่วโมงที่แล้ว";return Math.floor(h/24)+" วันที่แล้ว"}
+  function orderItems(orders,isAdmin){
+    return (orders||[]).slice(0,20).map(o=>{
+      const st=String(o.status||"").toLowerCase();
+      let type="info",icon="⏳",title="กำลังดำเนินการ",body="Order #"+String(o.id||"").slice(0,8).toUpperCase()+" กำลังดำเนินการ";
+      if(st==="completed"){type="success";icon="✓";title="สั่งซื้อเสร็จแล้ว";body="Order #"+String(o.id||"").slice(0,8).toUpperCase()+" ดำเนินการเสร็จสมบูรณ์"}
+      else if(st==="failed"){type="error";icon="×";title="สั่งซื้อไม่สำเร็จ";body="Order #"+String(o.id||"").slice(0,8).toUpperCase()+" ไม่สามารถดำเนินการได้"}
+      else if(st==="cancelled"){type="warning";icon="⊘";title="คำสั่งซื้อถูกยกเลิก";body="Order #"+String(o.id||"").slice(0,8).toUpperCase()+" ถูกยกเลิก"}
+      return {id:"order-"+o.id,type,icon,title,body,meta:(o.service_name||"บริการ")+" • "+Number(o.quantity||0).toLocaleString("th-TH")+" • ฿"+Number(o.total_price||0).toFixed(2),time:o.updated_at||o.created_at,important:st==="failed"||st==="cancelled",orderId:o.id,action:"openOrders"}
+    });
+  }
+  function render(){
+    const list=document.getElementById("primeNotifyList");if(!list)return;
+    let arr=notifyItems.slice();
+    if(notifyTab==="unread")arr=arr.filter(x=>!isRead(x.id));
+    if(notifyTab==="important")arr=arr.filter(x=>x.important);
+    if(!arr.length){list.innerHTML='<div class="prime-notify-empty">🔔<b>ไม่มีการแจ้งเตือน</b><span>เมื่อมีรายการใหม่ PRIME จะแสดงที่นี่</span></div>';return}
+    list.innerHTML=arr.map(x=>'<div class="prime-notify-item '+esc(x.type)+'" data-notify-id="'+esc(x.id)+'"><div class="prime-notify-icon">'+x.icon+'</div><div><div class="prime-notify-title">'+esc(x.title)+'<span class="prime-notify-time">'+esc(ago(x.time))+'</span></div><div class="prime-notify-body">'+esc(x.body)+'</div><div class="prime-notify-meta">'+esc(x.meta||"")+'</div>'+(x.action?'<button class="prime-notify-action" type="button" data-action="'+esc(x.action)+'" data-notify-id="'+esc(x.id)+'">ดูรายละเอียด</button>':"")+'</div></div>').join("");
+    list.querySelectorAll("[data-notify-id]").forEach(el=>{el.addEventListener("click",e=>{if(e.target.closest("button"))markRead(el.dataset.notifyId)})});
+  }
+  async function load(){
+    const isAdmin=window.__primeIsAdmin===true;
+    const title=document.getElementById("primeNotifyTitle"),sub=document.getElementById("primeNotifySubtitle");
+    if(title)title.textContent=isAdmin?"🔔 แจ้งเตือนแอดมิน":"🔔 แจ้งเตือนของฉัน";
+    if(sub)sub.textContent=isAdmin?"งานเติมเงิน • Order • Refund • API":"เติมเงิน • สั่งซื้อ • สำเร็จ • ล้มเหลว • คืนเครดิต";
+    try{
+      const orders=await loadOrders();
+      notifyItems=orderItems(orders,isAdmin);
+      if(isAdmin){
+        const failed=orders.filter(o=>["failed","cancelled"].includes(String(o.status||"").toLowerCase())).length;
+        if(failed)notifyItems.unshift({id:"admin-errors",type:"error",icon:"⚠",title:"มี Order ที่ต้องตรวจสอบ",body:"พบ "+failed+" รายการที่ล้มเหลวหรือถูกยกเลิก",meta:"ตรวจสอบ Order และ Refund ให้ครบ",important:true,action:"openOrders",time:new Date().toISOString()});
+      }
+    }catch(e){console.error("notifications",e);notifyItems=[]}
+    const count=notifyItems.filter(x=>!isRead(x.id)).length;
+    const badge=document.getElementById("primeNotifyCount");if(badge){badge.textContent=count>99?"99+":String(count);badge.style.display=count?"grid":"none"}
+    render();
+  }
+  window.openNotifications=async function(){
+    const p=document.getElementById("primeNotifyPanel"),b=document.getElementById("primeNotifyBtn");if(!p)return;
+    p.classList.add("show");p.setAttribute("aria-hidden","false");b?.setAttribute("aria-expanded","true");await load();
+  };
+  window.closeNotifications=function(){const p=document.getElementById("primeNotifyPanel"),b=document.getElementById("primeNotifyBtn");p?.classList.remove("show");p?.setAttribute("aria-hidden","true");b?.setAttribute("aria-expanded","false")};
+  window.markNotificationsRead=function(){saveRead(notifyItems.map(x=>x.id));render();const b=document.getElementById("primeNotifyCount");if(b)b.style.display="none"};
+  document.addEventListener("click",e=>{
+    const tab=e.target.closest("[data-notify-tab]");if(tab){notifyTab=tab.dataset.notifyTab;document.querySelectorAll("[data-notify-tab]").forEach(x=>x.classList.toggle("active",x===tab));render();return}
+    if(!e.target.closest("#primeNotifyPanel")&&!e.target.closest("#primeNotifyBtn"))closeNotifications();
+  });
+  document.addEventListener("DOMContentLoaded",async()=>{
+    const wrap=document.getElementById("primeNotifyWrap");if(wrap)wrap.style.display="block";
+    setTimeout(()=>load(),900);
+  });
+})();
+</script>
+</body>
 </html>
