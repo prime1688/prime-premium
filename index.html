@@ -3389,9 +3389,9 @@ const NEW_SERVICE_RULES={
 
 async function getBeeThPublicServices(){
   if(!supabaseClient)return [];
-  const {data,error}=await supabaseClient.from("bee_th_services_public")
-    .select("id,provider_service_id,name,type,category,rate,selling_price,min_quantity,max_quantity,refill,cancel,active,maintenance,maintenance_reason")
-    .order("provider_service_id");
+  // Use a dedicated read-only RPC so the public PRIME catalog is reliable
+  // even when direct Data API access to the catalog view/table changes.
+  const {data,error}=await supabaseClient.rpc("get_bee_th_services_public");
   if(error)throw error;
   return data||[];
 }
