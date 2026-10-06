@@ -3406,6 +3406,13 @@ function beeThFeatureMatch(row,platform,serviceName){
   if(!beeThPlatformMatch(row,platform))return false;
   const t=beeThText(row),s=String(serviceName||"").toLowerCase();
   if(!s)return true;
+
+  // BEE-TH uses several Thai/English names for live-viewer services.
+  // Treat these as the same feature, while excluding live comments/likes.
+  if(/live\s*(viewer|viewers)|ผู้ชมไลฟ์|คนดูไลฟ์|คนเข้าชมไลฟ์|เข้าชมไลฟ์|ดูไลฟ์|ไลฟ์สด/.test(s)){
+    return /live\s*(viewer|viewers|stream)|ผู้ชม.*ไลฟ์|ผู้ชมไลฟ์|คนดู.*ไลฟ์|คนเข้าชม.*ไลฟ์|เข้าชม.*ไลฟ์|ดู.*ไลฟ์|ไลฟ์สด.*(ผู้ชม|คนดู|เข้าชม)/.test(t);
+  }
+
   const tokens=s.split(/\s*\/\s*|\s*\+\s*|\s+/).map(x=>x.trim()).filter(x=>x.length>=3);
   return !tokens.length||tokens.some(token=>t.includes(token));
 }
