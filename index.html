@@ -3443,7 +3443,18 @@ async function openNewService(key){
     const list=[...unique.values()];
     if(!list.length){box.innerHTML='<div class="empty-state">ยังไม่มีบริการที่เปิดขายสำหรับรายการนี้</div>';return;}
     const esc=s=>String(s??"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
-    box.innerHTML=list.map(x=>'<button type="button" class="prime-new-option" data-new-platform="'+esc(x.platform)+'" data-new-service="'+esc(x.service.name||"")+'"><strong>'+esc(x.platform)+'</strong><span>'+esc(x.service.name||"BEE-TH Service")+' • ฿'+Number(x.service.selling_price||0).toLocaleString("th-TH",{minimumFractionDigits:2,maximumFractionDigits:2})+' / 1,000</span></button>').join("");
+    const compactNewServiceName=(row,key)=>{
+      if(key==="LiveViewers") return "🔴 Live Viewers";
+      if(key==="ReachImpressions") return "📣 Reach / Impressions";
+      if(key==="ProfileVisits") return "👤 Profile Visits";
+      if(key==="GroupChannelMembers") return "👥 Group / Channel Members";
+      return String(row?.name||"BEE-TH Service").split("|")[0].trim().slice(0,60);
+    };
+    box.innerHTML=list.map(x=>{
+      const title=compactNewServiceName(x.service,key);
+      const meta="สูงสุด "+Number(x.service.max_quantity||0).toLocaleString("th-TH")+" • "+(x.service.refill===true?"♻️ รับประกัน":"❌ ไม่รับประกัน")+" • ฿"+Number(x.service.selling_price||0).toLocaleString("th-TH",{minimumFractionDigits:2,maximumFractionDigits:2})+" / 1,000";
+      return '<button type="button" class="prime-new-option" data-new-platform="'+esc(x.platform)+'" data-new-service="'+esc(x.service.name||"")+'"><strong>'+esc(x.platform)+' · '+esc(title)+'</strong><span>'+esc(meta)+'</span></button>';
+    }).join("");
     box.querySelectorAll("[data-new-platform]").forEach(btn=>btn.addEventListener("click",async(e)=>{e.preventDefault();e.stopPropagation();const platform=btn.dataset.newPlatform,serviceName=btn.dataset.newService;closeModal("newServicesModal");await openSocialOrder(platform,serviceName);}));
   }catch(e){console.error("BEE-TH new service load failed",e);box.innerHTML='<div class="empty-state">ไม่สามารถโหลดบริการ BEE-TH ได้ กรุณาลองใหม่</div>';}
 }
@@ -3536,6 +3547,15 @@ async function loadSocialServices(platform){
     }};
   });
 }
+function socialServiceType(x){
+  const n=(String(x?.name||"")+" "+String(x?.category||"")).toLowerCase();
+  if(/comment|คอมเมนต์/.test(n)) return "comments";
+  if(/follower|followers|ผู้ติดตาม|ติดตาม/.test(n)) return "followers";
+  if(/share|shares|แชร์/.test(n)) return "shares";
+  if(/view|views|วิว|watch/.test(n)) return "views";
+  if(/like|likes|ไลก์|ไลค์|ถูกใจ|reaction|love|wow|haha|care|sad|angry|ปฏิกิริยา/.test(n)) return "likes";
+  return "other";
+}
 function formatNumber(n){return Number(n).toLocaleString("th-TH");}
 function socialTotal(qty,rule){return Number((Number(qty)*rule.price/1000).toFixed(2));}
 function socialUnitForService(serviceName){
@@ -3584,7 +3604,7 @@ function socialFeatureChips(x){
 function renderSocialServices(){
   const el=document.getElementById("socialServiceCards");if(!el)return;
   const seen=new Set();
-  const visibleServices=socialServices.filter(x=>{
+  const deduped=socialServices.filter(x=>{
     const name=String(x.name||"").toLowerCase()
       .replace(/[^a-z0-9ก-๙]+/g," ")
       .replace(/^(instagram|facebook|tiktok|youtube|twitter|x)\s*/,"")
@@ -3593,7 +3613,17 @@ function renderSocialServices(){
     if(seen.has(key))return false;
     seen.add(key);
     return true;
-  }).slice(0,8);
+  });
+  const platformKey=String(socialPlatformCurrent||"").toLowerCase();
+  const wanted=platformKey==="facebook"||platformKey==="instagram"||platformKey==="youtube"
+    ? ["likes","comments","shares","followers","views"]
+    : ["likes","comments","shares","followers","views","other"];
+  const visibleServices=[];
+  wanted.forEach(type=>{
+    const match=deduped.find(x=>socialServiceType(x)===type);
+    if(match)visibleServices.push(match);
+  });
+  deduped.forEach(x=>{if(visibleServices.length<8&&!visibleServices.includes(x))visibleServices.push(x);});
   el.innerHTML=visibleServices.map(x=>{
     const r=x.rule||{},selected=selectedSocialService?.id===x.id;
     const active=x.active!==false,maintenance=x.maintenance===true;
