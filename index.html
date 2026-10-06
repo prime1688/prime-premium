@@ -3528,15 +3528,30 @@ async function loadSocialServices(platform){
     const min=Number(x.min_quantity||1),max=Number(x.max_quantity||0);
     const rate=Number(x.rate||0);
     const price=Number(x.selling_price??(rate*4));
+    const unit=socialUnitForService(x.name);
     return {...x,id:Number(x.provider_service_id||x.id),platform,rule:{
       min,max,providerMin:min,providerMax:max,price,rate,
       refill:x.refill===true,cancel:x.cancel===true,maintenance:x.maintenance===true,
-      label:String(x.name||"บริการ BEE-TH"),unit:"หน่วย"
+      label:String(x.name||"บริการ BEE-TH"),unit
     }};
   });
 }
 function formatNumber(n){return Number(n).toLocaleString("th-TH");}
 function socialTotal(qty,rule){return Number((Number(qty)*rule.price/1000).toFixed(2));}
+function socialUnitForService(serviceName){
+  const n=String(serviceName||"").toLowerCase();
+  if(/like|likes|ไลก์|ไลค์/.test(n)) return "ไลก์";
+  if(/follower|followers|ผู้ติดตาม|follow/.test(n)) return "ผู้ติดตาม";
+  if(/view|views|วิว|watch|ผู้ชม/.test(n)) return "วิว";
+  if(/share|shares|แชร์/.test(n)) return "แชร์";
+  if(/comment|comments|คอมเมนต์/.test(n)) return "คอมเมนต์";
+  if(/save|saves|bookmark|บันทึก/.test(n)) return "บันทึก";
+  if(/reaction|reactions|love|wow|haha|care|sad|angry|ปฏิกิริยา/.test(n)) return "ปฏิกิริยา";
+  if(/play|plays/.test(n)) return "ครั้ง";
+  if(/member|members|สมาชิก/.test(n)) return "สมาชิก";
+  if(/review|reviews|รีวิว/.test(n)) return "รีวิว";
+  return "หน่วย";
+}
 function socialShortName(serviceName){
   const n=String(serviceName||"").toLowerCase();
   if(/comment|คอมเมนต์/.test(n)) return "💬 เพิ่มคอมเมนต์";
@@ -3589,7 +3604,7 @@ function renderSocialServices(){
     return '<div role="button" tabindex="'+(isOpen?"0":"-1")+'" class="social-service-card '+(selected?"selected ":"")+(isOpen?"":"service-closed")+'" data-service-id="'+String(x.id)+'" data-service-open="'+isOpen+'">'+
       '<div class="ssc-top"><span class="ssc-icon">'+socialPlatformLogo(document.getElementById("socialPlatform")?.textContent||"")+'</span><strong class="ssc-title">'+socialShortName(x.name)+'</strong></div>'+
       '<div class="ssc-chips">'+chips+'</div>'+
-      '<div class="ssc-price">฿'+formatNumber(r.price)+' <small>/ 1,000</small></div>'+
+      '<div class="ssc-price">฿'+formatNumber(r.price)+' <small>/ 1,000 '+String(r.unit||"หน่วย")+'</small></div>'+
       '<div class="ssc-meta"><span>ขั้นต่ำ '+formatNumber(r.min||1)+'</span><span>สูงสุด '+(r.max?formatNumber(r.max):"—")+'</span><span>เติมให้ '+(r.refill?"✅":"❌")+'</span><span>ยกเลิก '+(r.cancel?"✅":"❌")+'</span></div>'+
       '<div class="ssc-status '+(isOpen?"ready":maintenance?"maintenance":"temporary")+'">'+status+'</div>'+
       '<button type="button" class="ssc-action" data-service-id="'+String(x.id)+'" data-service-open="'+String(isOpen)+'" '+(isOpen?'':'disabled')+' onclick="event.preventDefault();event.stopPropagation();selectServiceAndOpenCheckoutById(Number(this.dataset.serviceId));">'+button+'</button>'+
