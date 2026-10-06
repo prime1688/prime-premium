@@ -3454,13 +3454,10 @@ function initNewCardSelectionState(){
     if(!card)return;
     const btn=event.target&&event.target.closest?event.target.closest(".prime-new-card .prime-new-btn,.prime-extra-card .prime-new-btn"):null;
     if(btn&&btn.disabled)return;
-    const grid=card.parentElement;
-    if(grid){
-      grid.querySelectorAll(".prime-new-card.is-selected,.prime-extra-card.is-selected").forEach(function(x){
-        if(x!==card)x.classList.remove("is-selected");
-      });
-    }
-    grid.querySelectorAll(".prime-new-card.is-selected,.prime-extra-card.is-selected").forEach(function(x){if(x!==card)x.classList.remove("is-selected");});
+    // Only ONE card across the entire "รายการใหม่" section may have the purple selected border.
+    document.querySelectorAll(".prime-new-card.is-selected,.prime-extra-card.is-selected").forEach(function(x){
+      if(x!==card)x.classList.remove("is-selected");
+    });
     card.classList.add("is-selected");
   });
 }
