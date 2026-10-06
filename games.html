@@ -136,7 +136,45 @@ radial-gradient(circle at 45% 55%,rgba(255,255,255,.05) 0 1px,transparent 2px);b
  .mockHud .statusHud span{font-size:9px;padding:4px 5px}
  #gameBody[data-game="cards"] .mockHud,#gameBody[data-game="sequence"] .mockHud{grid-template-columns:42px repeat(3,1fr)}
 }
-.pauseOverlay{position:absolute;inset:0;z-index:30;display:grid;place-items:center;background:rgba(5,2,16,.72);backdrop-filter:blur(9px)}.pauseOverlay>div{width:min(88%,360px);padding:24px;border-radius:24px;text-align:center;background:linear-gradient(180deg,#2a0d60,#12072b);border:1px solid rgba(206,137,255,.5);box-shadow:0 18px 50px rgba(0,0,0,.45)}.pauseOverlay h3{font-size:25px;margin:0 0 6px;color:#fff}.pauseOverlay p{color:#d8c9ed;margin:0 0 16px}</style>
+.pauseOverlay{position:absolute;inset:0;z-index:30;display:grid;place-items:center;background:rgba(5,2,16,.72);backdrop-filter:blur(9px)}.pauseOverlay>div{width:min(88%,360px);padding:24px;border-radius:24px;text-align:center;background:linear-gradient(180deg,#2a0d60,#12072b);border:1px solid rgba(206,137,255,.5);box-shadow:0 18px 50px rgba(0,0,0,.45)}.pauseOverlay h3{font-size:25px;margin:0 0 6px;color:#fff}.pauseOverlay p{color:#d8c9ed;margin:0 0 16px}/* SCENE V4 — layered PRIME mockup backgrounds */
+#gameBody{isolation:isolate;overflow-x:hidden}
+#gameBody:before,#gameBody:after{content:"";position:absolute;inset:0;pointer-events:none}
+#gameBody:before{z-index:0;opacity:.8;background:
+radial-gradient(circle at 50% 28%,rgba(205,112,255,.28) 0 4%,transparent 24%),
+radial-gradient(circle at 12% 20%,rgba(80,180,255,.16) 0 2%,transparent 18%),
+radial-gradient(circle at 88% 72%,rgba(255,213,62,.12) 0 3%,transparent 18%)}
+#gameBody:after{z-index:0;opacity:.55;background-image:
+linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),
+linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px);
+background-size:42px 42px;mask-image:linear-gradient(to bottom,black,transparent)}
+#gameBody>*{z-index:1}
+.scene-hero{position:relative;display:grid;place-items:center;min-height:118px;margin:0 auto 12px;max-width:680px;overflow:hidden;border-radius:24px;border:1px solid rgba(214,142,255,.4);background:linear-gradient(180deg,rgba(72,22,137,.76),rgba(15,6,35,.72));box-shadow:inset 0 0 55px rgba(167,67,255,.22),0 14px 35px rgba(0,0,0,.28)}
+.scene-hero:before{content:"";position:absolute;width:190px;height:190px;border-radius:50%;background:radial-gradient(circle,#d77aff 0,rgba(123,44,235,.4) 32%,transparent 70%);filter:blur(4px)}
+.scene-hero .scene-icon{position:relative;font-size:72px;filter:drop-shadow(0 0 18px rgba(220,126,255,.75));animation:sceneFloat 2.8s ease-in-out infinite}
+.scene-hero .scene-caption{position:absolute;left:14px;right:14px;bottom:9px;text-align:center;color:#eee2ff;font-size:11px;font-weight:900;letter-spacing:.3px}
+.scene-props{display:flex;justify-content:space-around;align-items:center;gap:8px;max-width:680px;margin:-2px auto 10px;pointer-events:none}
+.scene-props span{display:grid;place-items:center;width:54px;height:54px;border-radius:17px;background:linear-gradient(145deg,rgba(116,36,216,.75),rgba(29,9,62,.85));border:1px solid rgba(216,142,255,.35);box-shadow:0 7px 18px rgba(0,0,0,.25);font-size:27px}
+@keyframes sceneFloat{50%{transform:translateY(-5px) scale(1.03)}}
+#gameBody[data-game="shoot"] .scene-hero{background:linear-gradient(180deg,rgba(44,83,149,.78),rgba(18,7,42,.9))}
+#gameBody[data-game="shoot"] .scene-hero:after{content:"🎯  🎯  🎯";position:absolute;top:8px;left:0;right:0;text-align:center;font-size:24px;opacity:.75}
+#gameBody[data-game="runner"] .scene-hero,#gameBody[data-game="lane_dodge"] .scene-hero{background:linear-gradient(180deg,#244d85aa,#17142cdd)}
+#gameBody[data-game="runner"] .scene-hero:after,#gameBody[data-game="lane_dodge"] .scene-hero:after{content:"🏙️  🏙️  🏙️";position:absolute;top:10px;left:0;right:0;text-align:center;font-size:24px}
+#gameBody[data-game="racing"] .scene-hero{background:linear-gradient(180deg,#303b96aa,#12092fe8)}
+#gameBody[data-game="racing"] .scene-hero:after{content:"🏁  🌴  🏁";position:absolute;top:10px;left:0;right:0;text-align:center;font-size:25px}
+#gameBody[data-game="cards"] .scene-hero,#gameBody[data-game="sequence"] .scene-hero{background:linear-gradient(180deg,#6c28b8aa,#16082fe8)}
+#gameBody[data-game="cards"] .scene-hero:after{content:"🃏  ✨  🃏";position:absolute;top:10px;left:0;right:0;text-align:center;font-size:25px}
+#gameBody[data-game="quiz"] .scene-hero,#gameBody[data-game="math_rush"] .scene-hero,#gameBody[data-game="word_match"] .scene-hero{background:linear-gradient(180deg,#49249aaa,#12062fe8)}
+#gameBody[data-game="quiz"] .scene-hero:after{content:"🧠  💡  ⭐";position:absolute;top:10px;left:0;right:0;text-align:center;font-size:24px}
+#gameBody[data-game="reaction"] .scene-hero,#gameBody[data-game="timing"] .scene-hero,#gameBody[data-game="fast_tap"] .scene-hero{background:linear-gradient(180deg,#842cc4aa,#19052fe8)}
+#gameBody[data-game="reaction"] .scene-hero:after{content:"⚡  ✨  ⚡";position:absolute;top:10px;left:0;right:0;text-align:center;font-size:25px}
+#gameBody[data-game="color_match"] .scene-hero{background:linear-gradient(135deg,#5d27d6aa,#ef3cb766,#20c98c66)}
+#gameBody[data-game="memory_number"] .scene-hero,#gameBody[data-game="guess_number"] .scene-hero{background:linear-gradient(180deg,#3b2a9aaa,#10062fe8)}
+#gameBody[data-game="emoji_count"] .scene-hero{background:linear-gradient(180deg,#a34a92aa,#2b0b32e8)}
+#gameBody[data-game="coin_catcher"] .scene-hero{background:linear-gradient(180deg,#9b4b24aa,#210a2fe8)}
+#gameBody[data-game="higher_lower"] .scene-hero{background:linear-gradient(180deg,#2854a8aa,#10062fe8)}
+.scene-hero[data-accent="gold"] .scene-icon{filter:drop-shadow(0 0 20px rgba(255,216,61,.8))}
+@media(max-width:430px){.scene-hero{min-height:104px;border-radius:20px}.scene-hero .scene-icon{font-size:60px}.scene-hero .scene-caption{font-size:10px}.scene-props span{width:46px;height:46px;border-radius:14px;font-size:23px}}
+</style>
 </head>
 <body>
 <header class="header"><div class="nav"><a class="brand" href="./index.html">PRIME<span>.</span></a><a class="back" href="./index.html">← กลับ PRIME</a></div></header>
@@ -292,7 +330,37 @@ function enhanceGameScene(id){
   hud.innerHTML='<button class="pauseHud" type="button" aria-label="หยุดเกม" onclick="pausePrimeGame()">Ⅱ</button><div class="statHud"><small>⏱ เวลาเหลือ</small><b id="hudTime">—</b></div><div class="statHud"><small>⭐ คะแนน</small><b id="hudScore" class="gold">0</b></div><div class="statusHud"><span>🎮 <b>'+label+'</b></span><span id="hudRound">รอบ —</span><span id="hudState">กำลังเล่น</span></div>';
   body.insertBefore(hud,body.firstChild);
   syncPrimeHud(id);
+  addSceneLayers(id);
   clearInterval(hudSyncTimer); hudSyncTimer=setInterval(()=>syncPrimeHud(id),200);
+}
+function addSceneLayers(id){
+  const body=$("#gameBody"); if(!body)return;
+  body.querySelector(".scene-hero")?.remove(); body.querySelector(".scene-props")?.remove();
+  const scenes={
+    shoot:["🎯","สนามยิงเป้า PRIME","🎯","💥","⭐"],
+    runner:["🏃","ถนนเมือง PRIME","🪙","🚧","🏙️"],
+    cards:["🃏","ห้องจับคู่ PRIME","🃏","✨","👑"],
+    quiz:["🧠","PRIME Challenge","🧠","💡","🏆"],
+    racing:["🏎️","PRIME Street Race","🏁","🪙","🚧"],
+    reaction:["⚡","Reaction Arena","⚡","💥","✨"],
+    math_rush:["➗","Math Rush Lab","➕","🧠","⚡"],
+    color_match:["🎨","Color Lab","🔴","🟢","🔵"],
+    memory_number:["🔢","Memory Vault","🔐","✨","🔢"],
+    emoji_count:["🍎","Emoji Garden","🍎","🍎","⭐"],
+    tap_10:["👆","Tap Arena","👆","⚡","🎯"],
+    timing:["⏱️","Precision Zone","⏱️","🎯","⚡"],
+    guess_number:["🎲","Number Vault","🎲","❓","⭐"],
+    sequence:["🧩","Sequence Lab","🧩","🔢","✨"],
+    word_match:["🔤","Word Lab","🔤","🧠","⭐"],
+    coin_catcher:["🪙","Coin Rush","🪙","💰","✨"],
+    lane_dodge:["🛣️","Neon Highway","🚧","🚗","🪙"],
+    higher_lower:["⬆️","Higher / Lower","⬆️","⬇️","🎲"],
+    fast_tap:["🚀","Fast Tap Arena","🚀","⚡","🎯"]
+  };
+  const s=scenes[id]||["👑","PRIME GAME","⭐","✨","🏆"];
+  const hero=document.createElement("div");hero.className="scene-hero";hero.dataset.accent=(id==="coin_catcher"||id==="emoji_count"||id==="racing")?"gold":"";hero.innerHTML='<div class="scene-icon">'+s[0]+'</div><div class="scene-caption">'+s[1]+'</div>';
+  const props=document.createElement("div");props.className="scene-props";props.innerHTML='<span>'+s[2]+'</span><span>'+s[3]+'</span><span>'+s[4]+'</span>';
+  const hud=body.querySelector(".mockHud"); if(hud){hud.after(hero);hero.after(props)}else{body.prepend(props);body.prepend(hero)}
 }
 function syncPrimeHud(id){
   const body=$("#gameBody"); if(!body)return;
