@@ -2548,8 +2548,11 @@ html,body{
 .prime-new-card,.prime-extra-card{transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease}
 .prime-new-card .prime-new-btn,.prime-extra-card .prime-new-btn{position:relative;z-index:3;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
 .prime-new-card.is-selected,.prime-extra-card.is-selected{
-  border-color:#a957f5!important;
-  box-shadow:0 0 0 2px rgba(143,53,240,.18),0 10px 28px rgba(101,18,197,.14),inset 0 1px 0 #fff!important;
+  border:2px solid #a957f5!important;
+  outline:2px solid rgba(143,53,240,.18)!important;
+  outline-offset:-2px!important;
+  box-shadow:0 0 0 3px rgba(143,53,240,.16),0 12px 30px rgba(101,18,197,.18),inset 0 1px 0 #fff!important;
+  transform:translateY(-2px);
 }
 .prime-new-card .prime-new-btn:focus-visible,.prime-extra-card .prime-new-btn:focus-visible{
   outline:none!important;
@@ -3442,10 +3445,10 @@ function initNewCardSelectionState(){
   if(window.__primeNewCardSelectionBound)return;
   window.__primeNewCardSelectionBound=true;
   document.addEventListener("click",function(event){
-    const btn=event.target&&event.target.closest?event.target.closest(".prime-new-card .prime-new-btn,.prime-extra-card .prime-new-btn"):null;
-    if(!btn||btn.disabled)return;
-    const card=btn.closest(".prime-new-card,.prime-extra-card");
+    const card=event.target&&event.target.closest?event.target.closest(".prime-new-card,.prime-extra-card"):null;
     if(!card)return;
+    const btn=event.target&&event.target.closest?event.target.closest(".prime-new-card .prime-new-btn,.prime-extra-card .prime-new-btn"):null;
+    if(btn&&btn.disabled)return;
     const grid=card.parentElement;
     if(grid){
       grid.querySelectorAll(".prime-new-card.is-selected,.prime-extra-card.is-selected").forEach(function(x){
