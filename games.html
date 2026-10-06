@@ -360,6 +360,57 @@ radial-gradient(circle at 50% 45%,hsla(var(--sceneHue),90%,60%,.13),transparent 
  #gameBody .mockHud .statusHud{grid-template-columns:minmax(0,1.15fr) minmax(44px,.7fr) minmax(48px,.75fr);gap:3px}
  #gameBody .mockHud .statusHud span{font-size:8px;letter-spacing:-.1px}
  #gameBody .mockHud .statusHud span:first-child b{max-width:100%}
+}/* HUD ALIGNMENT V9 — uniform heights / spacing / alignment */
+#gameBody{--hud-gap:8px;--control-gap:12px}
+#gameBody .mockHud{box-sizing:border-box;width:100%;min-height:98px;display:grid;grid-template-columns:46px minmax(0,1fr) minmax(0,1fr);grid-template-rows:46px 36px;gap:8px;align-items:stretch;margin:0 0 12px;padding:4px max(2px,env(safe-area-inset-left)) 10px max(2px,env(safe-area-inset-right))}
+#gameBody .mockHud .pauseHud,#gameBody .mockHud .statHud{height:46px;min-height:46px;box-sizing:border-box}
+#gameBody .mockHud .statusHud{grid-column:2/4;grid-row:2;height:36px;min-height:36px;margin:0;gap:8px;display:grid;align-items:stretch}
+#gameBody .mockHud .statusHud span{height:36px;min-height:36px;box-sizing:border-box;display:flex;align-items:center;justify-content:center}
+#gameBody .scene-hero{margin-top:0;margin-bottom:10px}
+#gameBody .scene-props{height:58px;min-height:58px;margin:0 auto 12px}
+#gameBody .scene-props span{height:58px;min-height:58px;box-sizing:border-box}
+#gameBody .controls{box-sizing:border-box;min-height:82px;height:82px;margin-top:12px;gap:var(--control-gap);align-items:center;justify-content:center;padding-top:14px;padding-bottom:max(10px,env(safe-area-inset-bottom))}
+#gameBody .controls button{height:58px;min-height:58px;max-height:58px;box-sizing:border-box}
+#gameBody .actionBtn,#gameBody .finishBtn,#gameBody .primary{min-height:52px;height:52px;box-sizing:border-box}
+@media(max-width:430px){
+ #gameBody{--hud-gap:7px;--control-gap:10px}
+ #gameBody .mockHud{min-height:92px;grid-template-columns:44px minmax(0,1fr) minmax(0,1fr);grid-template-rows:44px 34px;gap:7px;margin-bottom:10px}
+ #gameBody .mockHud .pauseHud,#gameBody .mockHud .statHud{height:44px;min-height:44px}
+ #gameBody .mockHud .statusHud{height:34px;min-height:34px;gap:7px}
+ #gameBody .mockHud .statusHud span{height:34px;min-height:34px}
+ #gameBody .scene-hero{margin-bottom:8px}
+ #gameBody .scene-props{height:50px;min-height:50px;margin-bottom:10px}
+ #gameBody .scene-props span{height:50px;min-height:50px}
+ #gameBody .controls{height:78px;min-height:78px;margin-top:10px;gap:var(--control-gap);padding-top:12px}
+ #gameBody .controls button{height:56px;min-height:56px;max-height:56px}
+}
+@media(max-width:389px){
+ #gameBody{--control-gap:8px}
+ #gameBody .mockHud{grid-template-columns:42px minmax(0,1fr) minmax(0,1fr);grid-template-rows:42px 32px;gap:6px;min-height:86px;margin-bottom:9px}
+ #gameBody .mockHud .pauseHud,#gameBody .mockHud .statHud{height:42px;min-height:42px}
+ #gameBody .mockHud .statusHud{height:32px;min-height:32px;gap:6px}
+ #gameBody .mockHud .statusHud span{height:32px;min-height:32px}
+ #gameBody .scene-hero{margin-bottom:7px}
+ #gameBody .scene-props{height:48px;min-height:48px;margin-bottom:9px}
+ #gameBody .scene-props span{height:48px;min-height:48px}
+ #gameBody .controls{height:74px;min-height:74px;margin-top:9px;padding-top:10px}
+ #gameBody .controls button{height:54px;min-height:54px;max-height:54px}
+}
+@media(max-width:360px){
+ #gameBody{--control-gap:6px}
+ #gameBody .mockHud{grid-template-columns:40px minmax(0,1fr) minmax(0,1fr);grid-template-rows:40px 30px;gap:5px;min-height:80px;margin-bottom:8px}
+ #gameBody .mockHud .pauseHud,#gameBody .mockHud .statHud{height:40px;min-height:40px}
+ #gameBody .mockHud .statusHud{height:30px;min-height:30px;gap:5px}
+ #gameBody .mockHud .statusHud span{height:30px;min-height:30px}
+ #gameBody .scene-hero{margin-bottom:6px}
+ #gameBody .scene-props{height:46px;min-height:46px;margin-bottom:8px}
+ #gameBody .scene-props span{height:46px;min-height:46px}
+ #gameBody .controls{height:70px;min-height:70px;margin-top:8px;padding-top:8px;padding-bottom:max(8px,env(safe-area-inset-bottom))}
+ #gameBody .controls button{height:52px;min-height:52px;max-height:52px}
+}
+@media(min-width:430px){
+ #gameBody .mockHud{grid-template-columns:46px minmax(0,1fr) minmax(0,1fr);grid-template-rows:46px 36px;gap:8px}
+ #gameBody .controls{height:82px;min-height:82px;gap:12px}
 }</style>
 </head>
 <body>
