@@ -3550,11 +3550,13 @@ async function loadSocialServices(platform){
 function socialServiceType(x){
   const n=(String(x?.name||"")+" "+String(x?.category||"")).toLowerCase();
   if(/live\s*(viewer|viewers)|live stream|คนเข้าชมไลฟ์|คนดูไลฟ์|ผู้ชมไลฟ์|ไลฟ์สด/.test(n)) return "liveviewers";
-  if(/comment|คอมเมนต์/.test(n)) return "comments";
+  if(/comment|comments|คอมเมนต์|ความคิดเห็น/.test(n)) return "comments";
   if(/follower|followers|ผู้ติดตาม|ติดตาม/.test(n)) return "followers";
-  if(/share|shares|แชร์/.test(n)) return "shares";
-  if(/view|views|วิว|watch/.test(n)) return "views";
-  if(/like|likes|ไลก์|ไลค์|ถูกใจ|reaction|love|wow|haha|care|sad|angry|ปฏิกิริยา/.test(n)) return "likes";
+  if(/share|shares|แชร์|repost|retweet/.test(n)) return "shares";
+  if(/save|saves|บันทึก/.test(n)) return "saves";
+  if(/profile\s*visit|เข้าชมโปรไฟล์/.test(n)) return "profilevisits";
+  if(/like|likes|ไลก์|ไลค์|ถูกใจ|ยอดถูกใจ|reaction|love|wow|haha|care|sad|angry|ปฏิกิริยา/.test(n)) return "likes";
+  if(/view|views|วิว|ยอดวิว|watch/.test(n)) return "views";
   return "other";
 }
 function formatNumber(n){return Number(n).toLocaleString("th-TH");}
@@ -3624,7 +3626,7 @@ function renderSocialServices(){
     platformKey==="facebook"||platformKey==="instagram"||platformKey==="youtube"
       ? ["likes","comments","shares","followers","views"]
       : platformKey==="tiktok"
-        ? ["likes","comments","shares","followers","views","liveviewers","saves"]
+        ? ["likes","comments","shares","followers","views","liveviewers","saves","profilevisits"]
         : platformKey==="x"
           ? ["likes","followers","views","shares"]
           : null;
@@ -3634,7 +3636,7 @@ function renderSocialServices(){
       const match=deduped.find(x=>socialServiceType(x)===type);
       if(match)visibleServices.push(match);
     });
-    deduped.forEach(x=>{if(visibleServices.length<12&&!visibleServices.includes(x))visibleServices.push(x);});
+    // For TikTok/X, show one clear card per service type instead of many near-identical provider cards.
   }else{
     deduped.slice(0,12).forEach(x=>visibleServices.push(x));
   }
