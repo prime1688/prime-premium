@@ -5882,5 +5882,38 @@ document.addEventListener("click",(event)=>{
 .prime-product-card[data-platform="X"] .prime-product-icon img{width:52px !important;height:52px !important}
 .prime-product-card[data-platform="YouTube"] .prime-product-icon img{width:52px !important;height:52px !important}
 </style>
+<style id="prime-x-button-final-fix">
+/* X — exact same CTA sizing/alignment as every other product card */
+.prime-product-card[data-platform="X"] .prime-select-btn{
+  position:static !important;
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  width:100% !important;
+  height:auto !important;
+  min-height:44px !important;
+  flex:0 0 auto !important;
+  margin-top:auto !important;
+  margin-left:0 !important;
+  margin-right:0 !important;
+  margin-bottom:0 !important;
+  padding:10px !important;
+  box-sizing:border-box !important;
+  line-height:1.2 !important;
+}
+@media(max-width:600px){
+  .prime-product-card[data-platform="X"] .prime-select-btn{
+    width:100% !important;
+    height:auto !important;
+    min-height:44px !important;
+    flex:0 0 auto !important;
+    margin-top:auto !important;
+    margin-left:0 !important;
+    margin-right:0 !important;
+    margin-bottom:0 !important;
+    padding:10px !important;
+  }
+}
+</style>
 </body>
 </html>
