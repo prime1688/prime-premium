@@ -5698,21 +5698,23 @@ document.addEventListener("click",(event)=>{
 
 
 <style id="prime-x-button-final-fix">
-/* FINAL X CARD CTA ALIGNMENT — pin the X button to the exact same card bottom */
+/* FINAL X CARD SIZE RESTORE — same card dimensions and normal CTA flow as the other cards */
 .prime-product-card[data-platform="X"]{
   position:relative !important;
-  padding-bottom:80px !important;
+  padding-bottom:15px !important;
 }
 .prime-product-card[data-platform="X"] .prime-select-btn{
-  position:absolute !important;
-  left:15px !important;
-  right:15px !important;
-  bottom:15px !important;
-  width:calc(100% - 30px) !important;
+  position:static !important;
+  left:auto !important;
+  right:auto !important;
+  bottom:auto !important;
+  width:100% !important;
   height:50px !important;
   min-height:50px !important;
   max-width:none !important;
-  margin:0 !important;
+  margin-top:auto !important;
+  margin-left:0 !important;
+  margin-right:0 !important;
   padding:10px 12px !important;
   box-sizing:border-box !important;
   display:flex !important;
@@ -5721,15 +5723,17 @@ document.addEventListener("click",(event)=>{
   transform:none !important;
 }
 @media(max-width:600px){
+  .prime-product-card[data-platform="X"]{
+    padding-bottom:15px !important;
+  }
   .prime-product-card[data-platform="X"] .prime-select-btn{
-    left:15px !important;
-    right:15px !important;
-    bottom:15px !important;
-    width:calc(100% - 30px) !important;
+    position:static !important;
+    width:100% !important;
     height:50px !important;
     min-height:50px !important;
+    margin-top:auto !important;
   }
 }
-</style>
+
 </body>
 </html>
