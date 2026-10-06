@@ -2371,7 +2371,12 @@ html,body{
 .prime-new-grid{
   display:grid;
   grid-template-columns:repeat(4,minmax(0,1fr));
-  gap:14px;
+  column-gap:18px;
+  row-gap:18px!important;
+}
+/* Keep the two NEW service grids clearly separated */
+.prime-new-grid.prime-extra-grid{
+  margin-top:18px!important;
 }
 .prime-new-card{
   position:relative;
@@ -2461,7 +2466,7 @@ html,body{
 @media(max-width:600px){
   .prime-new-services{padding:16px;border-radius:20px}
   .prime-new-title{font-size:21px}
-  .prime-new-grid{grid-template-columns:1fr 1fr;gap:16px}
+  .prime-new-grid{grid-template-columns:1fr 1fr;column-gap:16px;row-gap:18px!important}
   .prime-new-card{min-height:200px;padding:14px}
   .prime-new-card h4{font-size:15px}
   .prime-new-card p{font-size:11px}
