@@ -3306,6 +3306,10 @@ body.prime-notify-open{overflow:hidden!important;touch-action:none!important}
       <span class="floating-icon">▤</span>
       <span class="floating-label">ออเดอร์ของฉัน</span>
     </button>
+    <button type="button" class="floating-menu-item auth-only-menu prime-support-btn" data-action="openSupportTicket" aria-label="แจ้งปัญหา">
+      <span class="floating-icon">⚠️</span>
+      <span class="floating-label">แจ้งปัญหา</span>
+    </button>
     <button type="button" class="floating-menu-item auth-only-menu" data-action="openFreeRewards" aria-label="รางวัลฟรี">
       <span class="floating-icon">🎁</span>
       <span class="floating-label">รางวัลฟรี</span>
@@ -3616,6 +3620,54 @@ function showTopupError(ref){
 }
 function closeTopupError(){document.getElementById("topupErrorModal")?.classList.remove("show");}
 function closeTopupSuccess(){document.getElementById("topupSuccessModal")?.classList.remove("show");}
+async function openSupportTicket(){
+  const s=await getSession();
+  if(!s){alert("กรุณาเข้าสู่ระบบก่อนแจ้งปัญหา");return;}
+  const modal=document.getElementById("supportTicketModal");
+  const form=document.getElementById("supportTicketForm"),result=document.getElementById("supportTicketResult");
+  if(!modal)return;
+  if(form)form.style.display="block"; if(result)result.style.display="none";
+  modal.classList.add("show");
+  const credit=document.getElementById("supportCurrentCredit"),orders=document.getElementById("supportOrderId");
+  if(credit)credit.textContent="กำลังโหลด...";
+  if(orders)orders.innerHTML='<option value="">กำลังโหลดออเดอร์...</option>';
+  const m=await loadMember();
+  if(credit)credit.textContent="฿"+Number(m?.credit||0).toLocaleString("th-TH",{minimumFractionDigits:2});
+  try{
+    const rows=await loadOrders();
+    if(orders)orders.innerHTML='<option value="">— ไม่ระบุออเดอร์ —</option>'+rows.slice(0,30).map(o=>'<option value="'+escapeHtml(o.id||"")+'">'+escapeHtml("#"+(o.id||"").slice(0,8)+" · "+(o.status||"ไม่ทราบสถานะ"))+'</option>').join("");
+  }catch(e){if(orders)orders.innerHTML='<option value="">— ไม่ระบุออเดอร์ —</option>';}
+}
+async function submitSupportTicket(){
+  if(!requireSupabase())return;
+  const btn=document.getElementById("supportSubmitBtn"),category=document.getElementById("supportCategory")?.value||"other",orderId=document.getElementById("supportOrderId")?.value||null,desc=document.getElementById("supportDescription")?.value.trim()||"";
+  if(desc.length<5){alert("กรุณาระบุรายละเอียดปัญหาอย่างน้อย 5 ตัวอักษร");return;}
+  if(btn){btn.disabled=true;btn.textContent="กำลังส่งเรื่อง...";}
+  try{
+    const {data,error}=await supabaseClient.rpc("create_support_ticket",{p_category:category,p_order_id:orderId,p_description:desc});
+    if(error)throw error;
+    if(!data?.success)throw new Error("สร้างเรื่องแจ้งปัญหาไม่สำเร็จ");
+    const form=document.getElementById("supportTicketForm"),result=document.getElementById("supportTicketResult");
+    if(form)form.style.display="none";
+    if(result){result.style.display="block";result.innerHTML='<div class="support-success"><div class="support-success-icon">✓</div><h2 style="color:#6f22d9!important">ส่งเรื่องสำเร็จ</h2><p style="color:#725f8e">ระบบบันทึกเรื่องของคุณแล้ว ทีมงานสามารถตรวจสอบจากหลังบ้าน PRIME ได้</p><div class="support-ticket-no">'+escapeHtml(data.ticket_no||"-")+'</div><button class="support-submit" type="button" data-action="closeModal" data-modal="supportTicketModal">ปิด</button></div>';}
+  }catch(e){alert(e?.message||"ส่งเรื่องแจ้งปัญหาไม่สำเร็จ");}
+  finally{if(btn){btn.disabled=false;btn.textContent="ส่งเรื่องแจ้งปัญหา";}}
+}
+async function loadAdminSupportTickets(){
+  const el=document.getElementById("admSupportTickets");if(!el)return;
+  try{
+    const {data,error}=await supabaseClient.from("support_tickets").select("id,ticket_no,user_id,category,order_id,description,credit_snapshot,status,created_at").order("created_at",{ascending:false}).limit(30);
+    if(error)throw error;
+    if(!data?.length){el.innerHTML='<div class="empty-state">ยังไม่มีเรื่องแจ้งปัญหา</div>';return;}
+    const labels={credit:"เครดิตหาย",topup:"เติมเงิน",order:"ออเดอร์",order_status:"ออเดอร์ไม่อัปเดต",service:"บริการ",button:"ปุ่ม/ระบบ",other:"อื่น ๆ"};
+    el.innerHTML='<div class="support-admin-list">'+data.map(t=>'<div class="support-admin-row"><div class="support-admin-top"><strong>'+escapeHtml(t.ticket_no)+'</strong><span>'+escapeHtml(labels[t.category]||t.category)+'</span></div><div class="support-admin-meta">เครดิตตอนแจ้ง: ฿'+Number(t.credit_snapshot||0).toLocaleString("th-TH",{minimumFractionDigits:2})+' · '+new Date(t.created_at).toLocaleString("th-TH")+'<br>'+escapeHtml(t.description)+'</div><select class="support-status-select" data-ticket-id="'+escapeHtml(t.id)+'" onchange="updateSupportTicketStatus(this)"><option value="OPEN" '+(t.status==="OPEN"?"selected":"")+'>เปิดเรื่อง</option><option value="IN_PROGRESS" '+(t.status==="IN_PROGRESS"?"selected":"")+'>กำลังตรวจสอบ</option><option value="RESOLVED" '+(t.status==="RESOLVED"?"selected":"")+'>แก้ไขแล้ว</option><option value="CLOSED" '+(t.status==="CLOSED"?"selected":"")+'>ปิดเรื่อง</option></select></div>').join("")+'</div>';
+  }catch(e){el.innerHTML='<div class="empty-state" style="color:#b42318">โหลดเรื่องแจ้งปัญหาไม่สำเร็จ: '+escapeHtml(e?.message||"เกิดข้อผิดพลาด")+'</div>';}
+}
+async function updateSupportTicketStatus(select){
+  const id=select?.dataset.ticketId,status=select?.value;if(!id||!status)return;
+  const {error}=await supabaseClient.from("support_tickets").update({status,updated_at:new Date().toISOString(),resolved_at:["RESOLVED","CLOSED"].includes(status)?new Date().toISOString():null}).eq("id",id);
+  if(error){alert("อัปเดตสถานะไม่สำเร็จ: "+error.message);return;}
+}
 function closeModal(id){document.getElementById(id).classList.remove("show");if(id==="topupModal")clearInterval(qrTimer);}
 function addToCart(name,price){
   if(localStorage.getItem("prime_logged_in")!=="1"){alert("กรุณาเข้าสู่ระบบก่อนสั่งซื้อ");return;}
@@ -3776,7 +3828,7 @@ function escapeHtml(value){
 }
 async function loadAdminDashboard(){
   const box=document.getElementById("adminDashboardContent"); if(!box)return;
-  box.innerHTML='<div class="admin-grid"><div class="admin-stat"><span>สมาชิก</span><strong id="admMembers">-</strong></div><div class="admin-stat"><span>ออเดอร์ทั้งหมด</span><strong id="admOrders">-</strong></div><div class="admin-stat"><span>กำลังดำเนินการ</span><strong id="admProcessing">-</strong></div><div class="admin-stat"><span>สำเร็จแล้ว</span><strong id="admCompleted">-</strong></div></div><div class="admin-members-box"><div class="admin-section-title">👥 สมาชิกและยอดเงิน</div><div id="admMembersList" class="empty-state">กำลังโหลดสมาชิก...</div></div>';
+  box.innerHTML='<div class="admin-grid"><div class="admin-stat"><span>สมาชิก</span><strong id="admMembers">-</strong></div><div class="admin-stat"><span>ออเดอร์ทั้งหมด</span><strong id="admOrders">-</strong></div><div class="admin-stat"><span>กำลังดำเนินการ</span><strong id="admProcessing">-</strong></div><div class="admin-stat"><span>สำเร็จแล้ว</span><strong id="admCompleted">-</strong></div></div><div class="admin-members-box"><div class="admin-section-title">👥 สมาชิกและยอดเงิน</div><div id="admMembersList" class="empty-state">กำลังโหลดสมาชิก...</div></div><div class="admin-members-box" style="margin-top:18px"><div class="admin-section-title">⚠️ เรื่องแจ้งปัญหาจากสมาชิก</div><div id="admSupportTickets" class="empty-state">กำลังโหลดเรื่องแจ้งปัญหา...</div></div>';
   const set=(id,v)=>{const e=document.getElementById(id);if(e)e.textContent=v};
   const finish=(html)=>{const e=document.getElementById("admMembersList");if(e)e.innerHTML=html};
   try{
@@ -3809,6 +3861,7 @@ async function loadAdminDashboard(){
     if(!rows.length){finish('<div class="empty-state">ไม่พบสมาชิก</div>');return;}
     finish('<div class="admin-members-head"><span>เบอร์โทรศัพท์</span><span>ยอดเงิน</span><span>สมัครเมื่อ</span></div>'+rows.map(m=>'<div class="admin-member-row"><strong>'+escapeHtml(m.phone||"-")+'</strong><strong>฿'+Number(m.credit||0).toLocaleString("th-TH",{minimumFractionDigits:2})+'</strong><span>'+ (m.created_at?new Date(m.created_at).toLocaleString("th-TH"):"-")+'</span></div>').join(""));
   }catch(e){finish('<div class="empty-state" style="color:#b42318">โหลดสมาชิกไม่สำเร็จ: '+escapeHtml(e?.message||"เกิดข้อผิดพลาด")+'</div>');}
+  await loadAdminSupportTickets();
 }
 async function openAdminPanel(){
   const modal=document.getElementById("adminPanelModal");
@@ -5210,7 +5263,7 @@ document.addEventListener("DOMContentLoaded",initModalScrollLock);
 document.addEventListener("click",(event)=>{
     const b=event.target.closest("[data-action]"); if(!b)return;
     const a=b.dataset.action;
-    if(a==="login") login(); else if(a==="loginContinue") performLogin(); else if(a==="logout") logout(); else if(a==="goProducts") goProducts(); else if(a==="openSignupPopup") document.getElementById("signupPopup")?.classList.add("show"); else if(a==="signupContinue"){performSignup();} else if(a==="signupSuccessDone"){closeSignupSuccess();} else if(a==="loginSuccessDone"){closeLoginSuccess();} else if(a==="openTopup") { closeNotifications(); openTopup(); } else if(a==="openTransactions") { closeNotifications(); openTransactions(); } else if(a==="openOrders") { closeNotifications(); openOrders(); } else if(a==="openFreeRewards") openFreeRewards(); else if(a==="openTerms") document.getElementById("termsModal")?.classList.add("show"); else if(a==="openCart") openCart(); else if(a==="openWithdrawNotice") openWithdrawNotice(); else if(a==="openPopularPlatforms"){document.getElementById("popularPlatformsModal")?.classList.add("show");} else if(a==="openNewService") openNewService(b.dataset.service); else if(a==="openFlashSale"){openFlashSale();} else if(a==="selectFlashPackage"){selectFlashPackage(b);} else if(a==="flashSaleContact"){flashSaleContact();} else if(a==="openPopularService"){openPopularService(b.dataset.platform,b.dataset.service);} else if(a==="popularPrev"){popularPlatformsMove(-1);} else if(a==="popularNext"){popularPlatformsMove(1);} else if(a==="openWithdraw") openWithdraw(); else if(a==="vipOnly") alert("ฟังก์ชันนี้สำหรับสมาชิก VIP เท่านั้น"); else if(a==="addToCart") addToCart(b.dataset.name,Number(b.dataset.price)); else if(a==="removeFromCart") removeFromCart(Number(b.dataset.index)); else if(a==="clearCart") clearCart(); else if(a==="showSocial") showSocial(b.dataset.name); else if(a==="closeModal") closeModal(b.dataset.modal); else if(a==="createTopup") createTopup(); else if(a==="topupSuccessHistory"){closeTopupSuccess();openTransactions();} else if(a==="topupSuccessDone"){closeTopupSuccess();window.scrollTo({top:0,behavior:"smooth"});} else if(a==="topupErrorDone"){closeTopupError();} else if(a==="checkout") checkout(); else if(a==="confirmSocialOrder") confirmSocialOrder(); else if(a==="openAdminPanel") openAdminPanel(); else if(a==="refreshAdminPanel") refreshAdminPanel(); else if(a==="syncSmmCatalog") syncSmmCatalog(); else if(a==="syncBeeServices") syncBeeServices(); else if(a==="openNotifications") openNotifications(); else if(a==="closeNotifications") closeNotifications(); else if(a==="markNotificationsRead") markNotificationsRead();
+    if(a==="login") login(); else if(a==="loginContinue") performLogin(); else if(a==="logout") logout(); else if(a==="goProducts") goProducts(); else if(a==="openSignupPopup") document.getElementById("signupPopup")?.classList.add("show"); else if(a==="signupContinue"){performSignup();} else if(a==="signupSuccessDone"){closeSignupSuccess();} else if(a==="loginSuccessDone"){closeLoginSuccess();} else if(a==="openTopup") { closeNotifications(); openTopup(); } else if(a==="openTransactions") { closeNotifications(); openTransactions(); } else if(a==="openOrders") { closeNotifications(); openOrders(); } else if(a==="openFreeRewards") openFreeRewards(); else if(a==="openSupportTicket") openSupportTicket(); else if(a==="submitSupportTicket") submitSupportTicket(); else if(a==="openTerms") document.getElementById("termsModal")?.classList.add("show"); else if(a==="openCart") openCart(); else if(a==="openWithdrawNotice") openWithdrawNotice(); else if(a==="openPopularPlatforms"){document.getElementById("popularPlatformsModal")?.classList.add("show");} else if(a==="openNewService") openNewService(b.dataset.service); else if(a==="openFlashSale"){openFlashSale();} else if(a==="selectFlashPackage"){selectFlashPackage(b);} else if(a==="flashSaleContact"){flashSaleContact();} else if(a==="openPopularService"){openPopularService(b.dataset.platform,b.dataset.service);} else if(a==="popularPrev"){popularPlatformsMove(-1);} else if(a==="popularNext"){popularPlatformsMove(1);} else if(a==="openWithdraw") openWithdraw(); else if(a==="vipOnly") alert("ฟังก์ชันนี้สำหรับสมาชิก VIP เท่านั้น"); else if(a==="addToCart") addToCart(b.dataset.name,Number(b.dataset.price)); else if(a==="removeFromCart") removeFromCart(Number(b.dataset.index)); else if(a==="clearCart") clearCart(); else if(a==="showSocial") showSocial(b.dataset.name); else if(a==="closeModal") closeModal(b.dataset.modal); else if(a==="createTopup") createTopup(); else if(a==="topupSuccessHistory"){closeTopupSuccess();openTransactions();} else if(a==="topupSuccessDone"){closeTopupSuccess();window.scrollTo({top:0,behavior:"smooth"});} else if(a==="topupErrorDone"){closeTopupError();} else if(a==="checkout") checkout(); else if(a==="confirmSocialOrder") confirmSocialOrder(); else if(a==="openAdminPanel") openAdminPanel(); else if(a==="refreshAdminPanel") refreshAdminPanel(); else if(a==="syncSmmCatalog") syncSmmCatalog(); else if(a==="syncBeeServices") syncBeeServices(); else if(a==="openNotifications") openNotifications(); else if(a==="closeNotifications") closeNotifications(); else if(a==="markNotificationsRead") markNotificationsRead();
   });
 
 /* Social service buttons use a direct click handler.
@@ -5225,7 +5278,7 @@ document.addEventListener("click",(event)=>{
   const ROUTER_ACTIONS=new Set([
     "login","loginContinue","logout","goProducts","openSignupPopup","signupContinue",
     "signupSuccessDone","loginSuccessDone","openTopup","openTransactions","openOrders",
-    "openFreeRewards","openTerms","openCart","openWithdrawNotice","openPopularPlatforms",
+    "openFreeRewards","openSupportTicket","submitSupportTicket","openTerms","openCart","openWithdrawNotice","openPopularPlatforms",
     "openNewService","openFlashSale","selectFlashPackage","flashSaleContact",
     "openPopularService","popularPrev","popularNext","openWithdraw","vipOnly",
     "addToCart","removeFromCart","clearCart","showSocial",
@@ -5646,6 +5699,36 @@ document.addEventListener("click",(event)=>{
     </div>
   </div>
 
+  <div class="modal" id="supportTicketModal" role="dialog" aria-modal="true" aria-labelledby="supportTicketTitle">
+    <div class="modal-card support-card">
+      <div class="support-head">
+        <div><h2 id="supportTicketTitle">⚠️ แจ้งปัญหา</h2><p>แจ้งเครดิต • เติมเงิน • ออเดอร์ • ปุ่มกดไม่ได้ ทีมงานจะตรวจสอบจากข้อมูลในระบบ</p></div>
+        <button class="modal-x" type="button" data-action="closeModal" data-modal="supportTicketModal">×</button>
+      </div>
+      <div id="supportTicketForm">
+        <div class="support-alert">หากเป็นปัญหา “เครดิตหาย” ระบบจะบันทึกยอดเครดิตปัจจุบันไว้พร้อมเลขเรื่อง เพื่อใช้ตรวจสอบย้อนหลัง</div>
+        <label class="support-label" for="supportCategory">ประเภทปัญหา</label>
+        <select id="supportCategory">
+          <option value="credit">💰 เครดิตหาย / ยอดเครดิตไม่ถูกต้อง</option>
+          <option value="topup">💳 เติมเงินแล้วเครดิตไม่เข้า</option>
+          <option value="order">📦 ออเดอร์มีปัญหา</option>
+          <option value="order_status">🔄 ออเดอร์ไม่อัปเดต</option>
+          <option value="service">🚫 บริการไม่ทำงาน</option>
+          <option value="button">🖱️ ปุ่มกดไม่ได้ / ระบบมีปัญหา</option>
+          <option value="other">💬 ปัญหาอื่น ๆ</option>
+        </select>
+        <div class="support-credit"><small>เครดิตปัจจุบัน</small><strong id="supportCurrentCredit">กำลังโหลด...</strong></div>
+        <label class="support-label" for="supportOrderId">ออเดอร์ (ถ้ามี)</label>
+        <select id="supportOrderId"><option value="">— ไม่ระบุออเดอร์ —</option></select>
+        <label class="support-label" for="supportDescription">รายละเอียดปัญหา</label>
+        <textarea id="supportDescription" maxlength="2000" placeholder="เช่น เครดิตลดลง 500 แต่ไม่ได้สั่งซื้อ หรือเติมเงินแล้วเครดิตยังไม่เข้า"></textarea>
+        <button id="supportSubmitBtn" class="support-submit" type="button" data-action="submitSupportTicket">ส่งเรื่องแจ้งปัญหา</button>
+        <div class="support-note">ข้อมูลจะถูกบันทึกในระบบ PRIME และผูกกับบัญชีของคุณโดยอัตโนมัติ</div>
+      </div>
+      <div id="supportTicketResult" style="display:none"></div>
+    </div>
+  </div>
+
   <div class="modal" id="cartModal">
     <div class="modal-card">
       <h2>ตะกร้าสั่งซื้อ</h2>
@@ -6045,6 +6128,16 @@ padding:9px 10px !important}}
 }
 .prime-product-grid .prime-product-card[data-platform="X"]{padding-top:11px !important}
 }
+
+/* PRIME SUPPORT TICKET */
+.prime-support-btn{position:relative;min-height:68px;width:100%;border:1px solid #ff8f9d;border-radius:14px;background:linear-gradient(145deg,#fff4f5,#f8e8ff);color:#8b1e5b;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;cursor:pointer;box-shadow:0 6px 18px rgba(190,70,120,.12);font-weight:900}
+.prime-support-btn .floating-icon{background:linear-gradient(135deg,#ff7180,#a94fff);color:#fff;box-shadow:0 0 14px rgba(255,82,104,.28)}
+.prime-support-btn .floating-label{color:#6b245f}
+.support-card{width:min(500px,100%)!important;max-height:calc(100dvh - 24px);overflow-y:auto;background:linear-gradient(145deg,#fff,#f7edff)!important;border:1px solid #d7a7ff!important;box-shadow:0 18px 70px rgba(70,20,120,.24)!important}
+.support-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:14px}.support-head h2{margin:0;color:#6f22d9!important}.support-head p{margin:5px 0 0;color:#725f8e;font-size:12px;line-height:1.5}
+.support-alert{padding:11px 13px;border-radius:13px;background:#fff2f4;border:1px solid #ffc2cb;color:#8b1e38;font-size:12px;font-weight:800;margin-bottom:14px}
+.support-label{display:block;color:#321078;font-size:12px;font-weight:900;margin:11px 0 6px}.support-card select,.support-card input,.support-card textarea{width:100%;box-sizing:border-box;padding:12px;border-radius:12px;border:1px solid #d8bcff;background:#fff;color:#24104f;font-size:15px;outline:none}.support-card textarea{min-height:120px;resize:vertical}.support-card input:focus,.support-card select:focus,.support-card textarea:focus{border-color:#9b4dff;box-shadow:0 0 0 3px rgba(155,77,255,.12)}
+.support-credit{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:13px 15px;border-radius:14px;background:linear-gradient(135deg,#f2e4ff,#fff);border:1px solid #d9b7ff;margin:8px 0 14px}.support-credit small{color:#725f8e}.support-credit strong{color:#6f22d9;font-size:21px}.support-submit{width:100%;margin-top:14px;padding:14px;border:1px solid #d8a6ff;border-radius:13px;background:linear-gradient(135deg,#c06cff,#7b24d8);color:#fff;font-size:15px;font-weight:950;cursor:pointer;box-shadow:0 8px 24px rgba(111,34,214,.24)}.support-submit:disabled{opacity:.55;cursor:not-allowed}.support-note{text-align:center;color:#8b7a9d;font-size:10px;margin:10px 0 0}.support-success{text-align:center;padding:8px 2px}.support-success-icon{width:78px;height:78px;margin:4px auto 13px;border-radius:50%;display:grid;place-items:center;background:radial-gradient(circle,#fff,#efe0ff);border:3px solid #b65cff;color:#1bb85b;font-size:42px;box-shadow:0 0 25px rgba(181,108,255,.28)}.support-ticket-no{margin:12px 0;padding:12px;border-radius:13px;background:#f3e7ff;border:1px solid #d7b3ff;color:#6f22d9;font-weight:950;font-size:19px}.support-admin-list{margin-top:12px;border:1px solid #eadcff;border-radius:14px;overflow:hidden;background:#fff}.support-admin-row{padding:12px;border-bottom:1px solid #eadcff}.support-admin-row:last-child{border-bottom:0}.support-admin-top{display:flex;justify-content:space-between;gap:8px}.support-admin-meta{font-size:10px;color:#806a96;margin-top:4px;line-height:1.5}.support-status-select{width:100%;margin-top:8px;padding:8px;border:1px solid #d8bcff;border-radius:9px;background:#fff;color:#321078}
 </style>
 <script id="prime-notification-center-js">
 (function(){
