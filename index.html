@@ -3236,7 +3236,8 @@ body.prime-notify-open{overflow:hidden!important;touch-action:none!important}
 </style>
 </head>
 
-<body>\n  <div id="adminSupportToast" class="admin-support-toast" style="display:none"></div>
+<body>
+  <div id="adminSupportToast" class="admin-support-toast" style="display:none"></div>
 
   <header class="header prime-header">
     <div class="prime-nav">
@@ -5300,7 +5301,8 @@ function initModalScrollLock(){
   document.querySelectorAll(".modal").forEach(m=>observer.observe(m,{attributes:true,attributeFilter:["class"]}));
   syncModalScrollLock();
 }
-document.addEventListener("DOMContentLoaded",initModalScrollLock);\ndocument.addEventListener("DOMContentLoaded",()=>{
+document.addEventListener("DOMContentLoaded",initModalScrollLock);
+document.addEventListener("DOMContentLoaded",()=>{
   setTimeout(()=>refreshAdminSupportAlert(true),1800);
   setInterval(()=>{if(document.visibilityState==="visible")refreshAdminSupportAlert(true);},30000);
 });
