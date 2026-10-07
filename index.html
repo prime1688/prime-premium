@@ -3383,7 +3383,7 @@ body.prime-notify-open{overflow:hidden!important;touch-action:none!important}
       <p>แพ็กเกจรวม 3 แพลตฟอร์ม</p>
       <div class="prime-flash-platforms">▶ YouTube &nbsp;•&nbsp; 𝕏 X &nbsp;•&nbsp; Facebook</div>
       <div class="prime-flash-price"><small>ราคาเริ่มต้น</small><strong>฿3,999</strong><span>/เดือน</span></div>
-      <div class="prime-sale-timer"><div class="prime-time-box"><b id="shopHours">74</b><small>ชั่วโมง</small></div><div class="prime-time-box"><b id="shopMinutes">33</b><small>นาที</small></div><div class="prime-time-box"><b id="shopSeconds">33</b><small>วินาที</small></div></div>
+      <div class="prime-sale-timer"><div class="prime-time-box"><b id="shopHours">98</b><small>ชั่วโมง</small></div><div class="prime-time-box"><b id="shopMinutes">00</b><small>นาที</small></div><div class="prime-time-box"><b id="shopSeconds">00</b><small>วินาที</small></div></div>
       <button class="flash-sale-open-btn" type="button" data-action="openFlashSale">ดูแพ็กเกจ →</button>
     </article>
 
@@ -5247,8 +5247,8 @@ document.addEventListener("DOMContentLoaded",()=>{
   }
 });
 function initPrimeShopTimer(){
-  const key="prime_flash_sale_end_v1";
-  const durationMs=((74*60*60+33*60+33)*1000);
+  const key="prime_flash_sale_end_v2";
+  const durationMs=(98*60*60*1000);
   let end=Number(localStorage.getItem(key)||0);
   if(!end||end<=Date.now()){
     end=Date.now()+durationMs;
