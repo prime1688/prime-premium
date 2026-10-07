@@ -508,7 +508,33 @@ html,body{overflow-x:hidden}
   .game p{font-size:9.5px;max-height:31px}
   .game .play{height:42px;min-height:42px;flex-basis:42px;margin-top:5px;margin-bottom:7px;font-size:12px}
 }
-</style>
+/* FULLSCREEN GAME V13 — fit game + HUD + controls inside mobile viewport */
+@media(max-width:600px){
+  #gameModal{position:fixed;inset:0;padding:0;align-items:stretch;justify-content:stretch;overflow:hidden}
+  #gameModal .panel{width:100%;height:100%;max-width:none;max-height:none;min-height:0;box-sizing:border-box;border-radius:0;border:0;padding:0;overflow:hidden;display:flex;flex-direction:column}
+  #gameModal .panel .head{flex:0 0 58px;min-height:58px;height:58px;box-sizing:border-box;padding:8px max(12px,env(safe-area-inset-right)) 8px max(12px,env(safe-area-inset-left));background:linear-gradient(180deg,#24104f,#12072b);border-bottom:1px solid rgba(190,110,255,.35);z-index:30}
+  #gameModal .panel .head h2{max-width:calc(100% - 70px);font-size:18px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#fff!important}
+  #gameModal .panel .close{flex:0 0 40px;width:40px;height:40px}
+  #gameBody{flex:1 1 auto;min-height:0;height:auto;max-height:none;overflow:auto;overflow-x:hidden;box-sizing:border-box;padding:8px max(10px,env(safe-area-inset-right)) calc(12px + env(safe-area-inset-bottom)) max(10px,env(safe-area-inset-left));-webkit-overflow-scrolling:touch}
+  #gameBody .mockHud{position:sticky;top:0;z-index:40}
+  #gameBody .controls{position:sticky;bottom:0;z-index:45;margin-top:8px}
+  .target-area,.runner-area,.race-area{height:min(42vh,calc(100svh - 350px));min-height:220px;max-height:420px;box-sizing:border-box;overflow:hidden}
+  .runner-area,.race-area{height:min(44vh,calc(100svh - 330px))}
+}
+@media(max-width:390px){
+  #gameModal .panel .head{flex-basis:54px;height:54px;min-height:54px}
+  #gameModal .panel .head h2{font-size:17px}
+  #gameBody{padding-top:6px}
+  .target-area,.runner-area,.race-area{height:min(40vh,calc(100svh - 320px));min-height:200px}
+  .runner-area,.race-area{height:min(42vh,calc(100svh - 305px))}
+}
+@media(max-width:360px){
+  #gameModal .panel .head{flex-basis:52px;height:52px;min-height:52px}
+  #gameModal .panel .head h2{font-size:16px}
+  #gameBody{padding-left:8px;padding-right:8px}
+  .target-area,.runner-area,.race-area{height:min(38vh,calc(100svh - 295px));min-height:185px}
+  .runner-area,.race-area{height:min(40vh,calc(100svh - 285px))}
+}</style>
 </head>
 <body>
 <header class="header"><div class="nav"><a class="brand" href="./index.html">PRIME<span>.</span></a><a class="back" href="./index.html">← กลับ PRIME</a></div></header>
