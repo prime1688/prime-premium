@@ -3295,32 +3295,32 @@ body.prime-notify-open{overflow:hidden!important;touch-action:none!important}
 
   <div class="floating-menu" aria-label="เมนูลัด">
     <button type="button" class="floating-menu-item auth-only-menu" data-action="openCart" aria-label="ตะกร้า">
-      <span class="floating-icon">🛒</span>
+      <span class="floating-icon" aria-hidden="true"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 4h2l2.2 11.1a2 2 0 0 0 2 1.6h7.9a2 2 0 0 0 1.9-1.4L21 8H6"/><circle cx="10" cy="20" r="1.2"/><circle cx="18" cy="20" r="1.2"/></svg></span>
       <span class="floating-label">ตะกร้า</span>
       <span class="floating-badge" id="floatingCartCount">0</span>
     </button>
     <button type="button" class="floating-menu-item auth-only-menu" data-action="openTransactions" aria-label="รายการเงิน">
-      <span class="floating-icon">▣</span>
+      <span class="floating-icon" aria-hidden="true"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg></span>
       <span class="floating-label">รายการเงิน</span>
     </button>
     <button type="button" class="floating-menu-item auth-only-menu" data-action="openOrders" aria-label="ออเดอร์ของฉัน">
-      <span class="floating-icon">▤</span>
+      <span class="floating-icon" aria-hidden="true"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M8 7h8M8 11h8M8 15h5"/></svg></span>
       <span class="floating-label">ออเดอร์ของฉัน</span>
     </button>
     <button type="button" class="floating-menu-item auth-only-menu prime-support-btn support-track-btn" data-action="openSupportStatus" aria-label="ติดตามแจ้งปัญหา">
-      <span class="floating-icon">🔎</span>
+      <span class="floating-icon" aria-hidden="true"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="10.5" cy="10.5" r="6"/><path d="m15 15 5 5"/></svg></span>
       <span class="floating-label">ติดตามแจ้งปัญหา</span>
     </button>
     <button type="button" class="floating-menu-item auth-only-menu prime-support-btn" data-action="openSupportTicket" aria-label="แจ้งปัญหา">
-      <span class="floating-icon">⚠️</span>
+      <span class="floating-icon" aria-hidden="true"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4 21 20H3L12 4Z"/><path d="M12 9v5M12 17h.01"/></svg></span>
       <span class="floating-label">แจ้งปัญหา</span>
     </button>
     <button type="button" class="floating-menu-item auth-only-menu" data-action="openFreeRewards" aria-label="รางวัลฟรี">
-      <span class="floating-icon">🎁</span>
+      <span class="floating-icon" aria-hidden="true"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10h16v10H4zM3 7h18v3H3zM12 7v13M12 7H8.5A2.5 2.5 0 1 1 11 4.5L12 7Zm0 0h3.5A2.5 2.5 0 1 0 13 4.5L12 7Z"/></svg></span>
       <span class="floating-label">รางวัลฟรี</span>
     </button>
     <button type="button" class="floating-menu-item auth-only-menu" data-action="openTerms" aria-label="เงื่อนไขและข้อกำหนด">
-      <span class="floating-icon">⚖</span>
+      <span class="floating-icon" aria-hidden="true"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v16M7 20h10M5 7h14M7 7l-3 6a3 3 0 0 0 6 0L7 7Zm10 0-3 6a3 3 0 0 0 6 0l-3-6Z"/></svg></span>
       <span class="floating-label">เงื่อนไขและข้อกำหนด</span>
     </button>
   </div>
@@ -6201,6 +6201,16 @@ padding:9px 10px !important}}
 .support-status-list{display:grid;gap:10px;margin-top:8px}.support-status-item{padding:13px;border:1px solid #dfc7ff;border-radius:14px;background:#fff}.support-status-top{display:flex;justify-content:space-between;gap:10px;align-items:center}.support-status-no{color:#6f22d9;font-weight:950}.support-status-badge{padding:5px 9px;border-radius:999px;font-size:10px;font-weight:900}.support-status-badge.open{background:#fff1d5;color:#9a6500}.support-status-badge.in-progress{background:#eee0ff;color:#6f22d9}.support-status-badge.resolved,.support-status-badge.closed{background:#e4f8e9;color:#24833b}.support-status-desc{margin-top:8px;color:#684f8b;font-size:11px;line-height:1.5}.support-status-time{margin-top:6px;color:#9a89ad;font-size:9px}
 .admin-support-alert{position:relative;display:inline-flex;align-items:center;gap:7px;border:1px solid #d7a7ff;background:#fff;color:#542080;border-radius:11px;padding:10px 12px;font-weight:900;cursor:pointer}.admin-support-alert .count{display:inline-grid;place-items:center;min-width:21px;height:21px;padding:0 6px;border-radius:999px;background:#ff3f67;color:#fff;font-size:10px}.admin-support-alert.has-new{box-shadow:0 0 0 3px rgba(255,63,103,.10),0 0 18px rgba(255,63,103,.18)}.admin-support-toast{position:fixed;right:18px;top:86px;z-index:5000;width:min(360px,calc(100vw - 30px));padding:14px;border-radius:15px;background:#fff;border:1px solid #d7a7ff;box-shadow:0 15px 45px rgba(60,20,100,.22);color:#321078}.admin-support-toast strong{display:block;color:#6f22d9;margin-bottom:4px}.admin-support-toast span{font-size:11px;color:#725f8e;line-height:1.45}.admin-support-toast button{margin-top:9px;border:0;background:linear-gradient(135deg,#b65cff,#6f22d9);color:#fff;border-radius:9px;padding:8px 11px;font-weight:900}
 @media(max-width:600px){.admin-support-toast{right:10px;top:72px}}
+
+/* PRIME — unified floating menu visual system */
+.floating-menu{width:128px!important;padding:8px!important;gap:7px!important;border:1px solid #dfccff!important;border-radius:24px!important;background:rgba(250,247,255,.96)!important;backdrop-filter:blur(18px)!important;box-shadow:0 14px 42px rgba(93,48,150,.16),0 0 26px rgba(154,103,255,.12)!important}
+.floating-menu-item,.floating-menu-item.prime-support-btn,.floating-menu-item.support-track-btn{min-height:82px!important;width:100%!important;padding:7px 4px!important;border:1px solid #eadfff!important;border-radius:17px!important;background:linear-gradient(145deg,#fff 0%,#f8f2ff 100%)!important;color:#6230b5!important;box-shadow:0 4px 12px rgba(100,55,160,.07)!important}
+.floating-menu-item:hover,.floating-menu-item.prime-support-btn:hover,.floating-menu-item.support-track-btn:hover{transform:translateY(-2px)!important;border-color:#bd91ff!important;background:linear-gradient(145deg,#fff 0%,#f3e9ff 100%)!important;box-shadow:0 8px 20px rgba(112,58,190,.14)!important}
+.floating-menu-item:active{transform:scale(.98)!important}
+.floating-icon,.prime-support-btn .floating-icon,.support-track-btn .floating-icon{width:42px!important;height:42px!important;border-radius:50%!important;display:grid!important;place-items:center!important;background:#eee2ff!important;color:#7137c8!important;box-shadow:none!important;font-size:22px!important}
+.floating-label,.prime-support-btn .floating-label,.support-track-btn .floating-label{color:#5c2aa7!important;font-size:11px!important;font-weight:900!important;line-height:1.18!important;text-align:center!important;white-space:normal!important;overflow:visible!important;text-overflow:clip!important;max-width:112px!important}
+.floating-badge{top:4px!important;right:5px!important;background:#8b4de8!important;color:#fff!important;border:2px solid #fff!important}
+@media(max-width:600px){.floating-menu{right:8px!important;width:108px!important;padding:6px!important;gap:6px!important;border-radius:21px!important}.floating-menu-item,.floating-menu-item.prime-support-btn,.floating-menu-item.support-track-btn{min-height:76px!important;border-radius:16px!important;padding:6px 3px!important}.floating-icon,.prime-support-btn .floating-icon,.support-track-btn .floating-icon{width:38px!important;height:38px!important;font-size:20px!important}.floating-label,.prime-support-btn .floating-label,.support-track-btn .floating-label{font-size:10px!important;line-height:1.15!important;max-width:98px!important}.floating-menu-item[data-action="openTerms"] .floating-label{font-size:10px!important;line-height:1.15!important;max-width:98px!important;white-space:normal!important}}
 </style>
 <script id="prime-notification-center-js">
 (function(){
